@@ -1,0 +1,7 @@
+.gradle
+.classpath
+.project
+.checkstyle
+.settings
+build
+build-eclipse

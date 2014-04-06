@@ -1,0 +1,79 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'jacoco'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+group = 'ca.coglinc'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+     
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+eclipse {
+    project {    
+        name = 'javaccPlugin'
+    }
+      
+    classpath {
+        defaultOutputDir = file('build-eclipse')
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'javaccPlugin', 'Implementation-Version': version
+    }
+}
+
+checkstyle {
+    configFile = new File("${project.projectDir}/config/checkstyle/checks.xml")
+}
+
+findbugs {
+    sourceSets = [sourceSets.main, sourceSets.test]
+    effort = "min"
+    ignoreFailures = true
+    reportLevel = "high"
+    excludeFilter = file("${project.projectDir}/config/findbugs/exclude.xml")
+}
+
+tasks.withType(FindBugs) {
+    maxHeapSize = project.hasProperty('findBugsHeapSize') ? project.findBugsHeapSize : '1g'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+        csv.enabled false
+    }
+}
+
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+artifacts {
+    archives sourceJar
+}

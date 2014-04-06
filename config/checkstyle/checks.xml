@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<!--
+    This configuration file was written by the eclipse-cs plugin configuration editor
+-->
+<!--
+    Checkstyle-Configuration: Project Checks
+    Description: none
+-->
+<module name="Checker">
+  <property name="severity" value="warning"/>
+  <module name="TreeWalker">
+    <module name="FileContentsHolder"/>
+    <module name="AnnotationUseStyle">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="MissingDeprecated">
+      <property name="severity" value="error"/>
+    </module>
+    <module name="MissingOverride">
+      <property name="severity" value="error"/>
+    </module>
+    <module name="ClassTypeParameterName">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="ConstantName">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="LocalFinalVariableName">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="LocalVariableName">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="MemberName">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="MethodName">
+      <property name="severity" value="warning"/>
+      <property name="format" value="^[a-z][a-zA-Z0-9_]*$"/>
+    </module>
+    <module name="MethodTypeParameterName">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="PackageName">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="ParameterName">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="StaticVariableName">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="TypeName">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="AvoidStarImport">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="IllegalImport">
+      <property name="severity" value="error"/>
+    </module>
+    <module name="ImportOrder">
+      <property name="severity" value="warning"/>
+      <property name="option" value="top"/>
+      <property name="groups" value="java,javax,org,com,javassist"/>
+      <property name="separated" value="true"/>
+    </module>
+    <module name="RedundantImport">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="UnusedImports">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="AnonInnerLength">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="ExecutableStatementCount">
+      <property name="severity" value="error"/>
+      <property name="tokens" value="INSTANCE_INIT,STATIC_INIT,METHOD_DEF,CTOR_DEF"/>
+    </module>
+    <module name="LineLength">
+      <property name="severity" value="info"/>
+      <property name="max" value="180"/>
+      <property name="tabWidth" value="4"/>
+    </module>
+    <module name="MethodLength">
+      <property name="severity" value="error"/>
+      <property name="max" value="50"/>
+    </module>
+    <module name="ParameterNumber">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="OuterTypeNumber">
+      <property name="severity" value="error"/>
+    </module>
+    <module name="MethodCount">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="GenericWhitespace">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="EmptyForInitializerPad">
+      <property name="severity" value="warning"/>
+      <property name="option" value="space"/>
+    </module>
+    <module name="EmptyForIteratorPad">
+      <property name="severity" value="warning"/>
+      <property name="option" value="space"/>
+    </module>
+    <module name="NoWhitespaceAfter">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="NoWhitespaceBefore">
+      <property name="severity" value="warning"/>
+      <property name="allowLineBreaks" value="true"/>
+      <property name="tokens" value="SEMI,DOT,POST_DEC,POST_INC"/>
+    </module>
+    <module name="OperatorWrap">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="MethodParamPad">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="ParenPad"/>
+    <module name="TypecastParenPad">
+      <property name="tokens" value="RPAREN,TYPECAST"/>
+    </module>
+    <module name="WhitespaceAfter">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="WhitespaceAround">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="ModifierOrder">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="RedundantModifier">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="AvoidNestedBlocks">
+      <property name="severity" value="warning"/>
+      <property name="allowInSwitchCase" value="true"/>
+    </module>
+    <module name="EmptyBlock">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="LeftCurly">
+      <property name="severity" value="warning"/>
+      <property name="maxLineLength" value="150"/>
+    </module>
+    <module name="NeedBraces">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="RightCurly">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="ArrayTypeStyle">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="Indentation">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="TodoComment">
+      <property name="severity" value="warning"/>
+      <property name="format" value="TODO"/>
+    </module>
+    <module name="TrailingComment">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="UpperEll">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="OuterTypeFilename">
+      <property name="severity" value="error"/>
+    </module>
+    <module name="PackageDeclaration">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="CovariantEquals">
+      <property name="severity" value="error"/>
+    </module>
+    <module name="DefaultComesLast">
+      <property name="severity" value="error"/>
+    </module>
+    <module name="DeclarationOrder">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="EmptyStatement">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="EqualsAvoidNull">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="EqualsHashCode">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="ExplicitInitialization">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="FallThrough">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="InnerAssignment">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="MagicNumber">
+      <property name="severity" value="warning"/>
+      <property name="ignoreHashCodeMethod" value="true"/>
+    </module>
+    <module name="MissingSwitchDefault">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="OneStatementPerLine">
+      <property name="severity" value="warning"/>
+    </module>
+    <module name="CyclomaticComplexity"/>
+  </module>
+  <module name="FileLength">
+    <property name="severity" value="error"/>
+    <property name="max" value="1000"/>
+  </module>
+  <module name="FileTabCharacter">
+    <property name="severity" value="warning"/>
+  </module>
+  <module name="NewlineAtEndOfFile">
+    <property name="severity" value="warning"/>
+  </module>
+  <module name="SuppressionCommentFilter"/>
+</module>
