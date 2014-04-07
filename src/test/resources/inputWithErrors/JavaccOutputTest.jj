@@ -1,0 +1,11 @@
+PARSER_BEGIN(JavaccOutputTest)
+package test.pkg
+
+public class JavaccOutputTest {
+}
+PARSER_END(JavaccOutputTest)
+
+TOKEN :
+{
+    <ABS: "abs">
+}

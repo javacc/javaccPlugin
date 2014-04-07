@@ -9,18 +9,23 @@ import java.util.Map;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.testfixtures.ProjectBuilder;
+import org.junit.Before;
 import org.junit.Test;
 
 public class JavaccPluginTest {
+    private Project project;
 
-    @Test
-    public void pluginAddsCompileJavaccTaskToProject() {
-        Project project = ProjectBuilder.builder().build();
+    @Before
+    public void applyJavaccPluginToProject() {
+        project = ProjectBuilder.builder().build();
         Map<String, String> pluginNames = new HashMap<String, String>(1);
         pluginNames.put("plugin", "javacc");
         
         project.apply(pluginNames);
-        
+    }
+
+    @Test
+    public void pluginAddsCompileJavaccTaskToProject() {
         final Task compileJavaccTask = project.getTasks().getByName("compileJavacc");
         assertNotNull(compileJavaccTask);
         assertTrue(compileJavaccTask instanceof CompileJavaccTask);

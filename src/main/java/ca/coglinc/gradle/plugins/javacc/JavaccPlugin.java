@@ -12,6 +12,9 @@ public class JavaccPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
         project.task(taskOptions(), CompileJavaccTask.TASK_NAME_VALUE);
+        
+        JavaToJavaccDependencyAction compileJavaDependsOnCompileJavacc = new JavaToJavaccDependencyAction();
+        project.afterEvaluate(compileJavaDependsOnCompileJavacc);
     }
 
     private Map<String, ?> taskOptions() {
@@ -19,6 +22,7 @@ public class JavaccPlugin implements Plugin<Project> {
         
         options.put(Task.TASK_TYPE, CompileJavaccTask.class);
         options.put(Task.TASK_DESCRIPTION, CompileJavaccTask.TASK_DESCRIPTION_VALUE);
+        options.put(Task.TASK_GROUP, CompileJavaccTask.JAVACC_GROUP);
         
         return options;
     }
