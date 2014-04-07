@@ -5,8 +5,8 @@ apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.5
+targetCompatibility = 1.5
 group = 'ca.coglinc'
 version = '1.0.0'
 
