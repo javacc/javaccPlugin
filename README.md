@@ -27,6 +27,12 @@ apply plugin: 'javacc'
 Place your JavaCC code into `src/main/javacc`.
 The generated Java code will be  put under `./build/generated/javacc` and will be compiled as part of the Java compile.
 
+## Compatibility
+
+This plugin requires Java 5+.
+
+It has been tested with Gradle 1.11. Please let us know if you have had success with other versions of Gradle.
+
 ## Changelog
 
 ### 1.0.0
