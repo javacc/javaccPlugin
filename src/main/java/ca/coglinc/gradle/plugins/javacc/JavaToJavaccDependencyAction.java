@@ -7,7 +7,6 @@ import org.gradle.api.tasks.compile.JavaCompile;
 
 public class JavaToJavaccDependencyAction implements Action<Project> {
 
-    @Override
     public void execute(Project project) {
         if (project.getPlugins().hasPlugin(JavaccPlugin.class)) {
             TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);

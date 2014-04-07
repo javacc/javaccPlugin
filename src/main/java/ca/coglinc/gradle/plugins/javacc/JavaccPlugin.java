@@ -9,7 +9,6 @@ import org.gradle.api.Task;
 
 public class JavaccPlugin implements Plugin<Project> {
 
-    @Override
     public void apply(Project project) {
         project.task(taskOptions(), CompileJavaccTask.TASK_NAME_VALUE);
         
