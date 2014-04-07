@@ -5,6 +5,7 @@ Provides the ability to use [JavaCC](http://javacc.java.net/) via [Gradle](http:
 ## Installation
 
 For now, you must build the plugin yourself and install it to your local maven repo. To build, simply run:
+
 `gradle clean build install`
 
 Then, add the following lines to your `build.gradle` script:
