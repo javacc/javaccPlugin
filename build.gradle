@@ -24,7 +24,7 @@ dependencies {
 
 eclipse {
     project {    
-        name = 'javaccPlugin'
+        name = 'javacc-gradle-plugin'
     }
       
     classpath {
@@ -44,7 +44,7 @@ compileTestJava {
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'javaccPlugin', 'Implementation-Version': version
+        attributes 'Implementation-Title': 'javacc-gradle-plugin', 'Implementation-Version': version
     }
 }
 
