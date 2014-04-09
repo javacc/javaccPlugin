@@ -4,6 +4,7 @@ apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
@@ -77,6 +78,60 @@ task sourceJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
+task javadocJar(type: Jar, dependsOn:javadoc) { 
+     classifier = 'javadoc' 
+     from javadoc.destinationDir 
+} 
+
 artifacts {
     archives sourceJar
+    archives javadocJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {  
+    repositories {  
+        mavenDeployer {  
+            beforeDeployment {
+                MavenDeployment deployment -> signing.signPom(deployment)
+            }
+            
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+        
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+            
+            pom.project {
+                packaging 'jar'
+                name 'javacc-gradle-plugin'
+                description 'Provides the ability to use JavaCC with Gradle. Compiles JavaCC files to Java.'
+                url 'https://github.com/johnmartel/javaccPlugin'
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'http://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+                scm {
+                    url 'https://github.com/johnmartel/javaccPlugin'
+                    connection 'scm:https://johnmartel@github.com/johnmartel/javaccPlugin.git'
+                    developerConnection 'scm:git://github.com/johnmartel/javaccPlugin.git' 
+                }
+                developers {
+                    developer {
+                        id 'jmartel'
+                        name 'Jonathan Martel'
+                        email 'jonathan.martel@coglinc.ca'
+                    }
+                }
+            }
+        }  
+    }  
 }

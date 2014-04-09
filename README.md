@@ -4,16 +4,14 @@ Provides the ability to use [JavaCC](http://javacc.java.net/) via [Gradle](http:
 
 ## Installation
 
-For now, you must build the plugin yourself and install it to your local maven repo. To build, simply run the following command in the directory where you checked out the plugin source:
+Simply grab the plugin from Maven Central:
 
-`gradle clean build install`
-
-Then, add the following lines to your `build.gradle` script:
+Add the following lines to your `build.gradle` script:
 
 ```groovy
 buildscript {
     repositories {
-        mavenLocal()
+        mavenCentral()
     }
     dependencies {
         classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '1.0.0'
@@ -21,6 +19,12 @@ buildscript {
 }
 apply plugin: 'javacc'
 ```
+
+## Building
+
+To build, simply run the following command in the directory where you checked out the plugin source:
+
+`gradle clean build`
 
 ## Usage
 
@@ -32,6 +36,10 @@ The generated Java code will be  put under `./build/generated/javacc` and will b
 This plugin requires Java 5+.
 
 It has been tested with Gradle 1.11. Please let us know if you have had success with other versions of Gradle.
+
+## Signature
+
+The artifacts for this plugin are signed using the [PGP key](http://pgp.mit.edu:11371/pks/lookup?op=get&search=0x321163AE83A4068A) for `jonathan.martel@coglinc.ca`.
 
 ## Changelog
 
