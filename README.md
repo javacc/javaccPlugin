@@ -31,6 +31,19 @@ To build, simply run the following command in the directory where you checked ou
 Place your JavaCC code into `src/main/javacc`.
 The generated Java code will be  put under `./build/generated/javacc` and will be compiled as part of the Java compile.
 
+### Eclipse
+
+If you are using Eclipse and would like your gradle project to compile nicely in eclipse and have the generated code in the build path, you can simply add the generated path to the main sourceSet and add a dependency on `compileJavacc` to `eclipseClasspath`.
+```java
+main {
+    java {
+        srcDir compileJavacc.outputDirectory
+    }
+}
+    
+eclipseClasspath.dependsOn("compileJavacc")
+```
+
 ## Compatibility
 
 This plugin requires Java 5+.
