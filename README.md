@@ -56,6 +56,10 @@ The artifacts for this plugin are signed using the [PGP key](http://pgp.mit.edu:
 
 ## Changelog
 
+### 1.0.1
+
+Updated JavaCC to 6.1.2.
+
 ### 1.0.0
 
 Initial version with limited features. Simply generates JavaCC files to Java from a non-configurable location into a non-configurable location.
