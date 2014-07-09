@@ -8,13 +8,19 @@ import org.gradle.api.tasks.compile.JavaCompile;
 public class JavaToJavaccDependencyAction implements Action<Project> {
 
     public void execute(Project project) {
-        if (project.getPlugins().hasPlugin(JavaccPlugin.class)) {
+        if (project.getPlugins().hasPlugin("java")) {
             TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
             CompileJavaccTask compileJavaccTask = (CompileJavaccTask) project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE);
-            for (JavaCompile task : javaCompilationTasks) {
-                task.dependsOn(compileJavaccTask);
-                task.source(compileJavaccTask.getOutputDirectory());
+            if (compileJavaccTask != null) {
+                addJavaccDependencyToJavaCompileTask(javaCompilationTasks, compileJavaccTask);
             }
+        }
+    }
+
+    private void addJavaccDependencyToJavaCompileTask(TaskCollection<JavaCompile> javaCompilationTasks, CompileJavaccTask compileJavaccTask) {
+        for (JavaCompile task : javaCompilationTasks) {
+            task.dependsOn(compileJavaccTask);
+            task.source(compileJavaccTask.getOutputDirectory());
         }
     }
 }

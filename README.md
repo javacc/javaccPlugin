@@ -14,10 +14,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '1.0.1'
+        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.0.0'
     }
 }
-apply plugin: 'javacc'
+apply plugin: 'ca.coglinc.javacc'
 ```
 
 ## Building
@@ -46,15 +46,21 @@ eclipseClasspath.dependsOn("compileJavacc")
 
 ## Compatibility
 
-This plugin requires Java 5+.
+This plugin requires Java 6+.
 
-It has been tested with Gradle 1.11. Please let us know if you have had success with other versions of Gradle.
+It has been tested with Gradle 1.11+. Please let us know if you have had success with other versions of Gradle.
 
 ## Signature
 
 The artifacts for this plugin are signed using the [PGP key](http://pgp.mit.edu:11371/pks/lookup?op=get&search=0x321163AE83A4068A) for `jonathan.martel@coglinc.ca`.
 
 ## Changelog
+
+### 2.0.0
+
+- Migrated to Gradle 2.0
+- Plugin id changed to 'ca.coglinc.javacc'
+- Plugin is now available via the [Gradle Plugins repository](http://plugins.gradle.org)
 
 ### 1.0.1
 

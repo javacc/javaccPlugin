@@ -6,10 +6,20 @@ apply plugin: 'jacoco'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-sourceCompatibility = 1.5
-targetCompatibility = 1.5
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
+    }
+}
+apply plugin: 'com.jfrog.bintray'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 group = 'ca.coglinc'
-version = '1.0.1'
+version = '2.0.0'
 
 repositories {
     mavenCentral()
@@ -92,9 +102,17 @@ signing {
     sign configurations.archives
 }
 
-uploadArchives {  
-    repositories {  
-        mavenDeployer {  
+uploadArchives {
+    if (!project.hasProperty('ossrhUsername')) {
+        ext.ossrhUsername = ''
+    }
+    
+    if (!project.hasProperty('ossrhPassword')) {
+        ext.ossrhPassword = ''
+    }
+                
+    repositories {
+        mavenDeployer {
             beforeDeployment {
                 MavenDeployment deployment -> signing.signPom(deployment)
             }
@@ -134,4 +152,38 @@ uploadArchives {
             }
         }  
     }  
+}
+
+bintray {
+    if (!project.hasProperty('bintrayUser')) {
+        ext.bintrayUser = ''
+    }
+    
+    if (!project.hasProperty('bintrayApiKey')) {
+        ext.bintrayApiKey = ''
+    }
+    
+    user = bintrayUser
+    key = bintrayApiKey
+
+    configurations = ['archives']
+    dryRun = false
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'javacc-gradle-plugin'
+        desc = 'Provides the ability to use JavaCC via Gradle. If the java plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.'
+        websiteUrl = 'https://github.com/johnmartel/javaccPlugin'
+        issueTrackerUrl = 'https://github.com/johnmartel/javaccPlugin/issues'
+        vcsUrl = 'https://github.com/johnmartel/javaccPlugin.git'
+        licenses = ['MIT']
+        labels = ['javacc', 'gradle']
+        publicDownloadNumbers = true
+        
+        version {
+            name = '2.0.0'
+            vcsTag = '2.0.0'
+            attributes = ['gradle-plugin': 'ca.coglinc.javacc:ca.coglinc:javacc']
+        }
+    }
 }

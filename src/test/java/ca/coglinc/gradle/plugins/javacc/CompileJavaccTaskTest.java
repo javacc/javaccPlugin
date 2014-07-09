@@ -36,7 +36,7 @@ public class CompileJavaccTaskTest {
 
     private void applyJavaccPluginToProject(Project project) {
         Map<String, String> pluginNames = new HashMap<String, String>(1);
-        pluginNames.put("plugin", "javacc");
+        pluginNames.put("plugin", "ca.coglinc.javacc");
         
         project.apply(pluginNames);
     }

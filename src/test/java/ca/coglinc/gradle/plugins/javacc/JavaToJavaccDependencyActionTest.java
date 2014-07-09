@@ -25,7 +25,7 @@ public class JavaToJavaccDependencyActionTest {
 
     private void applyJavaccPluginToProject() {
         Map<String, String> pluginNames = new HashMap<String, String>(1);
-        pluginNames.put("plugin", "javacc");
+        pluginNames.put("plugin", "ca.coglinc.javacc");
         project.apply(pluginNames);
     }
     
