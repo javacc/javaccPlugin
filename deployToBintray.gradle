@@ -1,0 +1,44 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
+    }
+}
+apply plugin: 'com.jfrog.bintray'
+
+bintray {
+    if (!project.hasProperty('bintrayUser')) {
+        ext.bintrayUser = ''
+    }
+    
+    if (!project.hasProperty('bintrayApiKey')) {
+        ext.bintrayApiKey = ''
+    }
+    
+    user = bintrayUser
+    key = bintrayApiKey
+
+    configurations = ['archives']
+    dryRun = false
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'javacc-gradle-plugin'
+        desc = 'Provides the ability to use JavaCC via Gradle. If the java plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.'
+        websiteUrl = 'https://github.com/johnmartel/javaccPlugin'
+        issueTrackerUrl = 'https://github.com/johnmartel/javaccPlugin/issues'
+        vcsUrl = 'https://github.com/johnmartel/javaccPlugin.git'
+        licenses = ['MIT']
+        labels = ['javacc', 'gradle']
+        publicDownloadNumbers = true
+        
+        version {
+            # TODO use project's version (should be published by Release build)
+            name = '2.0.1'
+            vcsTag = '2.0.1'
+            attributes = ['gradle-plugin': 'ca.coglinc.javacc:ca.coglinc:javacc-gradle-plugin']
+        }
+    }
+}
