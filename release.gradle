@@ -1,1 +1,4 @@
-
+# Test if there are snapshot dependencies (fail if any)
+# Remove "-SNAPSHOT" from version
+# Build
+# Commit and push change
