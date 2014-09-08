@@ -102,6 +102,7 @@ tasks.addRule('Pattern: write<VersionProperty>: Writes the value of VersionPrope
     
     if (taskNameMatchesWriteRulePattern(taskName, prefix, releaseVersionProperty, nextVersionProperty)) {
         String versionProperty = taskName - prefix
+        versionProperty = versionProperty[0].toLowerCase() + versionProperty.substring(1)
         
         logger.info("Adding task ${taskName}: name matches pattern write<VersionProperty>")
     
@@ -109,7 +110,7 @@ tasks.addRule('Pattern: write<VersionProperty>: Writes the value of VersionPrope
         writeTask.dependsOn verifyReleaseVersions
         writeTask.description "Writes the value of [${versionProperty}] project property to build.gradle as the project version."
         writeTask.group 'Release'
-        writeTask.doLast {
+        writeTask.configure {
             from projectDir
             into buildDir
             include 'build.gradle'
