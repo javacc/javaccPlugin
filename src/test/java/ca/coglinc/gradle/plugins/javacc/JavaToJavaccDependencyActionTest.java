@@ -2,6 +2,9 @@ package ca.coglinc.gradle.plugins.javacc;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.io.File;
 import java.util.HashMap;
@@ -14,6 +17,7 @@ import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Answers;
 
 public class JavaToJavaccDependencyActionTest {
     private Project project;
@@ -80,5 +84,16 @@ public class JavaToJavaccDependencyActionTest {
             Set<Object> dependencies = task.getDependsOn();
             assertFalse(dependencies.contains(project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE)));
         }
+    }
+    
+    @Test
+    public void noInteractionsWithProjectIfJavaPluginNotApplied() {
+        project = mock(Project.class, Answers.RETURNS_MOCKS.get());
+        JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
+        
+        action.execute(project);
+        
+        verify(project).getPlugins();
+        verifyNoMoreInteractions(project);
     }
 }

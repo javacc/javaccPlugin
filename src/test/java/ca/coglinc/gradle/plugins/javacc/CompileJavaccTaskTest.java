@@ -76,13 +76,12 @@ public class CompileJavaccTaskTest {
     
     @Test
     public void compileJavaccToJavaDoesNotGenerateAnythingIfNoInputFiles() {
-        testExecuteTaskWithNoInputFiles(null);
-        testExecuteTaskWithNoInputFiles(new String[0]);
+        testExecuteTaskWithNoInputFiles(new File[0]);
     }
     
-    private void testExecuteTaskWithNoInputFiles(String[] noInputFiles) {
+    private void testExecuteTaskWithNoInputFiles(File[] noInputFiles) {
         final File inputDirectory = mock(File.class, Answers.RETURNS_MOCKS.get());
-        when(inputDirectory.list()).thenReturn(noInputFiles);
+        when(inputDirectory.listFiles()).thenReturn(noInputFiles);
         when(inputDirectory.exists()).thenReturn(Boolean.TRUE);
         when(inputDirectory.isDirectory()).thenReturn(Boolean.TRUE);
         task.setInputDirectory(inputDirectory);
@@ -93,6 +92,11 @@ public class CompileJavaccTaskTest {
 
         assertTrue(outputDirectory.isDirectory());
         assertEquals(0, outputDirectory.list().length);
+    }
+    
+    @Test
+    public void compileJavaccToJavaDoesNotGenerateAnythingIfInputFilesNull() {
+        testExecuteTaskWithNoInputFiles(null);
     }
     
     @Test
