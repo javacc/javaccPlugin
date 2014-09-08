@@ -46,19 +46,7 @@ verifySnapshotDependencies << {
     }
 }
 
-task checkoutBranch {
-    description 'Checks out the branch before modifying any file so that they can be committed afterwards by Jenkins'
-    group 'Release'
-}
-
-checkoutBranch << {
-    gitRepo.checkout {
-        branch = "${project.gitBranch}"
-        createBranch = false
-    }
-}
-
-build.mustRunAfter clean, verifyReleaseVersions, verifySnapshotDependencies, checkoutBranch
+build.mustRunAfter clean, verifyReleaseVersions, verifySnapshotDependencies
 
 def commitChangedFiles(commitMessage) {
     gitRepo.commit {
@@ -167,7 +155,7 @@ copyNextBuildFile << {
     commitChangedFiles("Updated project version for next release ${nextVersion}")
 }
 
-task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, checkoutBranch, build, generateReadmeFileFromTemplate, copyReleaseBuildFile, tagRelease, copyNextBuildFile]) {
+task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, generateReadmeFileFromTemplate, copyReleaseBuildFile, tagRelease, copyNextBuildFile]) {
     description "Releases the plugin by verifying there are no snapshot dependencies, writing the next version to build.gradle and committing the build file. " +
         "Versions must be specified by using the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties."
     
