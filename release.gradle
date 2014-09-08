@@ -46,6 +46,34 @@ verifySnapshotDependencies << {
 
 build.mustRunAfter clean, verifyReleaseVersions, verifySnapshotDependencies
 
+
+def commitChangedFiles(commitMessage) {
+    def gitRepo = Grgit.open(projectDir)
+    gitRepo.commit {
+        message = commitMessage
+        all = true
+    }
+    gitRepo.push {
+        all = false
+        remote = "${project.scmUrl}"
+    }
+}
+
+task generateReadmeFileFromTemplate(type: Copy, dependsOn: verifyReleaseVersions) {
+    description 'Generates the README.md file from a template.'
+    group 'Release'
+    
+    from 'buildSrc'
+    into projectDir
+    include 'README.md.template'
+    rename '(.*)\\.template', '$1'
+    expand project.properties
+}
+
+generateReadmeFileFromTemplate << {
+    commitChangedFiles("Generated README file for version ${releaseVersion}")
+}
+
 task writeNextVersion(type: Copy, dependsOn: verifyReleaseVersions) {
     description "Writes the value of [${nextVersionProperty}] project property to build.gradle as the project version."
     group 'Release'
@@ -73,39 +101,20 @@ task copyNextBuildFile(type: Copy, dependsOn: writeNextVersion) {
     include 'build.gradle'
 }
 
-task generateReadmeFileFromTemplate(type: Copy, dependsOn: verifyReleaseVersions) {
-    description 'Generates the README.md file from a template.'
-    group 'Release'
-    
-    from 'buildSrc'
-    into projectDir
-    include 'README.md.template'
-    rename '(.*)\\.template', '$1'
-    expand project.properties
+copyNextBuildFile << {
+    commitChangedFiles("Updated project version after release ${releaseVersion}")
 }
 
-task commitChangedFiles(dependsOn: [copyNextBuildFile, generateReadmeFileFromTemplate]) {
-    description 'Commits files changed during the release to SCM.'
-    group 'Release'
-}
-
-def gitRepo = Grgit.open(projectDir)
-
-commitChangedFiles << {
-    gitRepo.commit {
-        message = "Changed version for release ${version}"
-        all = true
-    }
-    gitRepo.push {
-        all = false
-        remote = "${project.scmUrl}"
-    }
-}
+//task commitChangedFiles(dependsOn: [copyNextBuildFile, generateReadmeFileFromTemplate]) {
+//    description 'Commits files changed during the release to SCM.'
+//    group 'Release'
+//}
 
 task tagRelease {
     description 'Creates a tag in SCM for the release.'
     group 'Release'
     
+    def gitRepo = Grgit.open(projectDir)
     gitRepo.tag.add {
         name = "javacc-gradle-plugin-${releaseVersion}"
         annotate = false
@@ -117,7 +126,7 @@ task tagRelease {
     }
 }
 
-task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, generateReadmeFileFromTemplate, tagRelease, copyNextBuildFile, commitChangedFiles]) {
+task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, generateReadmeFileFromTemplate, tagRelease, copyNextBuildFile]) {
     description "Releases the plugin by verifying there are no snapshot dependencies, writing the next version to build.gradle and committing the build file. " +
         "Versions must be specified by using the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties."
     
