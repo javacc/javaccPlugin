@@ -122,7 +122,7 @@ tasks.addRule('Pattern: write<VersionProperty>: Writes the value of VersionPrope
             }
         }
         
-        if (versionProperty.equals(releaseVersionProperty)) {
+        if (versionProperty.equalsIgnoreCase(releaseVersionProperty)) {
             writeTask.mustRunAfter build
         } else {
             writeTask.mustRunAfter build, tagRelease
