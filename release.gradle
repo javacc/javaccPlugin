@@ -74,6 +74,37 @@ generateReadmeFileFromTemplate << {
     commitChangedFiles("Generated README file for version ${releaseVersion}")
 }
 
+task writeReleaseVersion(type: Copy, dependsOn: verifyReleaseVersions) {
+    description "Writes the value of [${releaseVersionProperty}] project property to build.gradle as the project version."
+    group 'Release'
+    
+    from projectDir
+    into buildDir
+    include 'build.gradle'
+    filter { line ->
+        if (line.startsWith('version =')) {
+            "version = '${project.getProperty(releaseVersionProperty)}'"
+        } else {
+            "${line}"
+        }
+    }
+}
+
+writeReleaseVersion.mustRunAfter build
+
+task copyReleaseBuildFile(type: Copy, dependsOn: writeReleaseVersion) {
+    description 'Overwrites build.gradle with the release version value.'
+    group 'Release'
+
+    from buildDir
+    into projectDir
+    include 'build.gradle'
+}
+
+copyReleaseBuildFile << {
+    commitChangedFiles("Updated project version for release ${releaseVersion}")
+}
+
 task tagRelease {
     description 'Creates a tag in SCM for the release.'
     group 'Release'
@@ -91,7 +122,7 @@ tagRelease << {
     }
 }
 
-tagRelease.mustRunAfter generateReadmeFileFromTemplate
+tagRelease.mustRunAfter generateReadmeFileFromTemplate, copyReleaseBuildFile
 
 task writeNextVersion(type: Copy, dependsOn: verifyReleaseVersions) {
     description "Writes the value of [${nextVersionProperty}] project property to build.gradle as the project version."
@@ -121,7 +152,7 @@ task copyNextBuildFile(type: Copy, dependsOn: writeNextVersion) {
 }
 
 copyNextBuildFile << {
-    commitChangedFiles("Updated project version after release ${releaseVersion}")
+    commitChangedFiles("Updated project version for next release ${nextVersion}")
 }
 
 task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, generateReadmeFileFromTemplate, tagRelease, copyNextBuildFile]) {
