@@ -14,7 +14,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.0.2'
+        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '${project.version}'
     }
 }
 apply plugin: 'ca.coglinc.javacc'
