@@ -97,7 +97,7 @@ commitChangedFiles << {
     }
     gitRepo.push {
         all = false
-        remote = 'origin'
+        remote = 'https://johnmartel@github.com/johnmartel/javaccPlugin.git'
     }
 }
 
