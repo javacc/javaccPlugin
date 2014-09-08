@@ -48,7 +48,7 @@ verifySnapshotDependencies << {
 
 build.mustRunAfter clean, verifyReleaseVersions, verifySnapshotDependencies
 
-def commitChangedFiles(commitMessage) {
+def commitChangedFiles(String commitMessage) {
     gitRepo.commit {
         message = commitMessage
         all = true
@@ -74,37 +74,6 @@ generateReadmeFileFromTemplate << {
     commitChangedFiles("Generated README file for version ${releaseVersion}")
 }
 
-task writeReleaseVersion(type: Copy, dependsOn: verifyReleaseVersions) {
-    description "Writes the value of [${releaseVersionProperty}] project property to build.gradle as the project version."
-    group 'Release'
-    
-    from projectDir
-    into buildDir
-    include 'build.gradle'
-    filter { line ->
-        if (line.startsWith('version =')) {
-            "version = '${project.getProperty(releaseVersionProperty)}'"
-        } else {
-            "${line}"
-        }
-    }
-}
-
-writeReleaseVersion.mustRunAfter build
-
-task copyReleaseBuildFile(type: Copy, dependsOn: writeReleaseVersion) {
-    description 'Overwrites build.gradle with the release version value.'
-    group 'Release'
-
-    from buildDir
-    into projectDir
-    include 'build.gradle'
-}
-
-copyReleaseBuildFile << {
-    commitChangedFiles("Updated project version for release ${releaseVersion}")
-}
-
 task tagRelease {
     description 'Creates a tag in SCM for the release.'
     group 'Release'
@@ -122,38 +91,83 @@ tagRelease << {
     }
 }
 
-tagRelease.mustRunAfter generateReadmeFileFromTemplate, copyReleaseBuildFile
+def boolean taskNameMatchesWriteRulePattern(String taskName, String prefix, String releaseVersionProperty, String nextVersionProperty) {
+    return (taskName.startsWith(prefix)
+        && (taskName.toUpperCase().endsWith(releaseVersionProperty.toUpperCase()) || taskName.toUpperCase().endsWith(nextVersionProperty.toUpperCase()))
+        && (tasks.findByPath(taskName) == null))
+}
 
-task writeNextVersion(type: Copy, dependsOn: verifyReleaseVersions) {
-    description "Writes the value of [${nextVersionProperty}] project property to build.gradle as the project version."
-    group 'Release'
+tasks.addRule('Pattern: write<VersionProperty>: Writes the value of VersionProperty project property to build.gradle as the project version') { taskName ->
+    String prefix = 'write'
     
-    from projectDir
-    into buildDir
-    include 'build.gradle'
-    filter { line ->
-        if (line.startsWith('version =')) {
-            "version = '${project.getProperty(nextVersionProperty)}'"
+    if (taskNameMatchesWriteRulePattern(taskName, prefix, releaseVersionProperty, nextVersionProperty)) {
+        String versionProperty = taskName - prefix
+        
+        logger.info("Adding task ${taskName}: name matches pattern write<VersionProperty>")
+    
+        Task writeTask = tasks.create(name: taskName, type: Copy)
+        writeTask.dependsOn verifyReleaseVersions
+        writeTask.description "Writes the value of [${versionProperty}] project property to build.gradle as the project version."
+        writeTask.group 'Release'
+        writeTask.doLast {
+            from projectDir
+            into buildDir
+            include 'build.gradle'
+            filter { line ->
+                if (line.startsWith('version =')) {
+                    "version = '${project.getProperty(versionProperty)}'"
+                } else {
+                    "${line}"
+                }
+            }
+        }
+        
+        if (versionProperty.equals(releaseVersionProperty)) {
+            writeTask.mustRunAfter build
         } else {
-            "${line}"
+            writeTask.mustRunAfter build, tagRelease
         }
     }
 }
 
-writeNextVersion.mustRunAfter build, tagRelease
-
-task copyNextBuildFile(type: Copy, dependsOn: writeNextVersion) {
-    description 'Overwrites build.gradle with the next version value.'
-    group 'Release'
-
-    from buildDir
-    into projectDir
-    include 'build.gradle'
+def boolean taskNameMatchesCopyRulePattern(String taskName, String prefix, String suffix, String releaseVersionProperty, String nextVersionProperty) {
+    return (taskName.startsWith(prefix)
+        && (taskName.toUpperCase().contains((releaseVersionProperty - 'Version').toUpperCase()) || taskName.toUpperCase().contains((nextVersionProperty - 'Version').toUpperCase()))
+        && taskName.endsWith(suffix)
+        && (tasks.findByPath(taskName) == null))
 }
 
-copyNextBuildFile << {
-    commitChangedFiles("Updated project version for next release ${nextVersion}")
+tasks.addRule('Pattern: copy<VersionType>BuildFile: Overwrites build.gradle with the VersionType version value') { taskName ->
+    String prefix = 'copy'
+    String suffix = 'BuildFile'
+    
+    if (taskNameMatchesCopyRulePattern(taskName, prefix, suffix, releaseVersionProperty, nextVersionProperty)) {
+        String versionType = taskName - prefix - suffix
+        
+        logger.info("Adding task ${taskName}: name matches pattern copy<VersionType>BuildFile")
+        
+        Task copyTask = tasks.create(name: taskName, type: Copy)
+        copyTask.dependsOn "write${versionType}Version"
+        copyTask.description "Overwrites build.gradle with the ${versionType} version value."
+        copyTask.group 'Release'
+        copyTask.configure {
+            from buildDir
+            into projectDir
+            include 'build.gradle'
+        }
+        if (versionType.equals('Release')) {
+            copyTask.doLast {
+                commitChangedFiles("Updated project version for release ${project.getProperty(releaseVersionProperty)}")
+            }
+        } else {
+            copyTask.doLast {
+                commitChangedFiles("Updated project version for release ${project.getProperty(nextVersionProperty)}")
+            }
+        }
+    }
 }
+
+tagRelease.mustRunAfter generateReadmeFileFromTemplate, copyReleaseBuildFile
 
 task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, generateReadmeFileFromTemplate, copyReleaseBuildFile, tagRelease, copyNextBuildFile]) {
     description "Releases the plugin by verifying there are no snapshot dependencies, writing the next version to build.gradle and committing the build file. " +
