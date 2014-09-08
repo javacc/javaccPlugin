@@ -102,7 +102,7 @@ commitChangedFiles << {
     }
 }
 
-task tagRelease(dependsOn: commitChangedFiles) {
+task tagRelease {
     description 'Creates a tag in SCM for the release.'
     group 'Release'
     
@@ -112,7 +112,7 @@ task tagRelease(dependsOn: commitChangedFiles) {
     }
 }
 
-task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, copyNextBuildFile, generateReadmeFileFromTemplate, commitChangedFiles, tagRelease]) {
+task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, generateReadmeFileFromTemplate, tagRelease, copyNextBuildFile, commitChangedFiles]) {
     description "Releases the plugin by verifying there are no snapshot dependencies, writing the next version to build.gradle and committing the build file. " +
         "Versions must be specified by using the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties."
     
