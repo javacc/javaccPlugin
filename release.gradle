@@ -16,7 +16,7 @@ defaultTasks 'release'
 def releaseVersionProperty = 'releaseVersion'
 def nextVersionProperty = 'nextVersion'
 
-def gitRepo = Grgit.open(projectDir)
+ext.gitRepo = Grgit.open(projectDir)
 
 task verifyReleaseVersions {
     description "Verifies that the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties are specified"
