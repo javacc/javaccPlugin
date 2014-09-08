@@ -65,6 +65,9 @@ findbugs {
     ignoreFailures = true
     reportLevel = "high"
     excludeFilter = file("${project.projectDir}/config/findbugs/exclude.xml")
+}
+
+tasks.withType(FindBugs) {
     maxHeapSize = project.hasProperty('findBugsHeapSize') ? project.findBugsHeapSize : '1g'
 }
 
