@@ -155,7 +155,7 @@ copyNextBuildFile << {
     commitChangedFiles("Updated project version for next release ${nextVersion}")
 }
 
-task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, generateReadmeFileFromTemplate, tagRelease, copyNextBuildFile]) {
+task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, generateReadmeFileFromTemplate, copyReleaseBuildFile, tagRelease, copyNextBuildFile]) {
     description "Releases the plugin by verifying there are no snapshot dependencies, writing the next version to build.gradle and committing the build file. " +
         "Versions must be specified by using the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties."
     
