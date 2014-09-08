@@ -1,4 +1,67 @@
-# Test if there are snapshot dependencies (fail if any)
-# Remove "-SNAPSHOT" from version
-# Build
-# Commit and push change
+apply from: 'build.gradle'
+
+defaultTasks 'release'
+
+def releaseVersionProperty = 'releaseVersion'
+def nextVersionProperty = 'nextVersion'
+
+task verifyReleaseVersions {
+    description "Verifies that the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties are specified"
+    group 'Release'
+}
+
+verifyReleaseVersions << {
+    if (!project.hasProperty(releaseVersionProperty) || !project.hasProperty(nextVersionProperty)) {
+        throw new RuntimeException("[${releaseVersionProperty}] and [${nextVersionProperty}] project properties are mandatory.")
+    }
+}
+
+task verifySnapshotDependencies {
+    description 'Fails the build if there are SNAPSHOT dependencies.'
+    group 'Release'
+}
+
+verifySnapshotDependencies << {
+    configurations.each { configuration ->
+        configuration.dependencies.each { dependency ->
+            logger.info "Verifying [${configuration.name}] dependency [${dependency.group}]:[${dependency.name}]:[${dependency.version}]"
+            
+            if (dependency.version != null && dependency.version.endsWith('SNAPSHOT')) {
+                throw new RuntimeException("Plugin can not be released with SNAPSHOT dependencies. See [${configuration.name}] [${dependency.group}]:[${dependency.name}]:[${dependency.version}]")
+            }
+        }
+    }
+}
+
+build.mustRunAfter clean, verifyReleaseVersions, verifySnapshotDependencies
+
+task writeNextVersion(type: Copy) {
+    description "Writes the value of [${nextVersionProperty}] project property to build.gradle as the project version and commits the file."
+    group 'Release'
+    
+    from projectDir
+    into projectDir
+    include 'build.gradle'
+    filter { line ->
+        if (line.startsWith('version =')) {
+            "version = ${project.getProperty(nextVersionProperty)}"
+        } else {
+            "${line}"
+        }
+    }
+}
+
+writeNextVersion.mustRunAfter build
+
+task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, writeNextVersion]) {
+    description "Releases the plugin by verifying there are no snapshot dependencies, writing the next version to build.gradle and committing the build file. " +
+        "Versions must be specified by using the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties."
+    
+    group 'Release'
+    
+    if (project.hasProperty(releaseVersionProperty)) {
+        version = project.getProperty(releaseVersionProperty)
+    }
+    println "Changing project's version to [${version}]"
+}
+    

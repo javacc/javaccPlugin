@@ -56,7 +56,7 @@ jar {
 }
 
 checkstyle {
-    configFile = new File("${project.projectDir}/config/checkstyle/checks.xml")
+    configFile = file("${project.projectDir}/config/checkstyle/checks.xml")
 }
 
 findbugs {
@@ -84,7 +84,7 @@ task sourceJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
-task javadocJar(type: Jar, dependsOn:javadoc) { 
+task javadocJar(type: Jar, dependsOn: javadoc) { 
      classifier = 'javadoc' 
      from javadoc.destinationDir 
 } 
