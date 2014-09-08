@@ -96,7 +96,7 @@ commitChangedFiles << {
         all = true
     }
     gitRepo.push {
-        all = false
+        all = true
         remote = 'https://johnmartel@github.com/johnmartel/javaccPlugin.git'
     }
 }
