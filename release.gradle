@@ -107,8 +107,13 @@ task tagRelease {
     group 'Release'
     
     gitRepo.tag.add {
-        name = "javacc-gradle-plugin-${version}"
+        name = "javacc-gradle-plugin-${releaseVersion}"
         annotate = false
+    }
+    gitRepo.push {
+        all = false
+        remote = "${project.scmUrl}"
+        tags = true
     }
 }
 
