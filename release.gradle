@@ -89,21 +89,27 @@ task commitChangedFiles(dependsOn: [copyNextBuildFile, generateReadmeFileFromTem
     group 'Release'
 }
 
+def gitRepo = Grgit.open(projectDir)
+
 commitChangedFiles << {
-    def gitRepo = Grgit.open(projectDir)
     gitRepo.commit {
         message = "Changed version for release ${version}"
         all = true
     }
     gitRepo.push {
-        all = true
-        remote = 'https://johnmartel@github.com/johnmartel/javaccPlugin.git'
+        all = false
+        remote = "${project.scmUrl}"
     }
 }
 
 task tagRelease(dependsOn: commitChangedFiles) {
     description 'Creates a tag in SCM for the release.'
     group 'Release'
+    
+    gitRepo.tag.add {
+        name = "javacc-gradle-plugin-${version}"
+        annotate = false
+    }
 }
 
 task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, copyNextBuildFile, generateReadmeFileFromTemplate, commitChangedFiles, tagRelease]) {
