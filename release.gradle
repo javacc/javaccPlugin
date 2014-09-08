@@ -95,7 +95,10 @@ commitChangedFiles << {
         message = "Changed version for release ${version}"
         all = true
     }
-    gitRepo.push()
+    gitRepo.push {
+        all = false
+        remote = 'origin'
+    }
 }
 
 task tagRelease(dependsOn: commitChangedFiles) {
