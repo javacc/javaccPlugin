@@ -16,6 +16,8 @@ defaultTasks 'release'
 def releaseVersionProperty = 'releaseVersion'
 def nextVersionProperty = 'nextVersion'
 
+def gitRepo = Grgit.open(projectDir)
+
 task verifyReleaseVersions {
     description "Verifies that the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties are specified"
     group 'Release'
@@ -46,9 +48,7 @@ verifySnapshotDependencies << {
 
 build.mustRunAfter clean, verifyReleaseVersions, verifySnapshotDependencies
 
-
 def commitChangedFiles(commitMessage) {
-    def gitRepo = Grgit.open(projectDir)
     gitRepo.commit {
         message = commitMessage
         all = true
@@ -74,6 +74,25 @@ generateReadmeFileFromTemplate << {
     commitChangedFiles("Generated README file for version ${releaseVersion}")
 }
 
+task tagRelease {
+    description 'Creates a tag in SCM for the release.'
+    group 'Release'
+}
+
+tagRelease << {
+    gitRepo.tag.add {
+        name = "javacc-gradle-plugin-${releaseVersion}"
+        annotate = false
+    }
+    gitRepo.push {
+        all = false
+        remote = "${project.scmUrl}"
+        tags = true
+    }
+}
+
+tagRelease.mustRunAfter generateReadmeFileFromTemplate
+
 task writeNextVersion(type: Copy, dependsOn: verifyReleaseVersions) {
     description "Writes the value of [${nextVersionProperty}] project property to build.gradle as the project version."
     group 'Release'
@@ -90,7 +109,7 @@ task writeNextVersion(type: Copy, dependsOn: verifyReleaseVersions) {
     }
 }
 
-writeNextVersion.mustRunAfter build
+writeNextVersion.mustRunAfter build, tagRelease
 
 task copyNextBuildFile(type: Copy, dependsOn: writeNextVersion) {
     description 'Overwrites build.gradle with the next version value.'
@@ -103,27 +122,6 @@ task copyNextBuildFile(type: Copy, dependsOn: writeNextVersion) {
 
 copyNextBuildFile << {
     commitChangedFiles("Updated project version after release ${releaseVersion}")
-}
-
-//task commitChangedFiles(dependsOn: [copyNextBuildFile, generateReadmeFileFromTemplate]) {
-//    description 'Commits files changed during the release to SCM.'
-//    group 'Release'
-//}
-
-task tagRelease {
-    description 'Creates a tag in SCM for the release.'
-    group 'Release'
-    
-    def gitRepo = Grgit.open(projectDir)
-    gitRepo.tag.add {
-        name = "javacc-gradle-plugin-${releaseVersion}"
-        annotate = false
-    }
-    gitRepo.push {
-        all = false
-        remote = "${project.scmUrl}"
-        tags = true
-    }
 }
 
 task release(dependsOn: [clean, verifyReleaseVersions, verifySnapshotDependencies, build, generateReadmeFileFromTemplate, tagRelease, copyNextBuildFile]) {
