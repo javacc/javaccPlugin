@@ -24,12 +24,20 @@ apply plugin: 'ca.coglinc.javacc'
 
 To build, simply run the following command in the directory where you checked out the plugin source:
 
-`gradle clean build`
+`gradlew clean build`
 
 ## Usage
 
 Place your JavaCC code into `src/main/javacc`.
 The generated Java code will be  put under `./build/generated/javacc` and will be compiled as part of the Java compile.
+
+You can configure commandline args passed to JavaCC by specifying `javaccArguments` map in compileJavacc:
+
+```
+compileJavacc {
+    javaccArguments = [grammar_encoding : 'UTF-8', static: 'false']
+}
+```
 
 ### Eclipse
 
