@@ -93,3 +93,7 @@ artifacts {
     archives sourceJar
     archives javadocJar
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}
