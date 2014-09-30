@@ -1,7 +1,9 @@
 .gradle
+.groovy
 .classpath
 .project
 .checkstyle
 .settings
+target
 build
 build-eclipse

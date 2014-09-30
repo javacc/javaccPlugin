@@ -1,6 +1,12 @@
 apply plugin: 'signing'
 apply plugin: 'maven'
 
+eclipse {
+    project {
+        name = 'javacc-gradle-plugin-deploy-maven-central'
+    }
+}
+
 signing {
     sign configurations.archives
 }

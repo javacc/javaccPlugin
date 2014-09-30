@@ -1,0 +1,5 @@
+include 'plugin', 'acceptance-tests', 'release', 'deploy-maven-central', 'deploy-bintray'
+
+rootProject.name = 'javacc-gradle-plugin-root'
+project(':plugin').name = 'javacc-gradle-plugin'
+project(':acceptance-tests').name = 'javacc-gradle-plugin-acceptance-tests'

@@ -1,0 +1,14 @@
+PARSER_BEGIN(JavaccOutputTest)
+package test.pkg;
+
+import patate.poil.PatatePoil;
+
+public class JavaccOutputTest {
+    private PatatePoil member;
+}
+PARSER_END(JavaccOutputTest)
+
+TOKEN :
+{
+    <ABS: "abs">
+}

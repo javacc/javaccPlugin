@@ -8,6 +8,12 @@ buildscript {
 }
 apply plugin: 'com.jfrog.bintray'
 
+eclipse {
+    project {
+        name = 'javacc-gradle-plugin-deploy-bintray'
+    }
+}
+
 bintray {
     if (!project.hasProperty('bintrayUser')) {
         ext.bintrayUser = ''
@@ -35,7 +41,7 @@ bintray {
         publicDownloadNumbers = true
         
         version {
-            # TODO use project's version (should be published by Release build)
+            // TODO use project's version (should be published by Release build)
             name = '2.0.1'
             vcsTag = '2.0.1'
             attributes = ['gradle-plugin': 'ca.coglinc.javacc:ca.coglinc:javacc-gradle-plugin']
