@@ -1,6 +1,7 @@
 package ca.coglinc.gradle.plugins.javacc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -90,8 +91,7 @@ public class CompileJavaccTaskTest {
 
         task.execute();
 
-        assertTrue(outputDirectory.isDirectory());
-        assertEquals(0, outputDirectory.list().length);
+        assertFalse(outputDirectory.isDirectory());
     }
     
     @Test
@@ -124,20 +124,6 @@ public class CompileJavaccTaskTest {
         task.setOutputDirectory(outputDirectory);
 
         task.execute();
-    }
-    
-    @Test(expected = TaskValidationException.class)
-    public void inputDirectoryIsMandatory() {
-        task.setInputDirectory(null);
-        final File outputDirectory = new File(getClass().getResource("/").getFile() + "output");
-        task.setOutputDirectory(outputDirectory);
-        
-        try {
-            task.execute();
-        } catch (TaskExecutionException e) {
-            assertTrue(e.getCause() instanceof IllegalArgumentException);
-            throw e;
-        }
     }
     
     @Test(expected = TaskValidationException.class)
