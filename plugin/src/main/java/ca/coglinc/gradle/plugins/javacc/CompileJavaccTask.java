@@ -1,6 +1,7 @@
 package ca.coglinc.gradle.plugins.javacc;
 
 import java.io.File;
+import java.util.Map;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.InputDirectory;
@@ -74,5 +75,10 @@ public class CompileJavaccTask extends DefaultTask {
     @OutputDirectory
     public File getOutputDirectory() {
         return outputDirectory;
+    }
+
+    public void setJavaccArguments(Map<String, String> javaccArguments) {
+        // TODO Auto-generated method stub
+        
     }
 }
