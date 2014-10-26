@@ -23,10 +23,10 @@ public class CompilationSteps {
     
     public void whenIExecuteTask(String taskName) throws IOException {
         project = GradleConnector.newConnector().forProjectDirectory(projectDirectory).connect();
+        
         BuildLauncher build = project.newBuild();
         build.forTasks(taskName).setStandardOutput(System.out);
-        build.withArguments("--debug", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle");
-        
+        build.withArguments("--debug", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle", "-Dplugin.version=" + System.getProperty("PLUGIN_VERSION"));
         build.run();
     }
     

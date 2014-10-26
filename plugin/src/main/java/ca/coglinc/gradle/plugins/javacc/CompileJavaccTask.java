@@ -19,6 +19,7 @@ public class CompileJavaccTask extends DefaultTask {
     
     private File inputDirectory = new File(getProject().getRootDir().getAbsolutePath() + DEFAULT_INPUT_DIRECTORY);
     private File outputDirectory = new File(getProject().getBuildDir().getAbsolutePath() + DEFAULT_OUTPUT_DIRECTORY);
+    private Map<String, String> javaccArguments;
     
     @TaskAction
     public void executeTask() throws Exception {
@@ -48,11 +49,36 @@ public class CompileJavaccTask extends DefaultTask {
         if (javaccFile.isDirectory()) {
             compileInputFilesToJava(javaccFile.listFiles());
         } else {
-            int errorCode = Main.mainProgram(new String[] {getJavaccOutputDirectoryOption(javaccFile.getParentFile()), javaccFile.getAbsolutePath()});
+            getLogger().debug("Compiling JavaCC file [{}] to [{}]", javaccFile.getAbsolutePath(), outputDirectory.getAbsolutePath());
+            
+            String[] arguments = getJavaccArgumentsForCommandLine(javaccFile);
+            getLogger().debug("Invoking JavaCC with arguments [{}]", (Object[]) arguments);
+            
+            int errorCode = Main.mainProgram(arguments);
             if (errorCode != 0) {
                 throw new IllegalStateException("Javacc failed with error code: [" + errorCode + "]");
             }
         }
+    }
+
+    String[] getJavaccArgumentsForCommandLine(File javaccFile) {
+        String[] argumentsForCommandLine;
+        if (javaccArguments != null && !javaccArguments.isEmpty()) {
+            argumentsForCommandLine = new String[javaccArguments.size() + 2];
+            
+            int index = 1;
+            for (Map.Entry<String, String> argumentEntry : javaccArguments.entrySet()) {
+                argumentsForCommandLine[index] = String.format("-%1$s=%2$s", argumentEntry.getKey(), argumentEntry.getValue());
+                index = index + 1;
+            }
+        } else {
+            argumentsForCommandLine = new String[2];
+        }
+        
+        argumentsForCommandLine[0] = getJavaccOutputDirectoryOption(javaccFile.getParentFile());
+        argumentsForCommandLine[argumentsForCommandLine.length - 1] = javaccFile.getAbsolutePath();
+        
+        return argumentsForCommandLine;
     }
 
     private String getJavaccOutputDirectoryOption(File parentFile) {
@@ -76,9 +102,12 @@ public class CompileJavaccTask extends DefaultTask {
     public File getOutputDirectory() {
         return outputDirectory;
     }
+    
+    public Map<String, String> getJavaccArguments() {
+        return javaccArguments;
+    }
 
     public void setJavaccArguments(Map<String, String> javaccArguments) {
-        // TODO Auto-generated method stub
-        
+        this.javaccArguments = javaccArguments;
     }
 }

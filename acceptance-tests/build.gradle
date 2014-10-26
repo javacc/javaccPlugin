@@ -2,6 +2,7 @@ defaultTasks 'clean', 'build'
 
 dependencies {
     testCompile gradleApi()
+    
     testRuntime project(':javacc-gradle-plugin')
 }
 
@@ -12,6 +13,11 @@ eclipse {
 }
 
 jar.enabled = false
+
+test {
+    dependsOn ':javacc-gradle-plugin:install'
+    systemProperty 'PLUGIN_VERSION', project.version
+}
 
 task testJar(type: Jar, dependsOn: testClasses) {
     classifier 'tests'

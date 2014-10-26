@@ -11,10 +11,6 @@ import org.ajoberstar.grgit.Grgit
 
 defaultTasks 'release'
 
-compileJava.enabled = false
-test.enabled = false
-jar.enabled = false
-
 eclipse {
     project {
         name = 'javacc-gradle-plugin-release'

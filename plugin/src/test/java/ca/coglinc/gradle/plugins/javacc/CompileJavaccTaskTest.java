@@ -1,6 +1,7 @@
 package ca.coglinc.gradle.plugins.javacc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -8,7 +9,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.gradle.api.Project;
@@ -16,22 +17,13 @@ import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.TaskExecutionException;
 import org.gradle.api.tasks.TaskValidationException;
 import org.gradle.testfixtures.ProjectBuilder;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.javacc.parser.Main;
+import org.hamcrest.collection.IsArrayContainingInOrder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Answers;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(Main.class)
 public class CompileJavaccTaskTest {
     private static final String[] GENERATED_FILES = {"JavaccOutputTest.java", "JavaccOutputTestConstants.java", "JavaccOutputTestTokenManager.java",
         "ParseException.java", "SimpleCharStream.java", "Token.java", "TokenMgrError.java" };
@@ -74,16 +66,25 @@ public class CompileJavaccTaskTest {
 
     @Test
     public void compileJavaccToJavaCompilesEachJavaccInputFileToJava() {
-        final File inputDirectory = new File(getClass().getResource("/input").getFile());
-        task.setInputDirectory(inputDirectory);
-        final File outputDirectory = new File(getClass().getResource("/").getFile() + "output");
-        task.setOutputDirectory(outputDirectory);
+        setTaskInputDirectory("/input");
+        final File outputDirectory = setTaskOutputDirectory("output");
 
         task.execute();
 
         assertTrue(outputDirectory.isDirectory());
         assertEquals(GENERATED_FILES.length, outputDirectory.list().length);
         assertTrue(Arrays.asList(outputDirectory.list()).containsAll(Arrays.asList(GENERATED_FILES)));
+    }
+
+    private void setTaskInputDirectory(final String inputDirectoryName) {
+        final File inputDirectory = new File(getClass().getResource(inputDirectoryName).getFile());
+        task.setInputDirectory(inputDirectory);
+    }
+    
+    private File setTaskOutputDirectory(final String outputDirectoryName) {
+        final File outputDirectory = new File(getClass().getResource("/").getFile() + outputDirectoryName);
+        task.setOutputDirectory(outputDirectory);
+        return outputDirectory;
     }
     
     @Test
@@ -113,10 +114,8 @@ public class CompileJavaccTaskTest {
     
     @Test
     public void compileJavaccToJavaCompilesEachJavaccInputFileToJavaIntoItsPackage() {
-        final File inputDirectory = new File(getClass().getResource("/inputWithPackages").getFile());
-        task.setInputDirectory(inputDirectory);
-        final File outputDirectory = new File(getClass().getResource("/").getFile() + "output");
-        task.setOutputDirectory(outputDirectory);
+        setTaskInputDirectory("/inputWithPackages");
+        final File outputDirectory = setTaskOutputDirectory("output");
 
         task.execute();
 
@@ -130,10 +129,8 @@ public class CompileJavaccTaskTest {
     
     @Test(expected = TaskExecutionException.class)
     public void compileJavaccFailsWhenParserGeneratesAnError() {
-        final File inputDirectory = new File(getClass().getResource("/inputWithErrors").getFile());
-        task.setInputDirectory(inputDirectory);
-        final File outputDirectory = new File(getClass().getResource("/").getFile() + "output");
-        task.setOutputDirectory(outputDirectory);
+        setTaskInputDirectory("/inputWithErrors");
+        setTaskOutputDirectory("output");
 
         task.execute();
     }
@@ -141,8 +138,7 @@ public class CompileJavaccTaskTest {
     @Test(expected = TaskValidationException.class)
     public void inputDirectoryIsMandatory() {
         task.setInputDirectory(null);
-        final File outputDirectory = new File(getClass().getResource("/").getFile() + "output");
-        task.setOutputDirectory(outputDirectory);
+        setTaskOutputDirectory("output");
         
         try {
             task.execute();
@@ -154,8 +150,7 @@ public class CompileJavaccTaskTest {
     
     @Test(expected = TaskValidationException.class)
     public void outputDirectoryIsMandatory() {
-        final File inputDirectory = new File(getClass().getResource("/input").getFile());
-        task.setInputDirectory(inputDirectory);
+        setTaskInputDirectory("/input");
         task.setOutputDirectory(null);
         
         try {
@@ -168,8 +163,7 @@ public class CompileJavaccTaskTest {
     
     @Test
     public void taskInputsAreInputDirectory() {
-        final File inputDirectory = new File(getClass().getResource("/input").getFile());
-        task.setInputDirectory(inputDirectory);
+        setTaskInputDirectory("/input");
         
         task.execute();
         
@@ -180,10 +174,8 @@ public class CompileJavaccTaskTest {
     
     @Test
     public void taskOutputsAreOutputDirectory() {
-        final File inputDirectory = new File(getClass().getResource("/input").getFile());
-        task.setInputDirectory(inputDirectory);
-        final File outputDirectory = new File(getClass().getResource("/").getFile() + "output");
-        task.setOutputDirectory(outputDirectory);
+        setTaskInputDirectory("/input");
+        setTaskOutputDirectory("output");
         
         task.execute();
         
@@ -193,47 +185,55 @@ public class CompileJavaccTaskTest {
     }
     
     @Test
-    public void providedJavaccArgumentsArePassedToJavacc() throws Exception {
-        final File inputDirectory = new File(getClass().getResource("/input").getFile());
-        task.setInputDirectory(inputDirectory);
-        final File outputDirectory = new File(getClass().getResource("/").getFile() + "output");
-        task.setOutputDirectory(outputDirectory);
-        Map<String, String> javaccArguments = new HashMap<String, String>(1);
-        javaccArguments.put("static", Boolean.TRUE.toString());
-        task.setJavaccArguments(javaccArguments);
-
-        task.execute();
-
-        PowerMockito.verifyStatic();
-        ArrayContainsAllElementsInMapMapMatcher containsJavaccArguments = new ArrayContainsAllElementsInMapMapMatcher(javaccArguments);
-        Main.mainProgram(Mockito.argThat(containsJavaccArguments));
+    public void javaccArgumentsAreOutputDirectoryAndFileToCompileWhenNoJavaccArgumentsProvided() {
+        setTaskInputDirectory("/input");
+        File outputDirectory = setTaskOutputDirectory("output");
+        File javaccFile = mock(File.class);
+        final String inputFileAbsolutePath = task.getInputDirectory().getAbsolutePath() + "/file.jj";
+        when(javaccFile.getAbsolutePath()).thenReturn(inputFileAbsolutePath);
+        when(javaccFile.getParentFile()).thenReturn(task.getInputDirectory());
         
-        assertTrue(outputDirectory.isDirectory());
-        assertEquals(GENERATED_FILES.length, outputDirectory.list().length);
-        assertTrue(Arrays.asList(outputDirectory.list()).containsAll(Arrays.asList(GENERATED_FILES)));
+        String[] javaccArgumentsForCommandLine = task.getJavaccArgumentsForCommandLine(javaccFile);
+        
+        assertEquals(2, javaccArgumentsForCommandLine.length);
+        assertThat(javaccArgumentsForCommandLine, IsArrayContainingInOrder.arrayContaining("-OUTPUT_DIRECTORY=" + outputDirectory.getAbsolutePath(), inputFileAbsolutePath));
     }
     
-    private static class ArrayContainsAllElementsInMapMapMatcher extends BaseMatcher<String[]> {
-        private Map<String, String> expectedElements;
-
-        public ArrayContainsAllElementsInMapMapMatcher(Map<String, String> expectedJavaccArguments) {
-            this.expectedElements = expectedJavaccArguments;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            // TODO Auto-generated method stub
-            
-        }
-
-        @Override
-        public boolean matches(Object item) {
-            if (item instanceof String[]) {
-                return false;
-            }
-            
-            List<String> providedElements = Arrays.asList((String[]) item);
-            return providedElements.containsAll(expectedElements.values());
-        }
+    @Test
+    public void javaccArgumentsAreOutputDirectoryAndFileToCompileWhenEmptyJavaccArgumentsProvided() {
+        setTaskInputDirectory("/input");
+        File outputDirectory = setTaskOutputDirectory("output");
+        File javaccFile = mock(File.class);
+        final String inputFileAbsolutePath = task.getInputDirectory().getAbsolutePath() + "/file.jj";
+        when(javaccFile.getAbsolutePath()).thenReturn(inputFileAbsolutePath);
+        when(javaccFile.getParentFile()).thenReturn(task.getInputDirectory());
+        task.setJavaccArguments(new HashMap<String, String>(0));
+        
+        String[] javaccArgumentsForCommandLine = task.getJavaccArgumentsForCommandLine(javaccFile);
+        
+        assertEquals(2, javaccArgumentsForCommandLine.length);
+        assertThat(javaccArgumentsForCommandLine, IsArrayContainingInOrder.arrayContaining("-OUTPUT_DIRECTORY=" + outputDirectory.getAbsolutePath(), inputFileAbsolutePath));
+    }
+    
+    @Test
+    public void javaccArgumentsAreOutputDirectoryFileToCompileAndProvidedArguments() {
+        setTaskInputDirectory("/input");
+        File outputDirectory = setTaskOutputDirectory("output");
+        File javaccFile = mock(File.class);
+        final String inputFileAbsolutePath = task.getInputDirectory().getAbsolutePath() + "/file.jj";
+        when(javaccFile.getAbsolutePath()).thenReturn(inputFileAbsolutePath);
+        when(javaccFile.getParentFile()).thenReturn(task.getInputDirectory());
+        LinkedHashMap<String, String> javaccArguments = new LinkedHashMap<String, String>(1);
+        javaccArguments.put("static", Boolean.FALSE.toString());
+        task.setJavaccArguments(javaccArguments);
+        
+        String[] javaccArgumentsForCommandLine = task.getJavaccArgumentsForCommandLine(javaccFile);
+        
+        assertEquals(3, javaccArgumentsForCommandLine.length);
+        final Matcher<String[]> containsOuputDirectoryFileToCompileAndOtherProvidedArguments = IsArrayContainingInOrder.arrayContaining(
+            "-OUTPUT_DIRECTORY=" + outputDirectory.getAbsolutePath(),
+            "-static=false",
+            inputFileAbsolutePath);
+        assertThat(javaccArgumentsForCommandLine, containsOuputDirectoryFileToCompileAndOtherProvidedArguments);
     }
 }
