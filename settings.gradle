@@ -1,5 +1,8 @@
-include 'plugin', 'acceptance-tests', 'release', 'deploy-maven-central', 'deploy-bintray'
+include 'subprojects/plugin', 'subprojects/acceptance-tests', 'subprojects/release', 'subprojects/deploy-maven-central', 'subprojects/deploy-bintray'
 
 rootProject.name = 'javacc-gradle-plugin-root'
-project(':plugin').name = 'javacc-gradle-plugin'
-project(':acceptance-tests').name = 'javacc-gradle-plugin-acceptance-tests'
+project(':subprojects/plugin').name = 'javacc-gradle-plugin'
+project(':subprojects/acceptance-tests').name = 'javacc-gradle-plugin-acceptance-tests'
+project(':subprojects/release').name = 'release'
+project(':subprojects/deploy-maven-central').name = 'deploy-maven-central'
+project(':subprojects/deploy-bintray').name = 'deploy-bintray'
