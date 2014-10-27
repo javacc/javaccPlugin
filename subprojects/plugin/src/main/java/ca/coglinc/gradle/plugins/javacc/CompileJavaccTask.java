@@ -17,7 +17,7 @@ public class CompileJavaccTask extends DefaultTask {
     private static final String DEFAULT_INPUT_DIRECTORY = File.separator + "src" + File.separator + "main" + File.separator + "javacc";
     private static final String DEFAULT_OUTPUT_DIRECTORY = File.separator + "generated" + File.separator + "javacc";
     
-    private File inputDirectory = new File(getProject().getRootDir().getAbsolutePath() + DEFAULT_INPUT_DIRECTORY);
+    private File inputDirectory = new File(getProject().getProjectDir().getAbsolutePath() + DEFAULT_INPUT_DIRECTORY);
     private File outputDirectory = new File(getProject().getBuildDir().getAbsolutePath() + DEFAULT_OUTPUT_DIRECTORY);
     private Map<String, String> javaccArguments;
     

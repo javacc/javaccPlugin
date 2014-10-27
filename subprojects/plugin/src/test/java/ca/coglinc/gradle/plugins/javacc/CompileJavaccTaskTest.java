@@ -229,7 +229,8 @@ public class CompileJavaccTaskTest {
         
         String[] javaccArgumentsForCommandLine = task.getJavaccArgumentsForCommandLine(javaccFile);
         
-        assertEquals(3, javaccArgumentsForCommandLine.length);
+        final int outputDirectoryAndProvidedArgumentAndFileToCompile = 3;
+        assertEquals(outputDirectoryAndProvidedArgumentAndFileToCompile, javaccArgumentsForCommandLine.length);
         final Matcher<String[]> containsOuputDirectoryFileToCompileAndOtherProvidedArguments = IsArrayContainingInOrder.arrayContaining(
             "-OUTPUT_DIRECTORY=" + outputDirectory.getAbsolutePath(),
             "-static=false",
