@@ -71,7 +71,7 @@ task generateReadmeFileFromTemplate(type: Copy, dependsOn: verifyReleaseVersions
     group 'Release'
     
     from rootProject.file('buildSrc')
-    into projectDir
+    into rootProject
     include 'README.md.template'
     rename '(.*)\\.template', '$1'
     expand project.properties
@@ -121,7 +121,7 @@ tasks.addRule('Pattern: write<VersionProperty>: Writes the value of VersionPrope
         writeTask.description "Writes the value of [${versionProperty}] project property to build.gradle as the project version."
         writeTask.group 'Release'
         writeTask.configure {
-            from projectDir
+            from rootProject.projectDir
             into buildDir
             include 'build.gradle'
             filter { line ->
@@ -166,7 +166,7 @@ tasks.addRule('Pattern: copy<VersionType>BuildFile: Overwrites build.gradle with
         copyTask.group 'Release'
         copyTask.configure {
             from buildDir
-            into projectDir
+            into rootProject.projectDir
             include 'build.gradle'
         }
         if (versionType.equals('Release')) {
