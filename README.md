@@ -14,7 +14,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.0.1'
+        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.0.2'
     }
 }
 apply plugin: 'ca.coglinc.javacc'
@@ -24,12 +24,19 @@ apply plugin: 'ca.coglinc.javacc'
 
 To build, simply run the following command in the directory where you checked out the plugin source:
 
-`gradle clean build`
+`./gradlew clean build`
 
 ## Usage
 
 Place your JavaCC code into `src/main/javacc`.
 The generated Java code will be  put under `./build/generated/javacc` and will be compiled as part of the Java compile.
+
+You can configure commandline args passed to JavaCC by specifying `javaccArguments` map in compileJavacc:
+```
+compileJavacc {
+    javaccArguments = [grammar_encoding : 'UTF-8', static: 'false']
+}
+```
 
 ### Eclipse
 
@@ -58,7 +65,10 @@ The artifacts for this plugin are signed using the [PGP key](http://pgp.mit.edu:
 
 ### 2.0.2
 
-Improved the build system
+- Improved the build system
+- Added acceptance tests
+- Support the gradle wrapper (Issue #10)
+- Support passing optional arguments to Javacc (Issue #11)
 
 ### 2.0.1
 
