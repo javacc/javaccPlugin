@@ -69,6 +69,7 @@ The artifacts for this plugin are signed using the [PGP key](http://pgp.mit.edu:
 - Added acceptance tests
 - Support the gradle wrapper (Issue #10)
 - Support passing optional arguments to Javacc (Issue #11)
+- Support multiproject builds (Issue #3)
 
 ### 2.0.1
 
