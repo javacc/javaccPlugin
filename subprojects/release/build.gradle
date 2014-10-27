@@ -71,7 +71,7 @@ task generateReadmeFileFromTemplate(type: Copy, dependsOn: verifyReleaseVersions
     group 'Release'
     
     from rootProject.file('buildSrc')
-    into rootProject
+    into rootProject.projectDir
     include 'README.md.template'
     rename '(.*)\\.template', '$1'
     expand project.properties
