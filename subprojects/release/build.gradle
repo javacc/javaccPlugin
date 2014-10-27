@@ -125,7 +125,7 @@ tasks.addRule('Pattern: write<VersionProperty>: Writes the value of VersionPrope
             into buildDir
             include 'build.gradle'
             filter { line ->
-                if (line.startsWith('version ='.trim())) {
+                if (line.contains('version =')) {
                     "version = '${project.getProperty(versionProperty)}'"
                 } else {
                     "${line}"
