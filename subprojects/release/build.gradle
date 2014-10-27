@@ -64,14 +64,13 @@ def commitChangedFiles(String commitMessage) {
 }
 
 task generateReadmeFileFromTemplate(type: Copy, dependsOn: verifyReleaseVersions) {
-    description 'Generates the README.md file from a template.'
-    group 'Release'
-    
     outputs.upToDateWhen {
         false
     }
+    description 'Generates the README.md file from a template.'
+    group 'Release'
     
-    from 'buildSrc'
+    from rootProject.file('buildSrc')
     into projectDir
     include 'README.md.template'
     rename '(.*)\\.template', '$1'
