@@ -189,6 +189,8 @@ tasks.addRule('Pattern: copy<VersionType>BuildFile: Overwrites build.gradle with
 
 tagRelease.mustRunAfter generateReadmeFileFromTemplate, copyReleaseBuildFile
 
+copyNextBuildFile.mustRunAfter uploadArchives, bintrayUpload
+
 signing {
     sign project(':javacc-gradle-plugin').configurations.archives
 }
