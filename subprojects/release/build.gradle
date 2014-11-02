@@ -278,16 +278,14 @@ bintray {
         publicDownloadNumbers = true
         
         version {
-            name = project.version
-            vcsTag = project.version
+            name = project.getProperty(releaseVersionProperty)
+            vcsTag = project.getProperty(releaseVersionProperty)
             attributes = ['gradle-plugin': 'ca.coglinc.javacc:ca.coglinc:javacc-gradle-plugin']
-            gpg {
-                sign = true
-                passphrase = gpgPassphrase
-            }
         }
     }
 }
+
+bintrayUpload.mustRunAfter uploadArchives
 
 task release(dependsOn: [project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies, project(':javacc-gradle-plugin').build, generateReadmeFileFromTemplate, copyReleaseBuildFile, tagRelease, uploadArchives, bintrayUpload, copyNextBuildFile]) {
     description "Releases the plugin by verifying there are no snapshot dependencies, writing the next version to build.gradle and committing the build file. " +
