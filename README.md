@@ -34,7 +34,7 @@ The generated Java code will be  put under `./build/generated/javacc` and will b
 You can configure commandline args passed to JavaCC by specifying `javaccArguments` map in compileJavacc:
 ```
 compileJavacc {
-    javaccArguments = [grammar_encoding : 'UTF-8', static: 'false']
+    javaccArguments = [grammar_encoding: 'UTF-8', static: 'false']
 }
 ```
 
