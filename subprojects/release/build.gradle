@@ -1,17 +1,14 @@
 buildscript {
     repositories {
         mavenCentral()
-        jcenter()
     }
     dependencies {
         classpath 'org.ajoberstar:gradle-git:0.9.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
     }
 }
 
 apply plugin: 'signing'
 apply plugin: 'maven'
-apply plugin: 'com.jfrog.bintray'
 
 import org.ajoberstar.grgit.Grgit
 
@@ -248,47 +245,13 @@ uploadArchives {
 
 uploadArchives.mustRunAfter copyNextBuildFile
 
-bintray {
-    if (!project.hasProperty('bintrayUser')) {
-        ext.bintrayUser = ''
-    }
-    
-    if (!project.hasProperty('bintrayApiKey')) {
-        ext.bintrayApiKey = ''
-    }
-    
-    if (!project.hasProperty('gpgPassphrase')) {
-        ext.gpgPassphrase = ''
-    }
-    
-    user = bintrayUser
-    key = bintrayApiKey
+project(':javacc-gradle-plugin').bintrayUpload.mustRunAfter uploadArchives
 
-    configurations = [project(':javacc-gradle-plugin').configurations.archives]
-    dryRun = false
-    publish = true
-    pkg {
-        repo = 'maven'
-        name = 'javacc-gradle-plugin'
-        desc = 'Provides the ability to use JavaCC via Gradle. If the java plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.'
-        websiteUrl = 'https://github.com/johnmartel/javaccPlugin'
-        issueTrackerUrl = 'https://github.com/johnmartel/javaccPlugin/issues'
-        vcsUrl = 'https://github.com/johnmartel/javaccPlugin.git'
-        licenses = ['MIT']
-        labels = ['javacc', 'gradle']
-        publicDownloadNumbers = true
-        
-        version {
-            name = project.getProperty(releaseVersionProperty)
-            vcsTag = project.getProperty(releaseVersionProperty)
-            attributes = ['gradle-plugin': 'ca.coglinc.javacc:ca.coglinc:javacc-gradle-plugin']
-        }
-    }
-}
+writeNextVersion.mustRunAfter tagRelease
 
-bintrayUpload.mustRunAfter uploadArchives
+copyNextBuildFile.mustRunAfter writeNextVersion
 
-task release(dependsOn: [project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies, project(':javacc-gradle-plugin').build, generateReadmeFileFromTemplate, copyReleaseBuildFile, tagRelease, uploadArchives, bintrayUpload, copyNextBuildFile]) {
+task release(dependsOn: [project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies, project(':javacc-gradle-plugin').build, generateReadmeFileFromTemplate, copyReleaseBuildFile, tagRelease, uploadArchives, project(':javacc-gradle-plugin').bintrayUpload, copyNextBuildFile]) {
     description "Releases the plugin by verifying there are no snapshot dependencies, writing the next version to build.gradle and committing the build file. " +
         "Versions must be specified by using the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties."
     

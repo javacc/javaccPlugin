@@ -1,7 +1,17 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
+    }
+}
+
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
+apply plugin: 'com.jfrog.bintray'
 
 defaultTasks 'clean', 'build', 'install'
 
@@ -70,4 +80,42 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourceJar
     archives javadocJar
+}
+
+bintray {
+    if (!project.hasProperty('bintrayUser')) {
+        ext.bintrayUser = ''
+    }
+    
+    if (!project.hasProperty('bintrayApiKey')) {
+        ext.bintrayApiKey = ''
+    }
+    
+    if (!project.hasProperty('gpgPassphrase')) {
+        ext.gpgPassphrase = ''
+    }
+    
+    user = bintrayUser
+    key = bintrayApiKey
+
+    configurations = ['archives']
+    dryRun = false
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'javacc-gradle-plugin'
+        desc = 'Provides the ability to use JavaCC via Gradle. If the java plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.'
+        websiteUrl = 'https://github.com/johnmartel/javaccPlugin'
+        issueTrackerUrl = 'https://github.com/johnmartel/javaccPlugin/issues'
+        vcsUrl = 'https://github.com/johnmartel/javaccPlugin.git'
+        licenses = ['MIT']
+        labels = ['javacc', 'gradle']
+        publicDownloadNumbers = true
+        
+        version {
+            name = releaseVersion
+            vcsTag = releaseVersion
+            attributes = ['gradle-plugin': 'ca.coglinc.javacc:ca.coglinc:javacc-gradle-plugin']
+        }
+    }
 }
