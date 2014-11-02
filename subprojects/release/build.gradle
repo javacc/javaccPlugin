@@ -23,6 +23,8 @@ eclipse {
     }
 }
 
+ext.gitRepo = Grgit.open(rootProject.projectDir)
+
 def releaseVersionProperty = 'releaseVersion'
 def nextVersionProperty = 'nextVersion'
 
@@ -57,8 +59,6 @@ verifySnapshotDependencies << {
 project(':javacc-gradle-plugin').build.mustRunAfter project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies
 
 def commitChangedFiles(String commitMessage) {
-    ext.gitRepo = Grgit.open(rootProject.projectDir)
-    
     gitRepo.commit {
         message = commitMessage
         all = true
@@ -93,8 +93,6 @@ task tagRelease {
 }
 
 tagRelease << {
-    ext.gitRepo = Grgit.open(rootProject.projectDir)
-    
     gitRepo.tag.add {
         name = "javacc-gradle-plugin-${releaseVersion}"
         annotate = false
@@ -191,8 +189,6 @@ tasks.addRule('Pattern: copy<VersionType>BuildFile: Overwrites build.gradle with
 
 tagRelease.mustRunAfter generateReadmeFileFromTemplate, copyReleaseBuildFile
 
-copyNextBuildFile.mustRunAfter uploadArchives, bintrayUpload
-
 signing {
     sign project(':javacc-gradle-plugin').configurations.archives
 }
@@ -221,6 +217,7 @@ uploadArchives {
             }
             
             pom.project {
+                version = project.getProperty(releaseVersionProperty)
                 packaging 'jar'
                 name 'javacc-gradle-plugin'
                 description 'Provides the ability to use JavaCC with Gradle. Compiles JavaCC files to Java.'
@@ -249,7 +246,7 @@ uploadArchives {
     }  
 }
 
-uploadArchives.mustRunAfter copyReleaseBuildFile
+uploadArchives.mustRunAfter copyNextBuildFile
 
 bintray {
     if (!project.hasProperty('bintrayUser')) {
