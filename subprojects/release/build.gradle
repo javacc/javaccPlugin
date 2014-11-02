@@ -247,6 +247,8 @@ uploadArchives {
     }  
 }
 
+uploadArchives.mustRunAfter copyReleaseBuildFile
+
 bintray {
     if (!project.hasProperty('bintrayUser')) {
         ext.bintrayUser = ''
