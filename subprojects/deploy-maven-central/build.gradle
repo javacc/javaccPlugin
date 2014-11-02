@@ -8,7 +8,7 @@ eclipse {
 }
 
 signing {
-    sign configurations.archives
+    sign project(':javacc-gradle-plugin').configurations.archives
 }
 
 uploadArchives {

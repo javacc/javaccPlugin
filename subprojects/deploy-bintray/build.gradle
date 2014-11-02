@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
     }
 }
 apply plugin: 'com.jfrog.bintray'
@@ -23,10 +23,14 @@ bintray {
         ext.bintrayApiKey = ''
     }
     
+    if (!project.hasProperty('gpgPassphrase')) {
+        ext.gpgPassphrase = ''
+    }
+    
     user = bintrayUser
     key = bintrayApiKey
 
-    configurations = ['archives']
+    configurations = [project(':javacc-gradle-plugin').configurations.archives]
     dryRun = false
     publish = true
     pkg {
@@ -41,10 +45,13 @@ bintray {
         publicDownloadNumbers = true
         
         version {
-            // TODO use project's version (should be published by Release build)
-            name = '2.0.1'
-            vcsTag = '2.0.1'
+            name = project.version
+            vcsTag = project.version
             attributes = ['gradle-plugin': 'ca.coglinc.javacc:ca.coglinc:javacc-gradle-plugin']
+            gpg {
+                sign = true
+                passphrase = gpgPassphrase
+            }
         }
     }
 }
