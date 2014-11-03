@@ -266,6 +266,7 @@ task release(dependsOn: [project(':javacc-gradle-plugin').clean, verifyReleaseVe
     
     if (project.hasProperty(releaseVersionProperty)) {
         version = project.getProperty(releaseVersionProperty)
+        rootProject.version = project.version
     }
     println "Changing project's version to [${version}]"
 }
