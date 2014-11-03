@@ -61,6 +61,11 @@ It has been tested with Gradle 1.11+. Please let us know if you have had success
 
 The artifacts for this plugin are signed using the [PGP key](http://pgp.mit.edu:11371/pks/lookup?op=get&search=0x321163AE83A4068A) for `jonathan.martel@coglinc.ca`.
 
+## Releasing
+
+The following command can be used to release the project, upload to Maven Central and upload to Bintray:
+```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/johnmartel/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -Psigning.keyId=[keyId] -Psigning.password=[password] -Psigning.secretKeyRingFile=[filename] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
+
 ## Changelog
 
 ### 2.0.2
