@@ -1,0 +1,27 @@
+options
+{}
+PARSER_BEGIN(MyParser)
+import java.util.*;
+public class MyParser {
+    public static void main(String[] args) throws ParseException {
+        MyClass mc = new MyClass();
+    }
+}
+PARSER_END(MyParser)
+
+SKIP:
+{
+    " "
+}
+
+TOKEN:
+{
+     <ANYTHING:  ~[]>
+}
+
+
+void production():
+{}
+{
+    (<ANYTHING>)+
+}

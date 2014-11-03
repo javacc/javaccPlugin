@@ -1,7 +1,10 @@
 PARSER_BEGIN(JavaccOutputTest)
-package test;
+package test.pkg;
+
+import somepackage.withsubpackage.ClassUnderSubPackage;
 
 public class JavaccOutputTest {
+    private ClassUnderSubPackage member;
 }
 PARSER_END(JavaccOutputTest)
 

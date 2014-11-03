@@ -1,6 +1,7 @@
 package ca.coglinc.gradle.plugins.javacc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -97,14 +98,13 @@ public class CompileJavaccTaskTest {
         when(inputDirectory.listFiles()).thenReturn(noInputFiles);
         when(inputDirectory.exists()).thenReturn(Boolean.TRUE);
         when(inputDirectory.isDirectory()).thenReturn(Boolean.TRUE);
-        task.setInputDirectory(inputDirectory);
+        task.setSource(inputDirectory);
         final File outputDirectory = new File(getClass().getResource("/").getFile() + "output");
         task.setOutputDirectory(outputDirectory);
 
         task.execute();
 
-        assertTrue(outputDirectory.isDirectory());
-        assertEquals(0, outputDirectory.list().length);
+        assertFalse(outputDirectory.isDirectory());
     }
     
     @Test
@@ -135,17 +135,12 @@ public class CompileJavaccTaskTest {
         task.execute();
     }
     
-    @Test(expected = TaskValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void inputDirectoryIsMandatory() {
-        task.setInputDirectory(null);
+        task.setSource(null);
         setTaskOutputDirectory("output");
         
-        try {
-            task.execute();
-        } catch (TaskExecutionException e) {
-            assertTrue(e.getCause() instanceof IllegalArgumentException);
-            throw e;
-        }
+        task.execute();
     }
     
     @Test(expected = TaskValidationException.class)
@@ -189,9 +184,9 @@ public class CompileJavaccTaskTest {
         setTaskInputDirectory("/input");
         File outputDirectory = setTaskOutputDirectory("output");
         File javaccFile = mock(File.class);
-        final String inputFileAbsolutePath = task.getInputDirectory().getAbsolutePath() + "/file.jj";
+        final String inputFileAbsolutePath = task.getSource().getAsPath();
         when(javaccFile.getAbsolutePath()).thenReturn(inputFileAbsolutePath);
-        when(javaccFile.getParentFile()).thenReturn(task.getInputDirectory());
+        when(javaccFile.getParentFile()).thenReturn(task.getSource().getSingleFile().getParentFile());
         
         String[] javaccArgumentsForCommandLine = task.getJavaccArgumentsForCommandLine(javaccFile);
         
@@ -204,9 +199,9 @@ public class CompileJavaccTaskTest {
         setTaskInputDirectory("/input");
         File outputDirectory = setTaskOutputDirectory("output");
         File javaccFile = mock(File.class);
-        final String inputFileAbsolutePath = task.getInputDirectory().getAbsolutePath() + "/file.jj";
+        final String inputFileAbsolutePath = task.getSource().getAsPath();
         when(javaccFile.getAbsolutePath()).thenReturn(inputFileAbsolutePath);
-        when(javaccFile.getParentFile()).thenReturn(task.getInputDirectory());
+        when(javaccFile.getParentFile()).thenReturn(task.getSource().getSingleFile().getParentFile());
         task.setJavaccArguments(new HashMap<String, String>(0));
         
         String[] javaccArgumentsForCommandLine = task.getJavaccArgumentsForCommandLine(javaccFile);
@@ -220,9 +215,9 @@ public class CompileJavaccTaskTest {
         setTaskInputDirectory("/input");
         File outputDirectory = setTaskOutputDirectory("output");
         File javaccFile = mock(File.class);
-        final String inputFileAbsolutePath = task.getInputDirectory().getAbsolutePath() + "/file.jj";
+        final String inputFileAbsolutePath = task.getSource().getAsPath();
         when(javaccFile.getAbsolutePath()).thenReturn(inputFileAbsolutePath);
-        when(javaccFile.getParentFile()).thenReturn(task.getInputDirectory());
+        when(javaccFile.getParentFile()).thenReturn(task.getSource().getSingleFile().getParentFile());
         LinkedHashMap<String, String> javaccArguments = new LinkedHashMap<String, String>(1);
         javaccArguments.put("static", Boolean.FALSE.toString());
         task.setJavaccArguments(javaccArguments);
