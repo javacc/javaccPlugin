@@ -80,6 +80,8 @@ task generateReadmeFileFromTemplate(type: Copy, dependsOn: verifyReleaseVersions
     expand project.properties
 }
 
+generateReadmeFileFromTemplate.mustRunAfter project(':javacc-gradle-plugin-acceptance-tests').test
+
 generateReadmeFileFromTemplate << {
     commitChangedFiles("Generated README file for version ${releaseVersion}")
 }
@@ -137,7 +139,7 @@ tasks.addRule('Pattern: write<VersionProperty>: Writes the value of VersionPrope
         }
         
         if (versionProperty.equalsIgnoreCase(releaseVersionProperty)) {
-            writeTask.mustRunAfter project(':javacc-gradle-plugin').build
+            project(':javacc-gradle-plugin').build.mustRunAfter writeTask
         } else {
             writeTask.mustRunAfter project(':javacc-gradle-plugin').build, tagRelease
         }
@@ -172,14 +174,13 @@ tasks.addRule('Pattern: copy<VersionType>BuildFile: Overwrites build.gradle with
             into rootProject.projectDir
             include 'build.gradle'
         }
-        if (versionType.equals('Release')) {
-            copyTask.doLast {
-                commitChangedFiles("Updated project version for release ${project.getProperty(releaseVersionProperty)}")
-            }
-        } else {
+        if (!versionType.equals('Release')) {
             copyTask.doLast {
                 commitChangedFiles("Updated project version for release ${project.getProperty(nextVersionProperty)}")
             }
+        } else {
+            copyTask.mustRunAfter writeReleaseVersion
+            project(':javacc-gradle-plugin').build.mustRunAfter copyTask
         }
     }
 }

@@ -14,7 +14,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.0.2'
+        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.0.3'
     }
 }
 apply plugin: 'ca.coglinc.javacc'
@@ -31,7 +31,16 @@ To build, simply run the following command in the directory where you checked ou
 Place your JavaCC code into `src/main/javacc`.
 The generated Java code will be  put under `./build/generated/javacc` and will be compiled as part of the Java compile.
 
-You can configure commandline args passed to JavaCC by specifying `javaccArguments` map in compileJavacc:
+You can configure the input/output directory by configuring the compileJavacc task:
+```
+compileJavacc {
+    inputDirectory = file('src/main/javacc')
+    outputDirectory = file(project.buildDir.absolutePath + '/generated/javacc')
+}
+```
+Due to the nature of the JavaCC compiler and its use of the OUTPUT_DIRECTORY parameter, you should prefer using `inputDirectory` over `source` provided by SourceTask. To use include/exclude filters, please refer to the [SourceTask](http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.SourceTask.html) documentation. By default, only `*.jj` files are included. 
+
+You can configure commandline arguments passed to JavaCC by specifying `javaccArguments` map in compileJavacc:
 ```
 compileJavacc {
     javaccArguments = [grammar_encoding: 'UTF-8', static: 'false']
@@ -61,7 +70,16 @@ It has been tested with Gradle 1.11+. Please let us know if you have had success
 
 The artifacts for this plugin are signed using the [PGP key](http://pgp.mit.edu:11371/pks/lookup?op=get&search=0x321163AE83A4068A) for `jonathan.martel@coglinc.ca`.
 
+## Releasing
+
+The following command can be used to release the project, upload to Maven Central and upload to Bintray:
+```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/johnmartel/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -Psigning.keyId=[keyId] -Psigning.password=[password] -Psigning.secretKeyRingFile=[filename] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
+
 ## Changelog
+
+### 2.0.3
+- CompileJavaccTask is now a [SourceTask](http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.SourceTask.html) and supports include/exclude filters
+- Can now configure the input/output directory
 
 ### 2.0.2
 
