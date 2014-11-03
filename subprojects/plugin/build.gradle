@@ -114,7 +114,7 @@ bintray {
         
         version {
             name = releaseVersion
-            vcsTag = releaseVersion
+            vcsTag = 'javacc-gradle-plugin-' + releaseVersion
             attributes = ['gradle-plugin': 'ca.coglinc.javacc:ca.coglinc:javacc-gradle-plugin']
         }
     }
