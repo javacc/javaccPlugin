@@ -59,7 +59,7 @@ public class JavaToJavaccDependencyActionTest {
         applyJavaccPluginToProject();
         applyJavaPluginToProject();
         JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
-        final File outputDirectory = new File(getClass().getResource("/testgenerated").getFile());
+        final File outputDirectory = new File(getClass().getResource("/javacc/testgenerated").getFile());
         CompileJavaccTask compileJavaccTask = (CompileJavaccTask) project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE);
         compileJavaccTask.setOutputDirectory(outputDirectory);
 

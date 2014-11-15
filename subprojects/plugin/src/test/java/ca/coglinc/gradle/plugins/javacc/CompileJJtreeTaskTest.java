@@ -140,20 +140,6 @@ public class CompileJJtreeTaskTest {
         }
     }
 
-    @Test(expected = TaskValidationException.class)
-    public void outputFilenameIsMandatory() {
-        final File inputDirectory = new File(getClass().getResource("/jjtree/input").getFile());
-        task.setInputDirectory(inputDirectory);
-        task.setOutputFilename(null);
-
-        try {
-            task.execute();
-        } catch (TaskExecutionException e) {
-            assertTrue(e.getCause() instanceof IllegalArgumentException);
-            throw e;
-        }
-    }
-
     @Test
     public void taskInputsAreInputDirectory() {
         final File inputDirectory = new File(getClass().getResource("/jjtree/input").getFile());

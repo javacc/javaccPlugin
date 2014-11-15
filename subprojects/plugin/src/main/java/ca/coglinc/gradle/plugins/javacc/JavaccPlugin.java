@@ -1,8 +1,11 @@
 package ca.coglinc.gradle.plugins.javacc;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.gradle.api.*;
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
+import org.gradle.api.Task;
 
 public class JavaccPlugin implements Plugin<Project> {
 

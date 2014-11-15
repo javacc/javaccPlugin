@@ -1,10 +1,12 @@
 package ca.coglinc.gradle.plugins.javacc;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Map;
 
-import org.gradle.api.tasks.*;
-import org.javacc.jjtree.*;
+import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.SourceTask;
+import org.gradle.api.tasks.TaskAction;
+import org.javacc.jjtree.JJTree;
 
 public class CompileJJTreeTask extends SourceTask {
     public static final String TASK_NAME_VALUE = "compileJJTree";

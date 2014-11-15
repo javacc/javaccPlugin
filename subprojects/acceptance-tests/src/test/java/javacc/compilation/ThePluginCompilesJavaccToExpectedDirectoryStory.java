@@ -1,9 +1,10 @@
 package javacc.compilation;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
-import org.junit.*;
+import org.junit.Test;
 
 public class ThePluginCompilesJavaccToExpectedDirectoryStory {
 

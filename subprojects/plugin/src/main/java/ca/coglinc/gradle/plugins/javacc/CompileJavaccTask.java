@@ -1,10 +1,13 @@
 package ca.coglinc.gradle.plugins.javacc;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Map;
+import java.util.Set;
 
-import org.gradle.api.tasks.*;
-import org.javacc.parser.*;
+import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.SourceTask;
+import org.gradle.api.tasks.TaskAction;
+import org.javacc.parser.Main;
 
 public class CompileJavaccTask extends SourceTask {
     public static final String TASK_NAME_VALUE = "compileJavacc";

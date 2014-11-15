@@ -1,6 +1,6 @@
 package ca.coglinc.gradle.plugins.javacc;
 
-import java.util.*;
+import java.util.Map;
 
 public final class JavaccHelper {
     private JavaccHelper() {
