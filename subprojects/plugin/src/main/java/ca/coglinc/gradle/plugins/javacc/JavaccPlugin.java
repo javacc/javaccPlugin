@@ -10,19 +10,30 @@ import org.gradle.api.Task;
 public class JavaccPlugin implements Plugin<Project> {
 
     public void apply(Project project) {
-        project.task(taskOptions(), CompileJavaccTask.TASK_NAME_VALUE);
-        
+        project.task(compileJavaccTaskOptions(), CompileJavaccTask.TASK_NAME_VALUE);
+        project.task(compileJJTreeTaskOptions(), CompileJJTreeTask.TASK_NAME_VALUE);
+
         JavaToJavaccDependencyAction compileJavaDependsOnCompileJavacc = new JavaToJavaccDependencyAction();
         project.afterEvaluate(compileJavaDependsOnCompileJavacc);
     }
 
-    private Map<String, ?> taskOptions() {
+    private Map<String, ?> compileJavaccTaskOptions() {
         Map<String, Object> options = new HashMap<String, Object>(2);
-        
+
         options.put(Task.TASK_TYPE, CompileJavaccTask.class);
         options.put(Task.TASK_DESCRIPTION, CompileJavaccTask.TASK_DESCRIPTION_VALUE);
         options.put(Task.TASK_GROUP, CompileJavaccTask.JAVACC_GROUP);
-        
+
+        return options;
+    }
+
+    private Map<String, ?> compileJJTreeTaskOptions() {
+        Map<String, Object> options = new HashMap<String, Object>(2);
+
+        options.put(Task.TASK_TYPE, CompileJJTreeTask.class);
+        options.put(Task.TASK_DESCRIPTION, CompileJJTreeTask.TASK_DESCRIPTION_VALUE);
+        options.put(Task.TASK_GROUP, CompileJJTreeTask.JAVACC_GROUP);
+
         return options;
     }
 }

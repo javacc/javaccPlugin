@@ -21,7 +21,7 @@ import org.mockito.Answers;
 
 public class JavaToJavaccDependencyActionTest {
     private Project project;
-    
+
     @Before
     public void createProject() {
         project = ProjectBuilder.builder().build();
@@ -32,7 +32,7 @@ public class JavaToJavaccDependencyActionTest {
         pluginNames.put("plugin", "ca.coglinc.javacc");
         project.apply(pluginNames);
     }
-    
+
     private void applyJavaPluginToProject() {
         Map<String, String> pluginNames = new HashMap<String, String>(1);
         pluginNames.put("plugin", "java");
@@ -44,16 +44,16 @@ public class JavaToJavaccDependencyActionTest {
         applyJavaccPluginToProject();
         applyJavaPluginToProject();
         JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
-        
+
         action.execute(project);
-        
+
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
             Set<Object> dependencies = task.getDependsOn();
             assertTrue(dependencies.contains(project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE)));
         }
     }
-    
+
     @Test
     public void generatedJavaFilesAreAddedToMainJavaSourceSet() {
         applyJavaccPluginToProject();
@@ -62,37 +62,51 @@ public class JavaToJavaccDependencyActionTest {
         final File outputDirectory = new File(getClass().getResource("/testgenerated").getFile());
         CompileJavaccTask compileJavaccTask = (CompileJavaccTask) project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE);
         compileJavaccTask.setOutputDirectory(outputDirectory);
-        
+
         action.execute(project);
-        
+
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
             assertTrue(task.getSource().contains(new File(outputDirectory.getAbsolutePath() + File.separator + "someSourceFile.txt")));
         }
     }
-    
-    
+
+
     @Test
     public void compileJavaDoesNotDependOnCompileJavaccWhenJavaccPluginNotApplied() {
         applyJavaPluginToProject();
         JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
-        
+
         action.execute(project);
-        
+
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
             Set<Object> dependencies = task.getDependsOn();
             assertFalse(dependencies.contains(project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE)));
         }
     }
-    
+
+    @Test
+    public void compileJavaDoesNotDependOnCompileJJTreeWhenJavaccPluginNotApplied() {
+        applyJavaPluginToProject();
+        JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
+
+        action.execute(project);
+
+        TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
+        for (JavaCompile task : javaCompilationTasks) {
+            Set<Object> dependencies = task.getDependsOn();
+            assertFalse(dependencies.contains(project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE)));
+        }
+    }
+
     @Test
     public void noInteractionsWithProjectIfJavaPluginNotApplied() {
         project = mock(Project.class, Answers.RETURNS_MOCKS.get());
         JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
-        
+
         action.execute(project);
-        
+
         verify(project).getPlugins();
         verifyNoMoreInteractions(project);
     }

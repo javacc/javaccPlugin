@@ -20,7 +20,7 @@ public class JavaccPluginTest {
         project = ProjectBuilder.builder().build();
         Map<String, String> pluginNames = new HashMap<String, String>(1);
         pluginNames.put("plugin", "ca.coglinc.javacc");
-        
+
         project.apply(pluginNames);
     }
 
@@ -29,5 +29,12 @@ public class JavaccPluginTest {
         final Task compileJavaccTask = project.getTasks().getByName("compileJavacc");
         assertNotNull(compileJavaccTask);
         assertTrue(compileJavaccTask instanceof CompileJavaccTask);
+    }
+
+    @Test
+    public void pluginAddsCompileJJTreeTaskToProject() {
+        final Task compileJJTreeTask = project.getTasks().getByName("compileJJTree");
+        assertNotNull(compileJJTreeTask);
+        assertTrue(compileJJTreeTask instanceof CompileJJTreeTask);
     }
 }
