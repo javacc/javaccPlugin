@@ -1,14 +1,14 @@
 package ca.coglinc.gradle.plugins.javacc;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import org.gradle.api.Plugin;
-import org.gradle.api.Project;
-import org.gradle.api.Task;
+import org.gradle.api.*;
 
 public class JavaccPlugin implements Plugin<Project> {
 
+    public static final String GROUP = "JavaCC";
+
+    @Override
     public void apply(Project project) {
         project.task(compileJavaccTaskOptions(), CompileJavaccTask.TASK_NAME_VALUE);
         project.task(compileJJTreeTaskOptions(), CompileJJTreeTask.TASK_NAME_VALUE);
@@ -22,7 +22,7 @@ public class JavaccPlugin implements Plugin<Project> {
 
         options.put(Task.TASK_TYPE, CompileJavaccTask.class);
         options.put(Task.TASK_DESCRIPTION, CompileJavaccTask.TASK_DESCRIPTION_VALUE);
-        options.put(Task.TASK_GROUP, CompileJavaccTask.JAVACC_GROUP);
+        options.put(Task.TASK_GROUP, GROUP);
 
         return options;
     }
@@ -32,7 +32,7 @@ public class JavaccPlugin implements Plugin<Project> {
 
         options.put(Task.TASK_TYPE, CompileJJTreeTask.class);
         options.put(Task.TASK_DESCRIPTION, CompileJJTreeTask.TASK_DESCRIPTION_VALUE);
-        options.put(Task.TASK_GROUP, CompileJJTreeTask.JAVACC_GROUP);
+        options.put(Task.TASK_GROUP, GROUP);
 
         return options;
     }

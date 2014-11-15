@@ -15,21 +15,21 @@ public class CompilationSteps {
     private ProjectConnection project;
     private File projectDirectory;
     private File outputDirectory;
-    
+
     public void givenAProjectNamed(String projectName) throws URISyntaxException {
         URL resource = getClass().getResource("projects" + File.separator + projectName);
         projectDirectory = new File(resource.toURI());
     }
-    
+
     public void whenIExecuteTask(String taskName) throws IOException {
         project = GradleConnector.newConnector().forProjectDirectory(projectDirectory).connect();
-        
+
         BuildLauncher build = project.newBuild();
-        build.forTasks(taskName).setStandardOutput(System.out);
+        build.forTasks("clean", taskName).setStandardOutput(System.out);
         build.withArguments("--debug", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle", "-Dplugin.version=" + System.getProperty("PLUGIN_VERSION"));
         build.run();
     }
-    
+
     public void thenAssertOutputDirectoryExists(String outputDirectory) {
         this.outputDirectory = new File(projectDirectory, outputDirectory);
         assertTrue(this.outputDirectory.exists());

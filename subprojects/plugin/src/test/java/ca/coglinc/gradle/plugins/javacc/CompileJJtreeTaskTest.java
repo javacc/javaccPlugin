@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.mockito.Answers;
 
 public class CompileJJtreeTaskTest {
-    private static final String[] GENERATED_FILES = {"grammar.jj", "HelloTreeConstants.java", "JJTHelloState.java",
+    private static final String[] GENERATED_FILES = {"JJTreeOutputTest.jj", "HelloTreeConstants.java", "JJTHelloState.java",
                                                      "Node.java", "SimpleNode.java"};
 
     private CompileJJTreeTask task;
