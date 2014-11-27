@@ -67,7 +67,7 @@ public class JavaToJavaccDependencyActionTest {
         
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
-            assertFalse(task.getSource().contains(new File(outputDirectory.getAbsolutePath() + File.separator + "JavaccTestOutput.java")));
+            assertTrue(task.getSource().contains(new File(outputDirectory.getAbsolutePath() + File.separator + "someSourceFile.txt")));
         }
     }
     
