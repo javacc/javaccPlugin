@@ -48,6 +48,7 @@ checkstyle {
 }
 
 findbugs {
+    toolVersion = '2.0.3'
     sourceSets = [sourceSets.main, sourceSets.test]
     effort = "min"
     ignoreFailures = true
