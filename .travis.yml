@@ -1,5 +1,5 @@
 language: java
-before_script: ./gradlew assemble -x signArchives
+install: ./gradlew assemble -x signArchives
 jdk:
   - oraclejdk8
   - oraclejdk7
