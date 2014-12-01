@@ -1,0 +1,7 @@
+language: java
+before_script: ./gradlew assemble -x signArchives
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk7
+  - openjdk6
