@@ -1,5 +1,4 @@
 language: java
-install: ./gradlew assemble -x signArchives
 jdk:
   - oraclejdk7
   - openjdk7
