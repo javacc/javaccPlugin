@@ -1,6 +1,7 @@
 # JavaCC Compiler Plugin for Gradle
 
 [![Build Status](https://travis-ci.org/johnmartel/javaccPlugin.svg)](https://travis-ci.org/johnmartel/javaccPlugin) 
+[![Coverage Status](https://img.shields.io/coveralls/johnmartel/javaccPlugin.svg)](https://coveralls.io/r/johnmartel/javaccPlugin)
 
 Provides the ability to use [JavaCC](http://javacc.java.net/) via [Gradle](http://www.gradle.org/). If the 'java' plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.
 
@@ -10,13 +11,21 @@ Simply grab the plugin from Maven Central:
 
 Add the following lines to your `build.gradle` script:
 
+Gradle 2.1+
+```groovy
+plugins {
+  id "ca.coglinc.javacc" version "2.0.4"
+}
+```
+
+Gradle <2.1
 ```groovy
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.0.3'
+        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.0.4'
     }
 }
 apply plugin: 'ca.coglinc.javacc'
@@ -75,9 +84,13 @@ The artifacts for this plugin are signed using the [PGP key](http://pgp.mit.edu:
 ## Releasing
 
 The following command can be used to release the project, upload to Maven Central and upload to Bintray:
-```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/johnmartel/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -Psigning.keyId=[keyId] -Psigning.password=[password] -Psigning.secretKeyRingFile=[filename] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
+```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/johnmartel/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
 
 ## Changelog
+
+### 2.0.4
+- Plugin now builds with Gradle 2.2.1
+- Now publishes to Bintray using the latest version of com.jfrog.bintray plugin ans syncs to Maven Central via this plugin
 
 ### 2.0.3
 - CompileJavaccTask is now a [SourceTask](http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.SourceTask.html) and supports include/exclude filters
