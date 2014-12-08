@@ -90,7 +90,7 @@ The following command can be used to release the project, upload to Maven Centra
 
 ### 2.0.4
 - Plugin now builds with Gradle 2.2.1
-- Now publishes to Bintray using the latest version of com.jfrog.bintray plugin ans syncs to Maven Central via this plugin
+- Now publishes to Bintray using the latest version of com.jfrog.bintray plugin and syncs to Maven Central via this plugin
 
 ### 2.0.3
 - CompileJavaccTask is now a [SourceTask](http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.SourceTask.html) and supports include/exclude filters
