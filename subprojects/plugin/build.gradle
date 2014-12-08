@@ -1,17 +1,11 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
-    }
+plugins {
+    id "com.jfrog.bintray" version "1.0"
 }
 
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
-apply plugin: 'com.jfrog.bintray'
 
 defaultTasks 'clean', 'build', 'install'
 
@@ -92,8 +86,20 @@ bintray {
         ext.bintrayApiKey = ''
     }
     
+    if (!project.hasProperty('ossrhUsername')) {
+        ext.ossrhUsername = ''
+    }
+    
+    if (!project.hasProperty('ossrhPassword')) {
+        ext.ossrhPassword = ''
+    }
+    
     if (!project.hasProperty('releaseVersion')) {
         ext.releaseVersion = ''
+    }
+    
+    if (!project.hasProperty('gpgPassphrase')) {
+        ext.gpgPassphrase = ''
     }
     
     user = bintrayUser
@@ -115,8 +121,19 @@ bintray {
         
         version {
             name = releaseVersion
+            released = new Date()
             vcsTag = 'javacc-gradle-plugin-' + releaseVersion
             attributes = ['gradle-plugin': 'ca.coglinc.javacc:ca.coglinc:javacc-gradle-plugin']
+            gpg {
+                sign = true
+                passphrase = gpgPassphrase
+            }
+            mavenCentralSync {
+                sync = true
+                user = ossrhUsername
+                password = ossrhPassword
+                close = '1'
+            }
         }
     }
 }

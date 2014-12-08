@@ -7,9 +7,6 @@ buildscript {
     }
 }
 
-apply plugin: 'signing'
-apply plugin: 'maven'
-
 import org.ajoberstar.grgit.Grgit
 
 defaultTasks 'release'
@@ -185,80 +182,17 @@ tasks.addRule('Pattern: copy<VersionType>BuildFile: Overwrites build.gradle with
     }
 }
 
+project(':javacc-gradle-plugin-acceptance-tests').test.mustRunAfter project(':javacc-gradle-plugin').build
+
 tagRelease.mustRunAfter generateReadmeFileFromTemplate, copyReleaseBuildFile
 
-signing {
-    sign project(':javacc-gradle-plugin').configurations.archives
-}
-
-uploadArchives {
-    if (!project.hasProperty('ossrhUsername')) {
-        ext.ossrhUsername = ''
-    }
-    
-    if (!project.hasProperty('ossrhPassword')) {
-        ext.ossrhPassword = ''
-    }
-    
-    if (!project.hasProperty(releaseVersionProperty)) {
-        ext.releaseVersion = ''
-    } else {
-        ext.releaseVersion = project.getProperty(releaseVersionProperty)
-    }
-                
-    repositories {
-        mavenDeployer {
-            beforeDeployment {
-                MavenDeployment deployment -> signing.signPom(deployment)
-            }
-            
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-        
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-            
-            pom.project {
-                version = releaseVersion
-                packaging 'jar'
-                name 'javacc-gradle-plugin'
-                description 'Provides the ability to use JavaCC with Gradle. Compiles JavaCC files to Java.'
-                url 'https://github.com/johnmartel/javaccPlugin'
-                licenses {
-                    license {
-                        name 'The MIT License (MIT)'
-                        url 'http://opensource.org/licenses/MIT'
-                        distribution 'repo'
-                    }
-                }
-                scm {
-                    url 'https://github.com/johnmartel/javaccPlugin'
-                    connection 'scm:https://johnmartel@github.com/johnmartel/javaccPlugin.git'
-                    developerConnection 'scm:git://github.com/johnmartel/javaccPlugin.git' 
-                }
-                developers {
-                    developer {
-                        id 'jmartel'
-                        name 'Jonathan Martel'
-                        email 'jonathan.martel@coglinc.ca'
-                    }
-                }
-            }
-        }  
-    }  
-}
-
-uploadArchives.mustRunAfter copyNextBuildFile
-
-project(':javacc-gradle-plugin').bintrayUpload.mustRunAfter uploadArchives
+project(':javacc-gradle-plugin').bintrayUpload.mustRunAfter tagRelease
 
 writeNextVersion.mustRunAfter tagRelease
 
 copyNextBuildFile.mustRunAfter writeNextVersion
 
-task release(dependsOn: [project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies, project(':javacc-gradle-plugin').build, project(':javacc-gradle-plugin-acceptance-tests').test, generateReadmeFileFromTemplate, copyReleaseBuildFile, tagRelease, uploadArchives, project(':javacc-gradle-plugin').bintrayUpload, copyNextBuildFile]) {
+task release(dependsOn: [project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies, project(':javacc-gradle-plugin').build, project(':javacc-gradle-plugin-acceptance-tests').test, generateReadmeFileFromTemplate, copyReleaseBuildFile, tagRelease, project(':javacc-gradle-plugin').bintrayUpload, copyNextBuildFile]) {
     description "Releases the plugin by verifying there are no snapshot dependencies, writing the next version to build.gradle and committing the build file. " +
         "Versions must be specified by using the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties."
     
