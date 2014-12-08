@@ -7,6 +7,7 @@ apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 defaultTasks 'clean', 'build', 'install'
 
@@ -76,6 +77,42 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourceJar
     archives javadocJar
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            
+            artifact sourceJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+            
+            pom.withXml {
+                asNode().appendNode('name', project.getName())
+                asNode().appendNode('description', 'Provides the ability to use JavaCC with Gradle. Compiles JavaCC files to Java.')
+                asNode().appendNode('url', 'https://github.com/johnmartel/javaccPlugin')
+                
+                def license = asNode().appendNode('licenses').appendNode('license')
+                license.appendNode('name', 'The MIT License (MIT)')
+                license.appendNode('url', 'http://opensource.org/licenses/MIT')
+                license.appendNode('distribution', 'repo')
+                
+                def scm = asNode().appendNode('scm')
+                scm.appendNode('url', 'https://github.com/johnmartel/javaccPlugin')
+                scm.appendNode('connection', 'scm:https://johnmartel@github.com/johnmartel/javaccPlugin.git')
+                scm.appendNode('developerConnection', 'scm:git://github.com/johnmartel/javaccPlugin.git')
+                
+                def developer = asNode().appendNode('developers').appendNode('developer')
+                developer.appendNode('id', 'jmartel')
+                developer.appendNode('name', 'Jonathan Martel')
+                developer.appendNode('email', 'jonathan.martel@coglinc.ca')
+            }
+        }
+    }
 }
 
 bintray {
