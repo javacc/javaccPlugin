@@ -1,5 +1,7 @@
 package javacc.compilation;
 
+import static java.lang.String.format;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -17,7 +19,11 @@ public class CompilationSteps {
     private File outputDirectory;
 
     public void givenAProjectNamed(String projectName) throws URISyntaxException {
-        URL resource = getClass().getResource("projects" + File.separator + projectName);
+        String projectPath = "projects" + File.separator + projectName;
+        URL resource = getClass().getResource(projectPath);
+        if (resource == null)
+            throw new AssertionError(format("Project at path [%s] does not exist.", projectPath));
+
         projectDirectory = new File(resource.toURI());
     }
 
@@ -26,13 +32,18 @@ public class CompilationSteps {
 
         BuildLauncher build = project.newBuild();
         build.forTasks("clean", taskName).setStandardOutput(System.out);
-        build.withArguments("--debug", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle", "-Dplugin.version=" + System.getProperty("PLUGIN_VERSION"));
+        build.withArguments("--debug", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle",
+            "-Dplugin.version=" + System.getProperty("PLUGIN_VERSION"));
         build.run();
     }
 
     public void thenAssertOutputDirectoryExists(String outputDirectory) {
         this.outputDirectory = new File(projectDirectory, outputDirectory);
         assertTrue(this.outputDirectory.exists());
+    }
+
+    public void thenAssertOutputDirectoryDoesNotExists(String outputDirectory) {
+        assertFalse(new File(projectDirectory, outputDirectory).exists());
     }
 
     public void andAssertFileWasGenerated(String filename) {
