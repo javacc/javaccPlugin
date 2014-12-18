@@ -26,7 +26,3 @@ repositories {
 
 dependencies {
 }
-
-compileJJTree {
-    inputDirectory = file('src/main/jjtree')
-}

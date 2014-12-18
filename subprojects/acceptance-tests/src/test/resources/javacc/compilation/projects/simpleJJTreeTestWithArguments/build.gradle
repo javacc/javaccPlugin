@@ -28,6 +28,5 @@ dependencies {
 }
 
 compileJJTree {
-    inputDirectory = file('src/main/jjtree')
     arguments = [output_file : 'grammar.jj']
 }

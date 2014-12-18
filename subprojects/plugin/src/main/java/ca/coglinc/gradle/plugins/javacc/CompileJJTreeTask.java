@@ -12,14 +12,17 @@ public class CompileJJTreeTask extends SourceTask {
     public static final String TASK_NAME_VALUE = "compileJJTree";
     public static final String TASK_DESCRIPTION_VALUE = "Compiles JJTree files into JavaCC files";
 
+    private static final String DEFAULT_INPUT_DIRECTORY = File.separator + "src" + File.separator + "main" + File.separator + "jjtree";
     private static final String DEFAULT_OUTPUT_DIRECTORY = File.separator + "generated" + File.separator + "jjtree";
 
-    private File inputDirectory = null;
+    private File inputDirectory = new File(getProject().getProjectDir().getAbsolutePath() + DEFAULT_INPUT_DIRECTORY);
     private File outputDirectory = new File(getProject().getBuildDir().getAbsolutePath() + DEFAULT_OUTPUT_DIRECTORY);
     private Map<String, String> jjtreeArguments;
 
     public CompileJJTreeTask() {
         include("**/*.jjt");
+
+        setInputDirectory(inputDirectory);
     }
 
     @TaskAction
