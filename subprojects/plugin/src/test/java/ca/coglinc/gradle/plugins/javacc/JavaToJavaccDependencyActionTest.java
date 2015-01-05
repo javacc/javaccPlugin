@@ -55,7 +55,7 @@ public class JavaToJavaccDependencyActionTest {
     }
 
     @Test
-    public void generatedJavaFilesAreAddedToMainJavaSourceSet() {
+    public void generatedJavaFilesFromCompileJavaccAreAddedToMainJavaSourceSet() {
         applyJavaccPluginToProject();
         applyJavaPluginToProject();
         JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
@@ -67,10 +67,34 @@ public class JavaToJavaccDependencyActionTest {
 
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
-            assertTrue(task.getSource().contains(new File(outputDirectory.getAbsolutePath() + File.separator + "someSourceFile.txt")));
+            assertTrue(task.getSource().contains(new File(outputDirectory, "someSourceFile.txt")));
         }
     }
 
+    @Test
+    public void generatedJavaccFilesFromCompileJJTreeAreAddedToCompileJavaccSourceSet() {
+        applyJavaccPluginToProject();
+        applyJavaPluginToProject();
+
+        JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
+        final File inputDirectory = new File(getClass().getResource("/jjtree/input").getFile());
+        final File outputDirectory = new File(getClass().getResource("/jjtree/testgenerated").getFile());
+        CompileJJTreeTask compileJJTreeTask = (CompileJJTreeTask) project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE);
+        compileJJTreeTask.setInputDirectory(inputDirectory);
+        compileJJTreeTask.setOutputDirectory(outputDirectory);
+
+        action.execute(project);
+
+        TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
+        for (JavaCompile task : javaCompilationTasks) {
+            assertTrue(task.getSource().contains(new File(outputDirectory, "someSourceFile.jj")));
+        }
+
+        TaskCollection<CompileJavaccTask> compileJavaccsTasks = project.getTasks().withType(CompileJavaccTask.class);
+        for (CompileJavaccTask task : compileJavaccsTasks) {
+            assertTrue(task.getSource().contains(new File(outputDirectory, "someSourceFile.jj")));
+        }
+    }
 
     @Test
     public void compileJavaDoesNotDependOnCompileJavaccWhenJavaccPluginNotApplied() {
@@ -95,6 +119,44 @@ public class JavaToJavaccDependencyActionTest {
 
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
+            Set<Object> dependencies = task.getDependsOn();
+            assertFalse(dependencies.contains(project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE)));
+        }
+    }
+
+    @Test
+    public void compileJavaccDependOnCompileJJTreeWhenInputDirectoryNotEmpty() {
+        applyJavaPluginToProject();
+        applyJavaccPluginToProject();
+        JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
+
+        final File inputDirectory = new File(getClass().getResource("/jjtree/input").getFile());
+        CompileJJTreeTask compileJJTreeTask = (CompileJJTreeTask) project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE);
+        compileJJTreeTask.setInputDirectory(inputDirectory);
+
+        action.execute(project);
+
+        TaskCollection<CompileJavaccTask> compileJavaccTasks = project.getTasks().withType(CompileJavaccTask.class);
+        for (CompileJavaccTask task : compileJavaccTasks) {
+            Set<Object> dependencies = task.getDependsOn();
+            assertTrue(dependencies.contains(project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE)));
+        }
+    }
+
+    @Test
+    public void compileJavaccDoesNotDependOnCompileJJTreeWhenInputDirectoryEmpty() {
+        applyJavaPluginToProject();
+        applyJavaccPluginToProject();
+        JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
+
+        final File inputDirectory = new File(getClass().getResource("/empty").getFile());
+        CompileJJTreeTask compileJJTreeTask = (CompileJJTreeTask) project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE);
+        compileJJTreeTask.setInputDirectory(inputDirectory);
+
+        action.execute(project);
+
+        TaskCollection<CompileJavaccTask> compileJavaccTasks = project.getTasks().withType(CompileJavaccTask.class);
+        for (CompileJavaccTask task : compileJavaccTasks) {
             Set<Object> dependencies = task.getDependsOn();
             assertFalse(dependencies.contains(project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE)));
         }

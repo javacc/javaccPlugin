@@ -47,7 +47,8 @@ public class CompileJavaccTask extends SourceTask {
         getLogger().debug("Invoking JavaCC with arguments [{}]", (Object[]) arguments);
 
         int errorCode = Main.mainProgram(arguments);
-        if (errorCode != 0) throw new IllegalStateException("Javacc failed with error code: [" + errorCode + "]");
+        if (errorCode != 0)
+            throw new IllegalStateException("Javacc failed with error code: [" + errorCode + "]");
     }
 
     String[] getJavaccArgumentsForCommandLine(File javaccFile) {

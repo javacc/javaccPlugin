@@ -41,7 +41,8 @@ public class CompileJJTreeTask extends SourceTask {
         getLogger().debug("Invoking JJTree with arguments [{}]", (Object[]) arguments);
 
         int errorCode = new JJTree().main(arguments);
-        if (errorCode != 0) throw new IllegalStateException("JJTree failed with error code: [" + errorCode + "]");
+        if (errorCode != 0)
+            throw new IllegalStateException("JJTree failed with error code: [" + errorCode + "]");
     }
 
     String[] getJJTreeArgumentsForCommandLine(File inputFile) {
@@ -54,7 +55,8 @@ public class CompileJJTreeTask extends SourceTask {
     }
 
     private String getJJTreeOutputDirectoryOption(File parentFile) {
-        return "-JJTREE_OUTPUT_DIRECTORY=" + outputDirectory.getAbsolutePath() + parentFile.getAbsolutePath().replace(inputDirectory.getAbsolutePath(), "");
+        return "-JJTREE_OUTPUT_DIRECTORY=" + outputDirectory.getAbsolutePath()
+            + parentFile.getAbsolutePath().replace(inputDirectory.getAbsolutePath(), "");
     }
 
     void setInputDirectory(File inputDirectory) {
