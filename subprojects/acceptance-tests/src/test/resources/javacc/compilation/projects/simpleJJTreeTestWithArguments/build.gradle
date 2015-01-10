@@ -28,5 +28,5 @@ dependencies {
 }
 
 compileJJTree {
-    arguments = [output_file : 'grammar.jj']
+    arguments([output_file : 'grammar.jj'])
 }

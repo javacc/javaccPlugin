@@ -146,7 +146,7 @@ public class CompileJavaccTaskTest {
     @Test(expected = TaskValidationException.class)
     public void outputDirectoryIsMandatory() {
         setTaskInputDirectory("/javacc/input");
-        task.setOutputDirectory(null);
+        task.setOutputDirectory((File) null);
 
         try {
             task.execute();
@@ -188,7 +188,7 @@ public class CompileJavaccTaskTest {
         when(javaccFile.getAbsolutePath()).thenReturn(inputFileAbsolutePath);
         when(javaccFile.getParentFile()).thenReturn(task.getSource().getSingleFile().getParentFile());
 
-        String[] javaccArgumentsForCommandLine = task.getJavaccArgumentsForCommandLine(javaccFile);
+        String[] javaccArgumentsForCommandLine = task.buildProgramArguments(javaccFile);
 
         assertEquals(2, javaccArgumentsForCommandLine.length);
         assertThat(javaccArgumentsForCommandLine,
@@ -203,9 +203,9 @@ public class CompileJavaccTaskTest {
         final String inputFileAbsolutePath = task.getSource().getAsPath();
         when(javaccFile.getAbsolutePath()).thenReturn(inputFileAbsolutePath);
         when(javaccFile.getParentFile()).thenReturn(task.getSource().getSingleFile().getParentFile());
-        task.setJavaccArguments(new HashMap<String, String>(0));
+        task.setArguments(new HashMap<String, String>(0));
 
-        String[] javaccArgumentsForCommandLine = task.getJavaccArgumentsForCommandLine(javaccFile);
+        String[] javaccArgumentsForCommandLine = task.buildProgramArguments(javaccFile);
 
         assertEquals(2, javaccArgumentsForCommandLine.length);
         assertThat(javaccArgumentsForCommandLine,
@@ -222,14 +222,14 @@ public class CompileJavaccTaskTest {
         when(javaccFile.getParentFile()).thenReturn(task.getSource().getSingleFile().getParentFile());
         LinkedHashMap<String, String> javaccArguments = new LinkedHashMap<String, String>(1);
         javaccArguments.put("static", Boolean.FALSE.toString());
-        task.setJavaccArguments(javaccArguments);
+        task.setArguments(javaccArguments);
 
-        String[] javaccArgumentsForCommandLine = task.getJavaccArgumentsForCommandLine(javaccFile);
+        String[] javaccArgumentsForCommandLine = task.buildProgramArguments(javaccFile);
 
         final int outputDirectoryAndProvidedArgumentAndFileToCompile = 3;
         assertEquals(outputDirectoryAndProvidedArgumentAndFileToCompile, javaccArgumentsForCommandLine.length);
         final Matcher<String[]> containsOuputDirectoryFileToCompileAndOtherProvidedArguments = IsArrayContainingInOrder.arrayContaining(
-            "-OUTPUT_DIRECTORY=" + outputDirectory.getAbsolutePath(), "-static=false", inputFileAbsolutePath);
+            "-static=false", "-OUTPUT_DIRECTORY=" + outputDirectory.getAbsolutePath(), inputFileAbsolutePath);
         assertThat(javaccArgumentsForCommandLine, containsOuputDirectoryFileToCompileAndOtherProvidedArguments);
     }
 }

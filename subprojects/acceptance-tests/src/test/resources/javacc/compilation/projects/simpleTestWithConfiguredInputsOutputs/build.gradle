@@ -28,6 +28,6 @@ dependencies {
 }
 
 compileJavacc {
-	inputDirectory = file('src/main/custom')
-	outputDirectory = file(project.buildDir.absolutePath + '/output');
+    inputDirectory('src/main/custom')
+    outputDirectory('output')
 }

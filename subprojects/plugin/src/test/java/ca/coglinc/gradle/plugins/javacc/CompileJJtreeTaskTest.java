@@ -130,7 +130,7 @@ public class CompileJJtreeTaskTest {
     public void outputDirectoryIsMandatory() {
         final File inputDirectory = new File(getClass().getResource("/jjtree/input").getFile());
         task.setInputDirectory(inputDirectory);
-        task.setOutputDirectory(null);
+        task.setOutputDirectory((File) null);
 
         try {
             task.execute();

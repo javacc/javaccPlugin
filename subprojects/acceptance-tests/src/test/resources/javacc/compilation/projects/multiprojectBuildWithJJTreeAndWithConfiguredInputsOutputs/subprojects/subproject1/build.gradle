@@ -28,10 +28,10 @@ dependencies {
 }
 
 compileJavacc {
-    outputDirectory = file(project.buildDir.absolutePath + '/output/javacc');
+    outputDirectory('output/javacc')
 }
 
 compileJJTree {
-    inputDirectory = file('src/main/custom')
-    outputDirectory = file(project.buildDir.absolutePath + '/output/jjtree');
+    inputDirectory('src/main/custom')
+    outputDirectory('output/jjtree')
 }
