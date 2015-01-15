@@ -1,11 +1,5 @@
 package ca.coglinc.gradle.plugins.javacc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,13 +11,15 @@ import org.gradle.api.tasks.TaskExecutionException;
 import org.gradle.api.tasks.TaskValidationException;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
+import org.mockito.Mockito;
 
 public class CompileJJtreeTaskTest {
     private static final String[] GENERATED_FILES = {"JJTreeOutputTest.jj", "HelloTreeConstants.java", "JJTHelloState.java", "Node.java",
-        "SimpleNode.java" };
+    "SimpleNode.java" };
 
     private CompileJJTreeTask task;
 
@@ -70,9 +66,9 @@ public class CompileJJtreeTaskTest {
 
         task.execute();
 
-        assertTrue(outputDirectory.isDirectory());
-        assertEquals(GENERATED_FILES.length, outputDirectory.list().length);
-        assertTrue(Arrays.asList(outputDirectory.list()).containsAll(Arrays.asList(GENERATED_FILES)));
+        Assert.assertTrue(outputDirectory.isDirectory());
+        Assert.assertEquals(CompileJJtreeTaskTest.GENERATED_FILES.length, outputDirectory.list().length);
+        Assert.assertTrue(Arrays.asList(outputDirectory.list()).containsAll(Arrays.asList(CompileJJtreeTaskTest.GENERATED_FILES)));
     }
 
     @Test
@@ -81,17 +77,17 @@ public class CompileJJtreeTaskTest {
     }
 
     private void testExecuteTaskWithNoInputFiles(File[] noInputFiles) {
-        final File inputDirectory = mock(File.class, Answers.RETURNS_MOCKS.get());
-        when(inputDirectory.listFiles()).thenReturn(noInputFiles);
-        when(inputDirectory.exists()).thenReturn(Boolean.TRUE);
-        when(inputDirectory.isDirectory()).thenReturn(Boolean.TRUE);
+        final File inputDirectory = Mockito.mock(File.class, Answers.RETURNS_MOCKS.get());
+        Mockito.when(inputDirectory.listFiles()).thenReturn(noInputFiles);
+        Mockito.when(inputDirectory.exists()).thenReturn(Boolean.TRUE);
+        Mockito.when(inputDirectory.isDirectory()).thenReturn(Boolean.TRUE);
         task.setInputDirectory(inputDirectory);
         final File outputDirectory = new File(getClass().getResource("/").getFile() + "output");
         task.setOutputDirectory(outputDirectory);
 
         task.execute();
 
-        assertFalse(outputDirectory.isDirectory());
+        Assert.assertFalse(outputDirectory.isDirectory());
     }
 
     @Test
@@ -108,12 +104,12 @@ public class CompileJJtreeTaskTest {
 
         task.execute();
 
-        assertTrue(outputDirectory.isDirectory());
-        assertEquals(1, outputDirectory.list().length);
-        assertEquals("test", outputDirectory.list()[0]);
+        Assert.assertTrue(outputDirectory.isDirectory());
+        Assert.assertEquals(1, outputDirectory.list().length);
+        Assert.assertEquals("test", outputDirectory.list()[0]);
         final String[] filesInTestPackageUnderOutputDirectory = outputDirectory.listFiles()[0].list();
-        assertEquals(GENERATED_FILES.length, filesInTestPackageUnderOutputDirectory.length);
-        assertTrue(Arrays.asList(filesInTestPackageUnderOutputDirectory).containsAll(Arrays.asList(GENERATED_FILES)));
+        Assert.assertEquals(CompileJJtreeTaskTest.GENERATED_FILES.length, filesInTestPackageUnderOutputDirectory.length);
+        Assert.assertTrue(Arrays.asList(filesInTestPackageUnderOutputDirectory).containsAll(Arrays.asList(CompileJJtreeTaskTest.GENERATED_FILES)));
     }
 
     @Test(expected = TaskExecutionException.class)
@@ -135,7 +131,7 @@ public class CompileJJtreeTaskTest {
         try {
             task.execute();
         } catch (TaskExecutionException e) {
-            assertTrue(e.getCause() instanceof IllegalArgumentException);
+            Assert.assertTrue(e.getCause() instanceof IllegalArgumentException);
             throw e;
         }
     }
@@ -148,8 +144,8 @@ public class CompileJJtreeTaskTest {
         task.execute();
 
         FileCollection inputFiles = task.getInputs().getFiles();
-        assertEquals(1, inputFiles.getFiles().size());
-        assertEquals("JJTreeOutputTest.jjt", ((File) inputFiles.getFiles().toArray()[0]).getName());
+        Assert.assertEquals(1, inputFiles.getFiles().size());
+        Assert.assertEquals("JJTreeOutputTest.jjt", ((File) inputFiles.getFiles().toArray()[0]).getName());
     }
 
     @Test
@@ -162,7 +158,7 @@ public class CompileJJtreeTaskTest {
         task.execute();
 
         FileCollection outputFiles = task.getOutputs().getFiles();
-        assertEquals(1, outputFiles.getFiles().size());
-        assertEquals("output", ((File) outputFiles.getFiles().toArray()[0]).getName());
+        Assert.assertEquals(1, outputFiles.getFiles().size());
+        Assert.assertEquals("output", ((File) outputFiles.getFiles().toArray()[0]).getName());
     }
 }

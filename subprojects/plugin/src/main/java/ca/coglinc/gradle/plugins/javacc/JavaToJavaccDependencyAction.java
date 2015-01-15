@@ -9,8 +9,9 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
 
     @Override
     public void execute(Project project) {
-        if (!project.getPlugins().hasPlugin("java"))
+        if (!project.getPlugins().hasPlugin("java")) {
             return;
+        }
 
         configureCompileJJTreeTask(project);
         configureCompileJavaccTask(project);
@@ -18,8 +19,9 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
 
     private void configureCompileJJTreeTask(Project project) {
         CompileJJTreeTask compileJJTreeTask = (CompileJJTreeTask) project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE);
-        if (compileJJTreeTask == null)
+        if (compileJJTreeTask == null) {
             return;
+        }
 
         if (!compileJJTreeTask.getSource().isEmpty()) {
             addJJTreeDependencyToJavaccCompileTask(project.getTasks().withType(JavaCompile.class),

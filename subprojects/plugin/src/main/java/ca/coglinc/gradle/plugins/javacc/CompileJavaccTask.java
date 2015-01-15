@@ -14,20 +14,24 @@ public class CompileJavaccTask extends AbstractJavaccTask {
     private static final String DEFAULT_OUTPUT_DIRECTORY = File.separator + "generated" + File.separator + "javacc";
 
     public CompileJavaccTask() {
-        super(DEFAULT_INPUT_DIRECTORY, DEFAULT_OUTPUT_DIRECTORY, "**/*.jj");
+        super(CompileJavaccTask.DEFAULT_INPUT_DIRECTORY, CompileJavaccTask.DEFAULT_OUTPUT_DIRECTORY, "**/*.jj");
     }
 
+    @Override
     protected void augmentArguments(File inputDirectory, RelativePath inputRelativePath, Map<String, String> arguments) {
         arguments.put("OUTPUT_DIRECTORY", inputRelativePath.getFile(getOutputDirectory()).getParentFile().getAbsolutePath());
     }
 
+    @Override
     protected String getProgramName() {
         return "JavaCC";
     }
 
+    @Override
     protected void invokeCompiler(String[] arguments) throws Exception {
         int errorCode = Main.mainProgram(arguments);
-        if (errorCode != 0)
+        if (errorCode != 0) {
             throw new IllegalStateException("Javacc failed with error code: [" + errorCode + "]");
+        }
     }
 }

@@ -1,23 +1,15 @@
 package ca.coglinc.gradle.plugins.javacc;
 
-import static java.lang.String.format;
-
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.gradle.api.file.EmptyFileVisitor;
-import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileVisitDetails;
-import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RelativePath;
-import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.SourceTask;
 import org.gradle.api.tasks.TaskAction;
-import org.javacc.parser.Main;
 
 public abstract class AbstractJavaccTask extends SourceTask {
 
@@ -45,9 +37,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
     }
 
     protected void compile(File inputDirectory, RelativePath inputRelativePath) {
-        getLogger().debug("Compiling {} file [{}] from [{}] into [{}]", getProgramName(), inputRelativePath,
-            inputDirectory,
-            getOutputDirectory());
+        getLogger().debug("Compiling {} file [{}] from [{}] into [{}]", getProgramName(), inputRelativePath, inputDirectory, getOutputDirectory());
 
         String[] arguments = buildProgramArguments(inputDirectory, inputRelativePath);
 
@@ -55,7 +45,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
         try {
             invokeCompiler(arguments);
         } catch (Exception exception) {
-            throw new JavaccTaskException(format("Unable to compile '%s' from '%s' into '%s'", inputRelativePath, inputDirectory,
+            throw new JavaccTaskException(String.format("Unable to compile '%s' from '%s' into '%s'", inputRelativePath, inputDirectory,
                 getOutputDirectory()));
         }
     }
@@ -128,8 +118,9 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
     String[] buildProgramArguments(File inputDirectory, RelativePath inputRelativePath) {
         Map<String, String> arguments = new HashMap<String, String>();
-        if (programArguments != null)
+        if (programArguments != null) {
             arguments.putAll(programArguments);
+        }
 
         augmentArguments(inputDirectory, inputRelativePath, arguments);
 

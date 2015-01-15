@@ -1,11 +1,5 @@
 package ca.coglinc.gradle.plugins.javacc;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +9,11 @@ import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.testfixtures.ProjectBuilder;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
+import org.mockito.Mockito;
 
 public class JavaToJavaccDependencyActionTest {
     private Project project;
@@ -50,7 +46,7 @@ public class JavaToJavaccDependencyActionTest {
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
             Set<Object> dependencies = task.getDependsOn();
-            assertTrue(dependencies.contains(project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE)));
+            Assert.assertTrue(dependencies.contains(project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE)));
         }
     }
 
@@ -67,7 +63,7 @@ public class JavaToJavaccDependencyActionTest {
 
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
-            assertTrue(task.getSource().contains(new File(outputDirectory, "someSourceFile.txt")));
+            Assert.assertTrue(task.getSource().contains(new File(outputDirectory, "someSourceFile.txt")));
         }
     }
 
@@ -87,12 +83,12 @@ public class JavaToJavaccDependencyActionTest {
 
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
-            assertTrue(task.getSource().contains(new File(outputDirectory, "someSourceFile.jj")));
+            Assert.assertTrue(task.getSource().contains(new File(outputDirectory, "someSourceFile.jj")));
         }
 
         TaskCollection<CompileJavaccTask> compileJavaccsTasks = project.getTasks().withType(CompileJavaccTask.class);
         for (CompileJavaccTask task : compileJavaccsTasks) {
-            assertTrue(task.getSource().contains(new File(outputDirectory, "someSourceFile.jj")));
+            Assert.assertTrue(task.getSource().contains(new File(outputDirectory, "someSourceFile.jj")));
         }
     }
 
@@ -106,7 +102,7 @@ public class JavaToJavaccDependencyActionTest {
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
             Set<Object> dependencies = task.getDependsOn();
-            assertFalse(dependencies.contains(project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE)));
+            Assert.assertFalse(dependencies.contains(project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE)));
         }
     }
 
@@ -120,7 +116,7 @@ public class JavaToJavaccDependencyActionTest {
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
             Set<Object> dependencies = task.getDependsOn();
-            assertFalse(dependencies.contains(project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE)));
+            Assert.assertFalse(dependencies.contains(project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE)));
         }
     }
 
@@ -139,7 +135,7 @@ public class JavaToJavaccDependencyActionTest {
         TaskCollection<CompileJavaccTask> compileJavaccTasks = project.getTasks().withType(CompileJavaccTask.class);
         for (CompileJavaccTask task : compileJavaccTasks) {
             Set<Object> dependencies = task.getDependsOn();
-            assertTrue(dependencies.contains(project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE)));
+            Assert.assertTrue(dependencies.contains(project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE)));
         }
     }
 
@@ -158,18 +154,18 @@ public class JavaToJavaccDependencyActionTest {
         TaskCollection<CompileJavaccTask> compileJavaccTasks = project.getTasks().withType(CompileJavaccTask.class);
         for (CompileJavaccTask task : compileJavaccTasks) {
             Set<Object> dependencies = task.getDependsOn();
-            assertFalse(dependencies.contains(project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE)));
+            Assert.assertFalse(dependencies.contains(project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE)));
         }
     }
 
     @Test
     public void noInteractionsWithProjectIfJavaPluginNotApplied() {
-        project = mock(Project.class, Answers.RETURNS_MOCKS.get());
+        project = Mockito.mock(Project.class, Answers.RETURNS_MOCKS.get());
         JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
 
         action.execute(project);
 
-        verify(project).getPlugins();
-        verifyNoMoreInteractions(project);
+        Mockito.verify(project).getPlugins();
+        Mockito.verifyNoMoreInteractions(project);
     }
 }

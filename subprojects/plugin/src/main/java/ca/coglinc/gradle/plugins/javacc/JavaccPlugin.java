@@ -21,11 +21,13 @@ public class JavaccPlugin implements Plugin<Project> {
     }
 
     private void addCompileJavaccTaskToProject(Project project) {
-        addTaskToProject(project, CompileJavaccTask.class, CompileJavaccTask.TASK_NAME_VALUE, CompileJavaccTask.TASK_DESCRIPTION_VALUE, GROUP);
+        addTaskToProject(project, CompileJavaccTask.class, CompileJavaccTask.TASK_NAME_VALUE, CompileJavaccTask.TASK_DESCRIPTION_VALUE,
+            JavaccPlugin.GROUP);
     }
 
     private void addCompileJJTreeTaskToProject(Project project) {
-        addTaskToProject(project, CompileJJTreeTask.class, CompileJJTreeTask.TASK_NAME_VALUE, CompileJJTreeTask.TASK_DESCRIPTION_VALUE, GROUP);
+        addTaskToProject(project, CompileJJTreeTask.class, CompileJJTreeTask.TASK_NAME_VALUE, CompileJJTreeTask.TASK_DESCRIPTION_VALUE,
+            JavaccPlugin.GROUP);
     }
 
     private void addTaskToProject(Project project, Class<?> type, String name, String description, String group) {

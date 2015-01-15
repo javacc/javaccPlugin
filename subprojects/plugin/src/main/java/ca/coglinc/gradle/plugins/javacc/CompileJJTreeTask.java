@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.gradle.api.file.RelativePath;
 import org.javacc.jjtree.JJTree;
-import org.javacc.parser.Main;
 
 public class CompileJJTreeTask extends AbstractJavaccTask {
     public static final String TASK_NAME_VALUE = "compileJJTree";
@@ -15,20 +14,24 @@ public class CompileJJTreeTask extends AbstractJavaccTask {
     private static final String DEFAULT_OUTPUT_DIRECTORY = File.separator + "generated" + File.separator + "jjtree";
 
     public CompileJJTreeTask() {
-        super(DEFAULT_INPUT_DIRECTORY, DEFAULT_OUTPUT_DIRECTORY, "**/*.jjt");
+        super(CompileJJTreeTask.DEFAULT_INPUT_DIRECTORY, CompileJJTreeTask.DEFAULT_OUTPUT_DIRECTORY, "**/*.jjt");
     }
 
+    @Override
     protected void augmentArguments(File inputDirectory, RelativePath inputRelativePath, Map<String, String> arguments) {
         arguments.put("JJTREE_OUTPUT_DIRECTORY", inputRelativePath.getFile(getOutputDirectory()).getParentFile().getAbsolutePath());
     }
 
+    @Override
     protected String getProgramName() {
         return "JJTree";
     }
 
+    @Override
     protected void invokeCompiler(String[] arguments) throws Exception {
         int errorCode = new JJTree().main(arguments);
-        if (errorCode != 0)
+        if (errorCode != 0) {
             throw new IllegalStateException("JJTree failed with error code: [" + errorCode + "]");
+        }
     }
 }
