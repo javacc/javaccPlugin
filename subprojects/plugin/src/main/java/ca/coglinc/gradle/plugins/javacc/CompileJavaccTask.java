@@ -3,6 +3,7 @@ package ca.coglinc.gradle.plugins.javacc;
 import java.io.File;
 import java.util.Map;
 
+import org.gradle.api.file.RelativePath;
 import org.javacc.parser.Main;
 
 public class CompileJavaccTask extends AbstractJavaccTask {
@@ -16,8 +17,8 @@ public class CompileJavaccTask extends AbstractJavaccTask {
         super(DEFAULT_INPUT_DIRECTORY, DEFAULT_OUTPUT_DIRECTORY, "**/*.jj");
     }
 
-    protected void augmentArguments(File inputFile, Map<String, String> arguments) {
-        arguments.put("OUTPUT_DIRECTORY", computeInputFileOutputDirectory(inputFile).getAbsolutePath());
+    protected void augmentArguments(File inputDirectory, RelativePath inputRelativePath, Map<String, String> arguments) {
+        arguments.put("OUTPUT_DIRECTORY", inputRelativePath.getFile(getOutputDirectory()).getParentFile().getAbsolutePath());
     }
 
     protected String getProgramName() {

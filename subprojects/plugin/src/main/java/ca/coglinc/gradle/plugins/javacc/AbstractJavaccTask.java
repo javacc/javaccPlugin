@@ -1,10 +1,19 @@
 package ca.coglinc.gradle.plugins.javacc;
 
+import static java.lang.String.format;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.gradle.api.file.EmptyFileVisitor;
+import org.gradle.api.file.FileCollection;
+import org.gradle.api.file.FileVisitDetails;
+import org.gradle.api.file.FileVisitor;
+import org.gradle.api.file.RelativePath;
+import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.SourceTask;
 import org.gradle.api.tasks.TaskAction;
@@ -24,21 +33,31 @@ public abstract class AbstractJavaccTask extends SourceTask {
     }
 
     @TaskAction
-    public void run() throws Exception {
+    public void run() {
         getOutputDirectory().mkdirs();
 
-        for (File inputFile : getSource().getFiles()) {
-            compile(inputFile);
-        }
+        getSource().visit(new EmptyFileVisitor() {
+            @Override
+            public void visitFile(FileVisitDetails fileVisitDetails) {
+                compile(computeInputDirectory(fileVisitDetails), fileVisitDetails.getRelativePath());
+            }
+        });
     }
 
-    protected void compile(File inputFile) throws Exception {
-        getLogger().debug("Compiling {} file [{}] to [{}]", getProgramName(), inputFile.getAbsolutePath(), getOutputDirectory().getAbsolutePath());
+    protected void compile(File inputDirectory, RelativePath inputRelativePath) {
+        getLogger().debug("Compiling {} file [{}] from [{}] into [{}]", getProgramName(), inputRelativePath,
+            inputDirectory,
+            getOutputDirectory());
 
-        String[] arguments = buildProgramArguments(inputFile);
+        String[] arguments = buildProgramArguments(inputDirectory, inputRelativePath);
 
         getLogger().debug("Invoking {} with arguments [{}]", getProgramName(), arguments);
-        invokeCompiler(arguments);
+        try {
+            invokeCompiler(arguments);
+        } catch (Exception exception) {
+            throw new JavaccTaskException(format("Unable to compile '%s' from '%s' into '%s'", inputRelativePath, inputDirectory,
+                getOutputDirectory()));
+        }
     }
 
     protected abstract void invokeCompiler(String[] arguments) throws Exception;
@@ -107,12 +126,12 @@ public abstract class AbstractJavaccTask extends SourceTask {
         return this;
     }
 
-    String[] buildProgramArguments(File inputFile) {
+    String[] buildProgramArguments(File inputDirectory, RelativePath inputRelativePath) {
         Map<String, String> arguments = new HashMap<String, String>();
         if (programArguments != null)
             arguments.putAll(programArguments);
 
-        augmentArguments(inputFile, arguments);
+        augmentArguments(inputDirectory, inputRelativePath, arguments);
 
         int index = 0;
         String[] commandLineArguments = new String[arguments.size() + 1];
@@ -123,7 +142,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
         }
 
         // Add file to compile as last command line argument
-        commandLineArguments[commandLineArguments.length - 1] = inputFile.getAbsolutePath();
+        commandLineArguments[commandLineArguments.length - 1] = inputRelativePath.getFile(inputDirectory).getAbsolutePath();
 
         return commandLineArguments;
     }
@@ -131,21 +150,21 @@ public abstract class AbstractJavaccTask extends SourceTask {
     /**
      * Gives a chance to sub-classes to add some required arguments for example, the output directory.
      *
-     * @param inputFile
-     *            The input file for each arguments should be augmented. This is the file that will be "compiled".
+     * @param inputDirectory
+     *            The input directory from which input relative path is derived.
+     * @param inputRelativePath
+     *            The input path relative to the input directory. This is the file that will be "compiled".
      * @param arguments
      *            The map to add new arguments to.
      */
-    protected abstract void augmentArguments(File inputFile, Map<String, String> arguments);
-
-    protected File computeInputFileOutputDirectory(File inputFile) {
-        File inputParentFile = inputFile.getParentFile();
-
-        // FIXME: This is not correct, multiple sources could be added to the `SourceTask`.
-        // Implications of having multiple sources is that `getInputDirectory()` is not correct
-        // to replace to "" in all cases.
-        return new File(getOutputDirectory(), inputParentFile.getAbsolutePath().replace(getInputDirectory().getAbsolutePath(), ""));
-    }
+    protected abstract void augmentArguments(File inputDirectory, RelativePath inputRelativePath, Map<String, String> arguments);
 
     protected abstract String getProgramName();
+
+    private File computeInputDirectory(FileVisitDetails fileVisitDetails) {
+        File fileAbsolute = fileVisitDetails.getFile();
+        File fileRelative = new File(fileVisitDetails.getPath());
+
+        return new File(fileAbsolute.getAbsolutePath().replace(fileRelative.getPath(), ""));
+    }
 }
