@@ -28,6 +28,6 @@ dependencies {
 }
 
 compileJJTree {
-    inputDirectory('src/main/custom')
-    outputDirectory('output')
+    inputDirectory = file('src/main/custom')
+    outputDirectory = file(project.buildDir.absolutePath + '/output');
 }
