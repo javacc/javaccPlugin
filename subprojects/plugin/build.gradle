@@ -28,11 +28,6 @@ eclipse {
     }
 }
 
-test {
-    maxParallelForks = 10
-    forkEvery = 50
-}
-
 jar {
     manifest {
         attributes 'Implementation-Title': 'javacc-gradle-plugin', 'Implementation-Version': version
