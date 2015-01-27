@@ -18,8 +18,7 @@ import org.mockito.Answers;
 import org.mockito.Mockito;
 
 public class CompileJJtreeTaskTest {
-    private static final String[] GENERATED_FILES = {"JJTreeOutputTest.jj", "HelloTreeConstants.java", "JJTHelloState.java", "Node.java",
-    "SimpleNode.java" };
+    private static final String[] GENERATED_FILES = {"JJTreeOutputTest.jj", "HelloTreeConstants.java", "JJTHelloState.java", "Node.java", "SimpleNode.java" };
 
     private CompileJJTreeTask task;
 
