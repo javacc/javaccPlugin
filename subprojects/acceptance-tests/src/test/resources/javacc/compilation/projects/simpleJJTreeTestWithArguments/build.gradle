@@ -27,6 +27,6 @@ repositories {
 dependencies {
 }
 
-compileJJTree {
+compileJjtree {
     arguments([output_file : 'grammar.jj'])
 }

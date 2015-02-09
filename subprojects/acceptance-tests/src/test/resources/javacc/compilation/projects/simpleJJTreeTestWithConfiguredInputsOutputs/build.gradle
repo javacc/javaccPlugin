@@ -27,7 +27,7 @@ repositories {
 dependencies {
 }
 
-compileJJTree {
+compileJjtree {
     inputDirectory = file('src/main/custom')
     outputDirectory = file(project.buildDir.absolutePath + '/output');
 }

@@ -31,7 +31,7 @@ compileJavacc {
     outputDirectory = file(project.buildDir.absolutePath + '/output/javacc');
 }
 
-compileJJTree {
+compileJjtree {
     inputDirectory = file('src/main/custom')
     outputDirectory = file(project.buildDir.absolutePath + '/output/jjtree');
 }
