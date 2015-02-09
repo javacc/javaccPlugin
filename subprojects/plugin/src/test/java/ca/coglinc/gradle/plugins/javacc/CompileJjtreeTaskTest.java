@@ -17,17 +17,17 @@ import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.Mockito;
 
-public class CompileJJtreeTaskTest {
+public class CompileJjtreeTaskTest {
     private static final String[] GENERATED_FILES = {"JJTreeOutputTest.jj", "HelloTreeConstants.java", "JJTHelloState.java", "Node.java", "SimpleNode.java" };
 
-    private CompileJJTreeTask task;
+    private CompileJjTreeTask task;
 
     @Before
     public void setUp() {
         Project project = ProjectBuilder.builder().build();
         applyJavaccPluginToProject(project);
 
-        task = (CompileJJTreeTask) project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE);
+        task = (CompileJjTreeTask) project.getTasks().findByName(CompileJjTreeTask.TASK_NAME_VALUE);
     }
 
     private void applyJavaccPluginToProject(Project project) {
@@ -66,8 +66,8 @@ public class CompileJJtreeTaskTest {
         task.execute();
 
         Assert.assertTrue(outputDirectory.isDirectory());
-        Assert.assertEquals(CompileJJtreeTaskTest.GENERATED_FILES.length, outputDirectory.list().length);
-        Assert.assertTrue(Arrays.asList(outputDirectory.list()).containsAll(Arrays.asList(CompileJJtreeTaskTest.GENERATED_FILES)));
+        Assert.assertEquals(CompileJjtreeTaskTest.GENERATED_FILES.length, outputDirectory.list().length);
+        Assert.assertTrue(Arrays.asList(outputDirectory.list()).containsAll(Arrays.asList(CompileJjtreeTaskTest.GENERATED_FILES)));
     }
 
     @Test
@@ -107,8 +107,8 @@ public class CompileJJtreeTaskTest {
         Assert.assertEquals(1, outputDirectory.list().length);
         Assert.assertEquals("test", outputDirectory.list()[0]);
         final String[] filesInTestPackageUnderOutputDirectory = outputDirectory.listFiles()[0].list();
-        Assert.assertEquals(CompileJJtreeTaskTest.GENERATED_FILES.length, filesInTestPackageUnderOutputDirectory.length);
-        Assert.assertTrue(Arrays.asList(filesInTestPackageUnderOutputDirectory).containsAll(Arrays.asList(CompileJJtreeTaskTest.GENERATED_FILES)));
+        Assert.assertEquals(CompileJjtreeTaskTest.GENERATED_FILES.length, filesInTestPackageUnderOutputDirectory.length);
+        Assert.assertTrue(Arrays.asList(filesInTestPackageUnderOutputDirectory).containsAll(Arrays.asList(CompileJjtreeTaskTest.GENERATED_FILES)));
     }
 
     @Test(expected = TaskExecutionException.class)

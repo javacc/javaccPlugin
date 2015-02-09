@@ -18,7 +18,7 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
     }
 
     private void configureCompileJJTreeTask(Project project) {
-        CompileJJTreeTask compileJJTreeTask = (CompileJJTreeTask) project.getTasks().findByName(CompileJJTreeTask.TASK_NAME_VALUE);
+        CompileJjTreeTask compileJJTreeTask = (CompileJjTreeTask) project.getTasks().findByName(CompileJjTreeTask.TASK_NAME_VALUE);
         if (compileJJTreeTask == null) {
             return;
         }
@@ -44,7 +44,7 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
     }
 
     private void addJJTreeDependencyToJavaccCompileTask(TaskCollection<JavaCompile> javaCompilationTasks,
-        TaskCollection<CompileJavaccTask> javaccCompilationTasks, CompileJJTreeTask compileJJTreeTask) {
+        TaskCollection<CompileJavaccTask> javaccCompilationTasks, CompileJjTreeTask compileJJTreeTask) {
         for (JavaCompile task : javaCompilationTasks) {
             task.dependsOn(compileJJTreeTask);
             task.source(compileJJTreeTask.getOutputDirectory());

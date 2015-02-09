@@ -6,15 +6,15 @@ import java.util.Map;
 import org.gradle.api.file.RelativePath;
 import org.javacc.jjtree.JJTree;
 
-public class CompileJJTreeTask extends AbstractJavaccTask {
-    public static final String TASK_NAME_VALUE = "compileJJTree";
+public class CompileJjTreeTask extends AbstractJavaccTask {
+    public static final String TASK_NAME_VALUE = "compileJjtree";
     public static final String TASK_DESCRIPTION_VALUE = "Compiles JJTree files into JavaCC files";
 
     private static final String DEFAULT_INPUT_DIRECTORY = File.separator + "src" + File.separator + "main" + File.separator + "jjtree";
     private static final String DEFAULT_OUTPUT_DIRECTORY = File.separator + "generated" + File.separator + "jjtree";
 
-    public CompileJJTreeTask() {
-        super(CompileJJTreeTask.DEFAULT_INPUT_DIRECTORY, CompileJJTreeTask.DEFAULT_OUTPUT_DIRECTORY, "**/*.jjt");
+    public CompileJjTreeTask() {
+        super(CompileJjTreeTask.DEFAULT_INPUT_DIRECTORY, CompileJjTreeTask.DEFAULT_OUTPUT_DIRECTORY, "**/*.jjt");
     }
 
     @Override
