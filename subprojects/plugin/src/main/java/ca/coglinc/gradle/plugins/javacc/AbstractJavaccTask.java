@@ -45,8 +45,9 @@ public abstract class AbstractJavaccTask extends SourceTask {
         try {
             invokeCompiler(arguments);
         } catch (Exception exception) {
-            throw new JavaccTaskException(String.format("Unable to compile '%s' from '%s' into '%s'", inputRelativePath, inputDirectory,
-                getOutputDirectory()));
+            final String errorMessage = String.format("Unable to compile '%s' from '%s' into '%s'", inputRelativePath, inputDirectory,
+                getOutputDirectory());
+            throw new JavaccTaskException(errorMessage, exception);
         }
     }
 
@@ -73,22 +74,6 @@ public abstract class AbstractJavaccTask extends SourceTask {
     @OutputDirectory
     public File getOutputDirectory() {
         return outputDirectory;
-    }
-
-    public AbstractJavaccTask inputDirectory(String inputDirectory) {
-        return setInputDirectory(inputDirectory);
-    }
-
-    public AbstractJavaccTask inputDirectory(File inputDirectory) {
-        return setInputDirectory(inputDirectory);
-    }
-
-    public AbstractJavaccTask outputDirectory(String outputDirectory) {
-        return setOutputDirectory(outputDirectory);
-    }
-
-    public AbstractJavaccTask outputDirectory(File outputDirectory) {
-        return setOutputDirectory(outputDirectory);
     }
 
     public AbstractJavaccTask setInputDirectory(String inputDirectory) {
