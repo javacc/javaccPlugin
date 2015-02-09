@@ -2,7 +2,7 @@ allprojects{
     apply plugin: 'eclipse'
     
     group = 'ca.coglinc'
-version = '2.1.0'
+version = '2.1.1-SNAPSHOT'
 
     repositories {
         mavenCentral()
