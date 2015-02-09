@@ -1,13 +1,12 @@
 plugins {
-    id "com.jfrog.bintray" version "1.0"
-    id "com.github.kt3k.coveralls" version "2.0.1x"
+    id 'com.jfrog.bintray' version '1.0'
+    id 'com.github.kt3k.coveralls' version '2.0.1x'
+    id 'checkstyle'
+    id 'findbugs'
+    id 'jacoco'
+    id 'maven'
+    id 'maven-publish'
 }
-
-apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
-apply plugin: 'jacoco'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
 
 defaultTasks 'clean', 'build', 'install'
 
