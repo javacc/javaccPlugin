@@ -57,10 +57,6 @@ public abstract class AbstractJavaccTask extends SourceTask {
         return programArguments;
     }
 
-    public AbstractJavaccTask arguments(Map<String, String> arguments) {
-        return setArguments(arguments);
-    }
-
     public AbstractJavaccTask setArguments(Map<String, String> arguments) {
         this.programArguments = arguments;
 
