@@ -54,7 +54,7 @@ Due to the nature of the JavaCC compiler and its use of the OUTPUT_DIRECTORY par
 You can configure commandline arguments passed to JavaCC by specifying `javaccArguments` map in compileJavacc:
 ```
 compileJavacc {
-    javaccArguments = [grammar_encoding: 'UTF-8', static: 'false']
+    arguments = [grammar_encoding: 'UTF-8', static: 'false']
 }
 ```
 

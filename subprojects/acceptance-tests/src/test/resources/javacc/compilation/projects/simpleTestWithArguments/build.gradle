@@ -28,5 +28,5 @@ dependencies {
 }
 
 compileJavacc {
-	javaccArguments = [grammar_encoding : 'UTF-8', static: 'false']
+	arguments = [grammar_encoding : 'UTF-8', static: 'false']
 }
