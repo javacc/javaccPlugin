@@ -8,20 +8,7 @@ public class JavaccTaskException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public JavaccTaskException() {
-        super();
-    }
-
     public JavaccTaskException(String message, Throwable cause) {
         super(message, cause);
     }
-
-    public JavaccTaskException(String message) {
-        super(message);
-    }
-
-    public JavaccTaskException(Throwable cause) {
-        super(cause);
-    }
-
 }
