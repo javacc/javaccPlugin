@@ -27,6 +27,6 @@ repositories {
 dependencies {
 }
 
-compileJavacc {
-	arguments = [grammar_encoding : 'UTF-8', static: 'false']
+compileJjtree {
+    arguments([output_file : 'grammar.jj'])
 }

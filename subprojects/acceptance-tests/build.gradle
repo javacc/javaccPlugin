@@ -1,3 +1,7 @@
+plugins {
+    id 'jacoco'
+}
+
 defaultTasks 'clean', 'build'
 
 dependencies {
@@ -17,6 +21,16 @@ jar.enabled = false
 test {
     dependsOn ':javacc-gradle-plugin:install'
     systemProperty 'PLUGIN_VERSION', project.version
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+        csv.enabled false
+    }
+    
+    sourceSets project(':javacc-gradle-plugin').sourceSets.main
 }
 
 task testJar(type: Jar, dependsOn: testClasses) {

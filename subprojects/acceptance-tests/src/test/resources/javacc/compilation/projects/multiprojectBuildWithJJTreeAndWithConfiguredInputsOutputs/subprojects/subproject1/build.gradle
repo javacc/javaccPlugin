@@ -28,5 +28,10 @@ dependencies {
 }
 
 compileJavacc {
-	arguments = [grammar_encoding : 'UTF-8', static: 'false']
+    outputDirectory = file(project.buildDir.absolutePath + '/output/javacc');
+}
+
+compileJjtree {
+    inputDirectory = file('src/main/custom')
+    outputDirectory = file(project.buildDir.absolutePath + '/output/jjtree');
 }

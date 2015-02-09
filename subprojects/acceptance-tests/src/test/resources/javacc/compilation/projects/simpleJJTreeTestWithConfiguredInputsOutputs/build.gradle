@@ -27,6 +27,7 @@ repositories {
 dependencies {
 }
 
-compileJavacc {
-	arguments = [grammar_encoding : 'UTF-8', static: 'false']
+compileJjtree {
+    inputDirectory = file('src/main/custom')
+    outputDirectory = file(project.buildDir.absolutePath + '/output');
 }

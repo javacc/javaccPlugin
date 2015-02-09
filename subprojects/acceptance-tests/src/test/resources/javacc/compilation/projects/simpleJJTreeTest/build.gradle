@@ -26,7 +26,3 @@ repositories {
 
 dependencies {
 }
-
-compileJavacc {
-	arguments = [grammar_encoding : 'UTF-8', static: 'false']
-}

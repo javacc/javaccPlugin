@@ -1,0 +1,4 @@
+# Git ignore file to keep this directory empty
+*
+
+!.gitignore

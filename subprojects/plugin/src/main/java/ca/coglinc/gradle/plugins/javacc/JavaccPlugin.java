@@ -9,20 +9,34 @@ import org.gradle.api.Task;
 
 public class JavaccPlugin implements Plugin<Project> {
 
+    public static final String GROUP = "JavaCC";
+
+    @Override
     public void apply(Project project) {
-        project.task(taskOptions(), CompileJavaccTask.TASK_NAME_VALUE);
-        
+        addCompileJavaccTaskToProject(project);
+        addCompileJJTreeTaskToProject(project);
+
         JavaToJavaccDependencyAction compileJavaDependsOnCompileJavacc = new JavaToJavaccDependencyAction();
         project.afterEvaluate(compileJavaDependsOnCompileJavacc);
     }
 
-    private Map<String, ?> taskOptions() {
+    private void addCompileJavaccTaskToProject(Project project) {
+        addTaskToProject(project, CompileJavaccTask.class, CompileJavaccTask.TASK_NAME_VALUE, CompileJavaccTask.TASK_DESCRIPTION_VALUE,
+            JavaccPlugin.GROUP);
+    }
+
+    private void addCompileJJTreeTaskToProject(Project project) {
+        addTaskToProject(project, CompileJjTreeTask.class, CompileJjTreeTask.TASK_NAME_VALUE, CompileJjTreeTask.TASK_DESCRIPTION_VALUE,
+            JavaccPlugin.GROUP);
+    }
+
+    private void addTaskToProject(Project project, Class<?> type, String name, String description, String group) {
         Map<String, Object> options = new HashMap<String, Object>(2);
-        
-        options.put(Task.TASK_TYPE, CompileJavaccTask.class);
-        options.put(Task.TASK_DESCRIPTION, CompileJavaccTask.TASK_DESCRIPTION_VALUE);
-        options.put(Task.TASK_GROUP, CompileJavaccTask.JAVACC_GROUP);
-        
-        return options;
+
+        options.put(Task.TASK_TYPE, type);
+        options.put(Task.TASK_DESCRIPTION, description);
+        options.put(Task.TASK_GROUP, group);
+
+        project.task(options, name);
     }
 }

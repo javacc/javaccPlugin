@@ -42,6 +42,9 @@ To build, simply run the following command in the directory where you checked ou
 Place your JavaCC code into `src/main/javacc`.
 The generated Java code will be  put under `./build/generated/javacc` and will be compiled as part of the Java compile.
 
+Place you JJTree code into `src/main/jjtree`
+The generated Java code will be  put under `./build/generated/jjtree` and will be compiled as part of the JavaCC compile.
+
 You can configure the input/output directory by configuring the compileJavacc task:
 ```
 compileJavacc {
@@ -54,7 +57,16 @@ Due to the nature of the JavaCC compiler and its use of the OUTPUT_DIRECTORY par
 You can configure commandline arguments passed to JavaCC by specifying `javaccArguments` map in compileJavacc:
 ```
 compileJavacc {
-    javaccArguments = [grammar_encoding: 'UTF-8', static: 'false']
+    arguments = [grammar_encoding: 'UTF-8', static: 'false']
+}
+```
+
+Input/output directories and arguments can be configured as well for JJTree:
+```
+compileJjtree {
+    inputDirectory = file('src/main/jjtree')
+    outputDirectory = file(project.buildDir.absolutePath + '/generated/jjtree')
+    arguments = [grammar_encoding: 'UTF-8', static: 'false']
 }
 ```
 
@@ -69,6 +81,19 @@ main {
 }
     
 eclipseClasspath.dependsOn("compileJavacc")
+```
+
+### Dependency on another version of JavaCC
+
+If for some reason you need to depend on a different version of JavaCC than the plugin's default, you can use the following in your build script:
+```
+buildscript {
+    configurations.all {
+        resolutionStrategy {
+            force group: 'net.java.dev.javacc', name: 'javacc', version: '4.0'
+        }
+    }
+}
 ```
 
 ## Compatibility
@@ -87,6 +112,9 @@ The following command can be used to release the project, upload to Maven Centra
 ```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/johnmartel/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
 
 ## Changelog
+
+### 2.1.0
+- Added support for JJTree: compileJjtree task is now added by default and compileJavacc depends on it (Issue #4, Pull Request #9)
 
 ### 2.0.4
 - Plugin now builds with Gradle 2.2.1

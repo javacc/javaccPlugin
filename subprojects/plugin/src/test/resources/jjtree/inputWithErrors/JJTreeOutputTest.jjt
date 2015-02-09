@@ -1,0 +1,17 @@
+PARSER_BEGIN(Hello)
+package AST
+public class Hello {}
+PARSER_END(Hello)
+
+SKIP : { " " | "\t" | "\n" | "\r" }
+
+TOKEN :
+{
+    <ABS: "abs">
+}
+
+SimpleNode Start() : {}
+{
+  <ABS>
+  { return jjtThis; }
+}
