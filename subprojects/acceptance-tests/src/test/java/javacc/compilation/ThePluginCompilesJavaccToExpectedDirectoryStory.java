@@ -100,26 +100,6 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
     }
 
     @Test
-    public void givenAMultiProjectBuildWithJJTreeWhenExecuteCompileJJTreeTaskThenTheFilesAreGeneratedInTheDefaultDirectory()
-        throws URISyntaxException, IOException {
-        CompilationSteps steps = new CompilationSteps();
-
-        steps.givenAProjectNamed("multiprojectBuildWithJJTree");
-        steps.whenIExecuteTask(":subprojects/subproject1:compileJJTree");
-
-        String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
-
-        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "jjtree");
-        steps.andAssertFileWasGenerated("JJTreeOutputTest.jj");
-        steps.andAssertFileWasGenerated("HelloTreeConstants.java");
-        steps.andAssertFileWasGenerated("JJTHelloState.java");
-        steps.andAssertFileWasGenerated("Node.java");
-        steps.andAssertFileWasGenerated("SimpleNode.java");
-
-        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "javacc");
-    }
-
-    @Test
     public void givenAMultiProjectBuildWithJJTreeWhenExecuteCompileJavaccTaskThenTheFilesAreGeneratedInTheDefaultDirectory()
         throws URISyntaxException, IOException {
         CompilationSteps steps = new CompilationSteps();
@@ -209,26 +189,6 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
     }
 
     @Test
-    public void givenAMultiProjectBuildWithJJTreeThatConfiguresTheInputOutputDirectoriesWhenExecuteCompileJJTreeTaskThenTheFilesAreGeneratedInTheDefaultDirectory()
-        throws URISyntaxException, IOException {
-        CompilationSteps steps = new CompilationSteps();
-
-        steps.givenAProjectNamed("multiprojectBuildWithJJTreeAndWithConfiguredInputsOutputs");
-        steps.whenIExecuteTask(":subprojects/subproject1:compileJJTree");
-
-        String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "output";
-
-        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "jjtree");
-        steps.andAssertFileWasGenerated("JJTreeOutputTest.jj");
-        steps.andAssertFileWasGenerated("HelloTreeConstants.java");
-        steps.andAssertFileWasGenerated("JJTHelloState.java");
-        steps.andAssertFileWasGenerated("Node.java");
-        steps.andAssertFileWasGenerated("SimpleNode.java");
-
-        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "javacc");
-    }
-
-    @Test
     public void givenAMultiProjectBuildWithJJTreeThatConfiguresTheInputOutputDirectoriesWhenExecuteCompileJavaccTaskThenTheFilesAreGeneratedInTheDefaultDirectory()
         throws URISyntaxException, IOException {
         CompilationSteps steps = new CompilationSteps();
@@ -253,26 +213,6 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.andAssertFileWasGenerated("HelloConstants.java");
         steps.andAssertFileWasGenerated("ParseException.java");
         steps.andAssertFileWasGenerated("Token.java");
-    }
-
-    @Test
-    public void givenASimpleJJTreeProjectWhenExecuteCompileJJTreeTaskThenTheFilesAreGeneratedInTheDefaultDirectory() throws URISyntaxException,
-    IOException {
-        CompilationSteps steps = new CompilationSteps();
-
-        steps.givenAProjectNamed("simpleJJTreeTest");
-        steps.whenIExecuteTask("compileJJTree");
-
-        String buildDirectory = "build" + File.separator + "generated";
-
-        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "jjtree");
-        steps.andAssertFileWasGenerated("JJTreeOutputTest.jj");
-        steps.andAssertFileWasGenerated("HelloTreeConstants.java");
-        steps.andAssertFileWasGenerated("JJTHelloState.java");
-        steps.andAssertFileWasGenerated("Node.java");
-        steps.andAssertFileWasGenerated("SimpleNode.java");
-
-        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "javacc");
     }
 
     @Test
@@ -303,26 +243,6 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
     }
 
     @Test
-    public void givenASimpleJJTreeProjectAndJavaccArgumentsProvidedWhenExecuteCompileJJTreeTaskThenTheFilesAreGeneratedInTheDefaultDirectory()
-        throws URISyntaxException, IOException {
-        CompilationSteps steps = new CompilationSteps();
-
-        steps.givenAProjectNamed("simpleJJTreeTestWithArguments");
-        steps.whenIExecuteTask("compileJJTree");
-
-        String buildDirectory = "build" + File.separator + "generated";
-
-        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "jjtree");
-        steps.andAssertFileWasGenerated("grammar.jj");
-        steps.andAssertFileWasGenerated("HelloTreeConstants.java");
-        steps.andAssertFileWasGenerated("JJTHelloState.java");
-        steps.andAssertFileWasGenerated("Node.java");
-        steps.andAssertFileWasGenerated("SimpleNode.java");
-
-        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "javacc");
-    }
-
-    @Test
     public void givenASimpleJJTreeProjectAndJavaccArgumentsProvidedWhenExecuteCompileJavaccTaskThenTheFilesAreGeneratedInTheDefaultDirectory()
         throws URISyntaxException, IOException {
         CompilationSteps steps = new CompilationSteps();
@@ -347,24 +267,6 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.andAssertFileWasGenerated("HelloConstants.java");
         steps.andAssertFileWasGenerated("ParseException.java");
         steps.andAssertFileWasGenerated("Token.java");
-    }
-
-    @Test
-    public void givenASimpleJJTreeProjectThatConfiguresTheInputOutputDirectoriesWhenExecuteCompileJJTreeTaskThenTheFilesAreGeneratedInTheConfiguredDirectory()
-        throws URISyntaxException, IOException {
-        CompilationSteps steps = new CompilationSteps();
-
-        steps.givenAProjectNamed("simpleJJTreeTestWithConfiguredInputsOutputs");
-        steps.whenIExecuteTask("compileJJTree");
-
-        steps.thenAssertOutputDirectoryExists("build" + File.separator + "output");
-        steps.andAssertFileWasGenerated("JJTreeOutputTest.jj");
-        steps.andAssertFileWasGenerated("HelloTreeConstants.java");
-        steps.andAssertFileWasGenerated("JJTHelloState.java");
-        steps.andAssertFileWasGenerated("Node.java");
-        steps.andAssertFileWasGenerated("SimpleNode.java");
-
-        steps.thenAssertOutputDirectoryDoesNotExists("build" + File.separator + "generated" + File.separator + "javacc");
     }
 
     @Test
