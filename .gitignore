@@ -4,6 +4,8 @@
 .project
 .checkstyle
 .settings
+.idea
+*.iml
 target
 build
 build-eclipse
