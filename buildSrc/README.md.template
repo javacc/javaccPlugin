@@ -114,7 +114,9 @@ The following command can be used to release the project, upload to Maven Centra
 ## Changelog
 
 ### 2.1.1
-- Plugin now builds with Gradle 2.3
+- Plugin now builds with Gradle 2.4
+- Upgraded plugin dependencies for bintray and coveralls
+- Upgraded dependencies to latest 
 
 ### 2.1.0
 - Added support for JJTree: compileJjtree task is now added by default and compileJavacc depends on it (Issue #4, Pull Request #9)

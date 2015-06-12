@@ -8,6 +8,12 @@ version = '2.1.1-SNAPSHOT'
     repositories {
         mavenCentral()
     }
+    
+    configurations.all {
+        resolutionStrategy {
+            failOnVersionConflict()
+        }
+    }
 
     eclipse {
         classpath {
@@ -57,5 +63,5 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
+    gradleVersion = '2.4'
 }
