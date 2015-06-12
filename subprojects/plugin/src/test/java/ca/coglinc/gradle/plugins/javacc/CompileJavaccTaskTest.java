@@ -1,5 +1,7 @@
 package ca.coglinc.gradle.plugins.javacc;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import java.util.Map;
 
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
+import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RelativePath;
 import org.gradle.api.tasks.TaskExecutionException;
 import org.gradle.api.tasks.TaskValidationException;
@@ -84,6 +87,20 @@ public class CompileJavaccTaskTest {
         Assert.assertTrue(outputDirectory.isDirectory());
         Assert.assertEquals(CompileJavaccTaskTest.GENERATED_FILES.length, outputDirectory.list().length);
         Assert.assertTrue(Arrays.asList(outputDirectory.list()).containsAll(Arrays.asList(CompileJavaccTaskTest.GENERATED_FILES)));
+    }
+    
+    @Test
+    public void compileJavaccToJavaCopiesNonJavaccFilesToOutputDirectory() {
+        setTaskInputDirectory("/javacc/inputWithNonJavaccFiles");
+        final File outputDirectory = setTaskOutputDirectory("output");
+        task.include("**/*.txt");
+
+        task.execute();
+
+        Assert.assertTrue(outputDirectory.isDirectory());
+        Assert.assertEquals(1 + CompileJavaccTaskTest.GENERATED_FILES.length, outputDirectory.list().length);
+        Assert.assertTrue(Arrays.asList(outputDirectory.list()).containsAll(Arrays.asList(CompileJavaccTaskTest.GENERATED_FILES)));
+        Assert.assertTrue(Arrays.asList(outputDirectory.list()).containsAll(Arrays.asList("test.txt")));
     }
 
     @Test
@@ -221,11 +238,12 @@ public class CompileJavaccTaskTest {
     public void javaccArgumentsAreOutputDirectoryAndFileToCompileWhenNoJavaccArgumentsProvided() {
         File inputDirectory = setTaskInputDirectory("/javacc/input");
         File outputDirectory = setTaskOutputDirectory("output");
+        File tempOutputDirectory = new File(outputDirectory, "tmp");
 
         RelativePath inputRelativePath = Mockito.mock(RelativePath.class);
         Mockito.when(inputRelativePath.getPathString()).thenReturn("Grammar.jj");
         Mockito.when(inputRelativePath.getFile(inputDirectory)).thenReturn(new File(inputDirectory, "Grammar.jj"));
-        Mockito.when(inputRelativePath.getFile(outputDirectory)).thenReturn(new File(outputDirectory, "Grammar.jj"));
+        Mockito.when(inputRelativePath.getFile(tempOutputDirectory)).thenReturn(new File(tempOutputDirectory, "Grammar.jj"));
 
         String inputAbsolutePath = inputRelativePath.getFile(inputDirectory).getAbsolutePath();
 
@@ -233,18 +251,19 @@ public class CompileJavaccTaskTest {
 
         Assert.assertEquals(2, javaccArgumentsForCommandLine.length);
         Assert.assertThat(javaccArgumentsForCommandLine,
-            IsArrayContainingInOrder.arrayContaining("-OUTPUT_DIRECTORY=" + outputDirectory.getAbsolutePath(), inputAbsolutePath));
+            IsArrayContainingInOrder.arrayContaining("-OUTPUT_DIRECTORY=" + tempOutputDirectory.getAbsolutePath(), inputAbsolutePath));
     }
 
     @Test
     public void javaccArgumentsAreOutputDirectoryAndFileToCompileWhenEmptyJavaccArgumentsProvided() {
         File inputDirectory = setTaskInputDirectory("/javacc/input");
         File outputDirectory = setTaskOutputDirectory("output");
+        File tempOutputDirectory = new File(outputDirectory, "tmp");
 
         RelativePath inputRelativePath = Mockito.mock(RelativePath.class);
         Mockito.when(inputRelativePath.getPathString()).thenReturn("Grammar.jj");
         Mockito.when(inputRelativePath.getFile(inputDirectory)).thenReturn(new File(inputDirectory, "Grammar.jj"));
-        Mockito.when(inputRelativePath.getFile(outputDirectory)).thenReturn(new File(outputDirectory, "Grammar.jj"));
+        Mockito.when(inputRelativePath.getFile(tempOutputDirectory)).thenReturn(new File(tempOutputDirectory, "Grammar.jj"));
 
         String inputAbsolutePath = inputRelativePath.getFile(inputDirectory).getAbsolutePath();
 
@@ -254,18 +273,19 @@ public class CompileJavaccTaskTest {
 
         Assert.assertEquals(2, javaccArgumentsForCommandLine.length);
         Assert.assertThat(javaccArgumentsForCommandLine,
-            IsArrayContainingInOrder.arrayContaining("-OUTPUT_DIRECTORY=" + outputDirectory.getAbsolutePath(), inputAbsolutePath));
+            IsArrayContainingInOrder.arrayContaining("-OUTPUT_DIRECTORY=" + tempOutputDirectory.getAbsolutePath(), inputAbsolutePath));
     }
 
     @Test
     public void javaccArgumentsAreOutputDirectoryFileToCompileAndProvidedArguments() {
         File inputDirectory = setTaskInputDirectory("/javacc/input");
         File outputDirectory = setTaskOutputDirectory("output");
+        File tempOutputDirectory = new File(outputDirectory, "tmp");
 
         RelativePath inputRelativePath = Mockito.mock(RelativePath.class);
         Mockito.when(inputRelativePath.getPathString()).thenReturn("Grammar.jj");
         Mockito.when(inputRelativePath.getFile(inputDirectory)).thenReturn(new File(inputDirectory, "Grammar.jj"));
-        Mockito.when(inputRelativePath.getFile(outputDirectory)).thenReturn(new File(outputDirectory, "Grammar.jj"));
+        Mockito.when(inputRelativePath.getFile(tempOutputDirectory)).thenReturn(new File(tempOutputDirectory, "Grammar.jj"));
 
         String inputAbsolutePath = inputRelativePath.getFile(inputDirectory).getAbsolutePath();
 
@@ -278,7 +298,21 @@ public class CompileJavaccTaskTest {
         final int outputDirectoryAndProvidedArgumentAndFileToCompile = 3;
         Assert.assertEquals(outputDirectoryAndProvidedArgumentAndFileToCompile, javaccArgumentsForCommandLine.length);
         final Matcher<String[]> containsOuputDirectoryFileToCompileAndOtherProvidedArguments = IsArrayContainingInOrder.arrayContaining(
-            "-static=false", "-OUTPUT_DIRECTORY=" + outputDirectory.getAbsolutePath(), inputAbsolutePath);
+            "-static=false", "-OUTPUT_DIRECTORY=" + tempOutputDirectory.getAbsolutePath(), inputAbsolutePath);
         Assert.assertThat(javaccArgumentsForCommandLine, containsOuputDirectoryFileToCompileAndOtherProvidedArguments);
+    }
+
+    @Test
+    public void getFileVisitorReturnsInstanceOfJavaccSourceFileVisitor() {
+        FileVisitor sourceFileVisitor = task.getJavaccSourceFileVisitor();
+
+        Assert.assertTrue(sourceFileVisitor instanceof JavaccSourceFileVisitor);
+    }
+    
+    @Test
+    public void supportsDotJjFiles() {
+        String supportedSuffix = task.supportedSuffix();
+        
+        assertEquals(".jj", supportedSuffix);
     }
 }

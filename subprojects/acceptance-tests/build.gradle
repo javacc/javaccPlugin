@@ -6,6 +6,7 @@ defaultTasks 'clean', 'build'
 
 dependencies {
     testCompile gradleApi()
+    testCompile 'commons-io:commons-io:2.4'
     
     testRuntime project(':javacc-gradle-plugin')
 }

@@ -4,36 +4,22 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.gradle.api.file.EmptyFileVisitor;
-import org.gradle.api.file.FileVisitDetails;
+import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RelativePath;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.SourceTask;
-import org.gradle.api.tasks.TaskAction;
 
 public abstract class AbstractJavaccTask extends SourceTask {
-
     private File inputDirectory;
     private File outputDirectory;
-    private Map<String, String> programArguments;
+    
+    protected Map<String, String> programArguments;
 
     protected AbstractJavaccTask(String inputDirectory, String outputDirectory, String filter) {
         setInputDirectory(inputDirectory);
         setOutputDirectory(outputDirectory);
 
         include(filter);
-    }
-
-    @TaskAction
-    public void run() {
-        getOutputDirectory().mkdirs();
-
-        getSource().visit(new EmptyFileVisitor() {
-            @Override
-            public void visitFile(FileVisitDetails fileVisitDetails) {
-                compile(computeInputDirectory(fileVisitDetails), fileVisitDetails.getRelativePath());
-            }
-        });
     }
 
     protected void compile(File inputDirectory, RelativePath inputRelativePath) {
@@ -53,6 +39,12 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
     protected abstract void invokeCompiler(String[] arguments) throws Exception;
 
+    protected abstract FileVisitor getJavaccSourceFileVisitor();
+    
+    protected FileVisitor getNonJavaccSourceFileVisitor() {
+        return new NonJavaccSourceFileVisitor(this);
+    }
+
     public Map<String, String> getArguments() {
         return programArguments;
     }
@@ -71,7 +63,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
     public File getOutputDirectory() {
         return outputDirectory;
     }
-
+    
     public AbstractJavaccTask setInputDirectory(String inputDirectory) {
         return setInputDirectory(new File(getProject().getProjectDir(), inputDirectory));
     }
@@ -133,10 +125,5 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
     protected abstract String getProgramName();
 
-    private File computeInputDirectory(FileVisitDetails fileVisitDetails) {
-        File fileAbsolute = fileVisitDetails.getFile();
-        File fileRelative = new File(fileVisitDetails.getPath());
-
-        return new File(fileAbsolute.getAbsolutePath().replace(fileRelative.getPath(), ""));
-    }
+    protected abstract String supportedSuffix();
 }

@@ -1,0 +1,14 @@
+PARSER_BEGIN(JavaccOutputTest)
+package test.pkg;
+
+import somepackage.withsubpackage.ClassUnderSubPackage;
+
+public class JavaccOutputTest {
+    private ClassUnderSubPackage member;
+}
+PARSER_END(JavaccOutputTest)
+
+TOKEN :
+{
+    <ABS: "abs">
+}

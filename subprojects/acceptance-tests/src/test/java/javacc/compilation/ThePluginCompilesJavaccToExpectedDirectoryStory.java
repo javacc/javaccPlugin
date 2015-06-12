@@ -29,6 +29,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.andAssertFileWasGenerated("TokenMgrError.java");
 
         steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "javacc" + File.separator + "test" + File.separator + "pkg");
+        steps.andAssertFileWasGenerated("JavaccOutputTest.java");
         steps.andAssertFileWasGenerated("JavaccOutputTestConstants.java");
         steps.andAssertFileWasGenerated("JavaccOutputTestTokenManager.java");
         steps.andAssertFileWasGenerated("ParseException.java");
@@ -292,5 +293,35 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.andAssertFileWasGenerated("HelloConstants.java");
         steps.andAssertFileWasGenerated("ParseException.java");
         steps.andAssertFileWasGenerated("Token.java");
+    }
+    
+    @Test
+    public void givenASimpleProjectWithCustomAstClassesWhenExecuteCompileJavaccTaskThenTheFilesThatDoNotHaveACorrespondingCustomAstClassAreGeneratedInTheDefaultDirectory() throws URISyntaxException, IOException {
+        CompilationSteps steps = new CompilationSteps();
+
+        steps.givenAProjectNamed("simpleTestWithCustomAstClass");
+        steps.whenIExecuteTask("compileJavacc");
+
+        String buildDirectory = "build" + File.separator + "generated";
+
+        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "jjtree");
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "javacc");
+        steps.andAssertFileExistsButWasNotGenerated("MyParser.java");
+        steps.andAssertFileExistsButWasNotGenerated("MyParserConstants.java");
+        steps.andAssertFileExistsButWasNotGenerated("MyParserTokenManager.java");
+        steps.andAssertFileWasGenerated("ParseException.java");
+        steps.andAssertFileWasGenerated("SimpleCharStream.java");
+        steps.andAssertFileExistsButWasNotGenerated("Token.java");
+        steps.andAssertFileExistsButWasNotGenerated("TokenMgrError.java");
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "javacc" + File.separator + "test" + File.separator + "pkg");
+        steps.andAssertFileWasGenerated("JavaccOutputTest.java");
+        steps.andAssertFileWasGenerated("JavaccOutputTestConstants.java");
+        steps.andAssertFileWasGenerated("JavaccOutputTestTokenManager.java");
+        steps.andAssertFileWasGenerated("ParseException.java");
+        steps.andAssertFileWasGenerated("SimpleCharStream.java");
+        steps.andAssertFileExistsButWasNotGenerated("Token.java");
+        steps.andAssertFileWasGenerated("TokenMgrError.java");
     }
 }
