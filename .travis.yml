@@ -5,4 +5,5 @@ jdk:
   - openjdk6
 
 after_success:
+  - jdk_switcher use oraclejdk7
   - ./gradlew jacocoTestReport coveralls
