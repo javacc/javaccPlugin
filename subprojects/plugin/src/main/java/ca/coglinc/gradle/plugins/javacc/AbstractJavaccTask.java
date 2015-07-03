@@ -1,7 +1,7 @@
 package ca.coglinc.gradle.plugins.javacc;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.gradle.api.file.FileVisitor;
@@ -90,7 +90,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
     }
 
     String[] buildProgramArguments(File inputDirectory, RelativePath inputRelativePath) {
-        Map<String, String> arguments = new HashMap<String, String>();
+        Map<String, String> arguments = new LinkedHashMap<String, String>();
         if (programArguments != null) {
             arguments.putAll(programArguments);
         }
