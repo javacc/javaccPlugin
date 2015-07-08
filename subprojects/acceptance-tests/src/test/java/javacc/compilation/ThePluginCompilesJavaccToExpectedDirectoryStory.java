@@ -296,7 +296,9 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
     }
     
     @Test
-    public void givenASimpleProjectWithCustomAstClassesWhenExecuteCompileJavaccTaskThenTheFilesThatDoNotHaveACorrespondingCustomAstClassAreGeneratedInTheDefaultDirectory() throws URISyntaxException, IOException {
+    public void givenASimpleProjectWithCustomAstClassesWhenExecuteCompileJavaccTaskThenTheFilesThatDoNotHaveACorrespondingCustomAstClassAreGeneratedInTheDefaultDirectory()
+        throws URISyntaxException, IOException {
+        
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithCustomAstClass");

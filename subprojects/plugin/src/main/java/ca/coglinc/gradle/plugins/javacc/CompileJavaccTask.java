@@ -23,7 +23,7 @@ public class CompileJavaccTask extends AbstractJavaccTask {
     public CompileJavaccTask() {
         super(CompileJavaccTask.DEFAULT_INPUT_DIRECTORY, CompileJavaccTask.DEFAULT_OUTPUT_DIRECTORY, "**/*" + SUPPORTED_FILE_SUFFIX);
     }
-    
+
     @TaskAction
     public void run() {
         getTempOutputDirectory().mkdirs();
@@ -33,7 +33,7 @@ public class CompileJavaccTask extends AbstractJavaccTask {
         copyNonJavaccFilesToOutputDirectory();
         FileUtils.deleteQuietly(getTempOutputDirectory());
     }
-    
+
     private void copyNonJavaccFilesToOutputDirectory() {
         getSource().visit(getNonJavaccSourceFileVisitor());
     }
@@ -41,7 +41,7 @@ public class CompileJavaccTask extends AbstractJavaccTask {
     private File getTempOutputDirectory() {
         return new File(getOutputDirectory(), "tmp");
     }
-    
+
     private void compileSourceFilesToTempOutputDirectory() {
         getSource().visit(getJavaccSourceFileVisitor());
     }
@@ -49,10 +49,12 @@ public class CompileJavaccTask extends AbstractJavaccTask {
     private void copyCompiledFilesFromTempOutputDirectoryToOutputDirectory() {
         Collection<File> tempCompiledFiles = FileUtils.listFiles(getTempOutputDirectory(), TrueFileFilter.TRUE, TrueFileFilter.TRUE);
         for (File tempCompiledFile : tempCompiledFiles) {
-            File customAstClassInputFile = new File(tempCompiledFile.getAbsolutePath().replace(getTempOutputDirectory().getAbsolutePath(), getInputDirectory().getAbsolutePath()));
-            String compiledFileOutputPath = tempCompiledFile.getAbsolutePath().replace(getTempOutputDirectory().getAbsolutePath(), getOutputDirectory().getAbsolutePath());
+            File customAstClassInputFile = new File(tempCompiledFile.getAbsolutePath().replace(getTempOutputDirectory().getAbsolutePath(),
+                getInputDirectory().getAbsolutePath()));
+            String compiledFileOutputPath = tempCompiledFile.getAbsolutePath().replace(getTempOutputDirectory().getAbsolutePath(),
+                getOutputDirectory().getAbsolutePath());
             File compiledFileOutputFile = new File(compiledFileOutputPath);
-            
+
             if (!customAstClassInputFile.exists()) {
                 copyGeneratedFilesToOutputDirectory(tempCompiledFile, customAstClassInputFile, compiledFileOutputFile);
             } else {
@@ -63,21 +65,26 @@ public class CompileJavaccTask extends AbstractJavaccTask {
 
     private void copyGeneratedFilesToOutputDirectory(File tempCompiledFile, File customAstClassInputFile, File compiledFileOutputFile) {
         getLogger().debug("Custom AST class {} not found", customAstClassInputFile.getAbsolutePath());
-        getLogger().debug("Copying compiled file {} from {} to {}", tempCompiledFile.getAbsolutePath(), getTempOutputDirectory().getAbsolutePath(), getOutputDirectory().getAbsolutePath());
+        getLogger().debug("Copying compiled file {} from {} to {}", tempCompiledFile.getAbsolutePath(), getTempOutputDirectory().getAbsolutePath(),
+            getOutputDirectory().getAbsolutePath());
         try {
             FileUtils.moveFile(tempCompiledFile, compiledFileOutputFile);
         } catch (IOException e) {
-            throw new JavaccTaskException(String.format("Could not copy %s from %s to %s", tempCompiledFile.getAbsolutePath(), getTempOutputDirectory().getAbsolutePath(), getOutputDirectory().getAbsolutePath()), e);
+            throw new JavaccTaskException(String.format("Could not copy %s from %s to %s", tempCompiledFile.getAbsolutePath(),
+                getTempOutputDirectory().getAbsolutePath(), getOutputDirectory().getAbsolutePath()), e);
         }
     }
-    
+
     private void copyCustomAstClassToOutputDirectory(File tempCompiledFile, File customAstClassInputFile, String compiledFileOutputPath,
         File compiledFileOutputFile) {
-        getLogger().debug("Not copying compiled file {} from {} to {} because it is overridden by the custom AST class {}", tempCompiledFile.getAbsolutePath(), getTempOutputDirectory().getAbsolutePath(), getOutputDirectory().getAbsolutePath(), customAstClassInputFile.getAbsolutePath());
+        getLogger().debug("Not copying compiled file {} from {} to {} because it is overridden by the custom AST class {}",
+            tempCompiledFile.getAbsolutePath(), getTempOutputDirectory().getAbsolutePath(), getOutputDirectory().getAbsolutePath(),
+            customAstClassInputFile.getAbsolutePath());
         try {
             FileUtils.copyFile(customAstClassInputFile, compiledFileOutputFile);
         } catch (IOException e) {
-            throw new JavaccTaskException(String.format("Could not copy %s from %s", customAstClassInputFile.getAbsolutePath(), compiledFileOutputPath), e);
+            throw new JavaccTaskException(String.format("Could not copy %s from %s", customAstClassInputFile.getAbsolutePath(),
+                compiledFileOutputPath), e);
         }
     }
 
