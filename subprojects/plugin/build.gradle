@@ -37,7 +37,7 @@ jar {
 }
 
 checkstyle {
-    configFile = file("${project.projectDir}/config/checkstyle/checks.xml")
+    configFile = file("${rootProject.projectDir}/config/checkstyle/checks.xml")
 }
 
 findbugs {
@@ -46,7 +46,7 @@ findbugs {
     effort = "min"
     ignoreFailures = true
     reportLevel = "high"
-    excludeFilter = file("${project.projectDir}/config/findbugs/exclude.xml")
+    excludeFilter = file("${rootProject.projectDir}/config/findbugs/exclude.xml")
 }
 
 tasks.withType(FindBugs) {

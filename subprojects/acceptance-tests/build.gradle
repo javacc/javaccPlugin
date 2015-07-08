@@ -1,3 +1,8 @@
+plugins {
+    id 'checkstyle'
+    id 'findbugs'
+}
+
 defaultTasks 'clean', 'build'
 
 dependencies {
@@ -14,6 +19,23 @@ eclipse {
 }
 
 jar.enabled = false
+
+checkstyle {
+    configFile = file("${rootProject.projectDir}/config/checkstyle/checks.xml")
+}
+
+findbugs {
+    toolVersion = '3.0.1'
+    sourceSets = [sourceSets.main, sourceSets.test]
+    effort = "min"
+    ignoreFailures = true
+    reportLevel = "high"
+    excludeFilter = file("${rootProject.projectDir}/config/findbugs/exclude.xml")
+}
+
+tasks.withType(FindBugs) {
+    maxHeapSize = project.hasProperty('findBugsHeapSize') ? project.findBugsHeapSize : '1g'
+}
 
 test {
     dependsOn ':javacc-gradle-plugin:install'
