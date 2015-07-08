@@ -10,10 +10,10 @@ import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.SourceTask;
 
 public abstract class AbstractJavaccTask extends SourceTask {
+    protected Map<String, String> programArguments;
+    
     private File inputDirectory;
     private File outputDirectory;
-    
-    protected Map<String, String> programArguments;
 
     protected AbstractJavaccTask(String inputDirectory, String outputDirectory, String filter) {
         setInputDirectory(inputDirectory);
