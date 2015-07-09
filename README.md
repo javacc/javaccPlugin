@@ -1,7 +1,7 @@
 # JavaCC Compiler Plugin for Gradle
 
 [![Build Status](https://travis-ci.org/johnmartel/javaccPlugin.svg)](https://travis-ci.org/johnmartel/javaccPlugin) 
-[![Coverage Status](https://img.shields.io/coveralls/johnmartel/javaccPlugin.svg)](https://coveralls.io/r/johnmartel/javaccPlugin)
+[![Coverage Status](https://coveralls.io/repos/johnmartel/javaccPlugin/badge.svg?branch=master&service=github)](https://coveralls.io/github/johnmartel/javaccPlugin?branch=master)
 
 Provides the ability to use [JavaCC](http://javacc.java.net/) via [Gradle](http://www.gradle.org/). If the 'java' plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.
 
@@ -14,7 +14,7 @@ Add the following lines to your `build.gradle` script:
 Gradle 2.1+
 ```groovy
 plugins {
-  id "ca.coglinc.javacc" version "2.1.0"
+  id "ca.coglinc.javacc" version "2.2.0"
 }
 ```
 
@@ -25,7 +25,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.1.0'
+        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.2.0'
     }
 }
 apply plugin: 'ca.coglinc.javacc'
@@ -96,6 +96,15 @@ buildscript {
 }
 ```
 
+### Custom AST classes
+
+To use your own custom AST classes, simply place them in your JavaCC input directory besides your regular .jj files. Make sure to include .java files:
+```
+compileJavacc {
+    include '**/*.java'
+}
+```
+
 ## Compatibility
 
 This plugin requires Java 6+.
@@ -112,6 +121,12 @@ The following command can be used to release the project, upload to Maven Centra
 ```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/johnmartel/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
 
 ## Changelog
+
+### 2.2.0
+- Added support for custom AST classes (Issue #13)
+- Plugin now builds with Gradle 2.5
+- Upgraded plugin dependencies for bintray and coveralls
+- Upgraded dependencies to latest
 
 ### 2.1.0
 - Added support for JJTree: compileJjtree task is now added by default and compileJavacc depends on it (Issue #4, Pull Request #9)
