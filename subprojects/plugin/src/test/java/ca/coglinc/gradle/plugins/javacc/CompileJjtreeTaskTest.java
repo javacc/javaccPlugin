@@ -1,5 +1,7 @@
 package ca.coglinc.gradle.plugins.javacc;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7,6 +9,7 @@ import java.util.Map;
 
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
+import org.gradle.api.file.FileVisitor;
 import org.gradle.api.tasks.TaskExecutionException;
 import org.gradle.api.tasks.TaskValidationException;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -159,5 +162,19 @@ public class CompileJjtreeTaskTest {
         FileCollection outputFiles = task.getOutputs().getFiles();
         Assert.assertEquals(1, outputFiles.getFiles().size());
         Assert.assertEquals("output", ((File) outputFiles.getFiles().toArray()[0]).getName());
+    }
+    
+    @Test
+    public void getFileVisitorReturnsInstanceOfJavaccSourceFileVisitor() {
+        FileVisitor sourceFileVisitor = task.getJavaccSourceFileVisitor();
+
+        Assert.assertTrue(sourceFileVisitor instanceof JavaccSourceFileVisitor);
+    }
+    
+    @Test
+    public void supportsDotJjtFiles() {
+        String supportedSuffix = task.supportedSuffix();
+        
+        assertEquals(".jjt", supportedSuffix);
     }
 }

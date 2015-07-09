@@ -1,11 +1,18 @@
 allprojects{
     apply plugin: 'eclipse'
+    apply plugin: 'idea'
     
     group = 'ca.coglinc'
-version = '2.1.1-SNAPSHOT'
+version = '2.2.0-SNAPSHOT'
 
     repositories {
         mavenCentral()
+    }
+    
+    configurations.all {
+        resolutionStrategy {
+            failOnVersionConflict()
+        }
     }
 
     eclipse {
@@ -25,10 +32,12 @@ project(':javacc-gradle-plugin') {
 
     compileJava {
         options.encoding = 'UTF-8'
+        options.compilerArgs = ['-Xlint:unchecked']
     }
 
     compileTestJava {
         options.encoding = 'UTF-8'
+        options.compilerArgs = ['-Xlint:unchecked']
     }
 }
 
@@ -40,10 +49,12 @@ project(':javacc-gradle-plugin-acceptance-tests') {
 
     compileJava {
         options.encoding = 'UTF-8'
+        options.compilerArgs = ['-Xlint:unchecked']
     }
 
     compileTestJava {
         options.encoding = 'UTF-8'
+        options.compilerArgs = ['-Xlint:unchecked']
     }
 }
 
@@ -56,5 +67,5 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
+    gradleVersion = '2.5'
 }

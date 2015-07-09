@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
@@ -29,7 +30,7 @@ public class CompilationSteps {
         project = GradleConnector.newConnector().forProjectDirectory(projectDirectory).connect();
 
         BuildLauncher build = project.newBuild();
-        build.forTasks("clean", taskName).setStandardOutput(System.out);
+        build.forTasks("clean", taskName).setStandardOutput(System.out).setStandardError(System.err);
         build.withArguments("--debug", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle",
             "-Dplugin.version=" + System.getProperty("PLUGIN_VERSION"));
         build.run();
@@ -46,5 +47,13 @@ public class CompilationSteps {
 
     public void andAssertFileWasGenerated(String filename) {
         Assert.assertTrue((new File(outputDirectory, filename)).exists());
+    }
+
+    public void andAssertFileExistsButWasNotGenerated(String filename) throws IOException {
+        File javaFile = new File(outputDirectory, filename);
+        Assert.assertTrue(javaFile.exists());
+        
+        String fileContent = FileUtils.readFileToString(javaFile);
+        Assert.assertTrue(fileContent.contains("public static final boolean IS_CUSTOM = true;"));
     }
 }

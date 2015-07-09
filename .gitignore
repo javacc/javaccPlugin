@@ -4,6 +4,9 @@
 .project
 .checkstyle
 .settings
+.idea
+*.iml
 target
 build
 build-eclipse
+!subprojects/plugin/src/test/resources/compiledJavaccFile/target

@@ -1,39 +1,25 @@
 package ca.coglinc.gradle.plugins.javacc;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.gradle.api.file.EmptyFileVisitor;
-import org.gradle.api.file.FileVisitDetails;
+import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RelativePath;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.SourceTask;
-import org.gradle.api.tasks.TaskAction;
 
 public abstract class AbstractJavaccTask extends SourceTask {
-
+    protected Map<String, String> programArguments;
+    
     private File inputDirectory;
     private File outputDirectory;
-    private Map<String, String> programArguments;
 
     protected AbstractJavaccTask(String inputDirectory, String outputDirectory, String filter) {
         setInputDirectory(inputDirectory);
         setOutputDirectory(outputDirectory);
 
         include(filter);
-    }
-
-    @TaskAction
-    public void run() {
-        getOutputDirectory().mkdirs();
-
-        getSource().visit(new EmptyFileVisitor() {
-            @Override
-            public void visitFile(FileVisitDetails fileVisitDetails) {
-                compile(computeInputDirectory(fileVisitDetails), fileVisitDetails.getRelativePath());
-            }
-        });
     }
 
     protected void compile(File inputDirectory, RelativePath inputRelativePath) {
@@ -45,13 +31,18 @@ public abstract class AbstractJavaccTask extends SourceTask {
         try {
             invokeCompiler(arguments);
         } catch (Exception exception) {
-            final String errorMessage = String.format("Unable to compile '%s' from '%s' into '%s'", inputRelativePath, inputDirectory,
-                getOutputDirectory());
+            final String errorMessage = String.format("Unable to compile '%s' from '%s' into '%s'", inputRelativePath, inputDirectory, getOutputDirectory());
             throw new JavaccTaskException(errorMessage, exception);
         }
     }
 
     protected abstract void invokeCompiler(String[] arguments) throws Exception;
+
+    protected abstract FileVisitor getJavaccSourceFileVisitor();
+    
+    protected FileVisitor getNonJavaccSourceFileVisitor() {
+        return new NonJavaccSourceFileVisitor(this);
+    }
 
     public Map<String, String> getArguments() {
         return programArguments;
@@ -71,7 +62,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
     public File getOutputDirectory() {
         return outputDirectory;
     }
-
+    
     public AbstractJavaccTask setInputDirectory(String inputDirectory) {
         return setInputDirectory(new File(getProject().getProjectDir(), inputDirectory));
     }
@@ -98,7 +89,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
     }
 
     String[] buildProgramArguments(File inputDirectory, RelativePath inputRelativePath) {
-        Map<String, String> arguments = new HashMap<String, String>();
+        Map<String, String> arguments = new LinkedHashMap<String, String>();
         if (programArguments != null) {
             arguments.putAll(programArguments);
         }
@@ -133,10 +124,5 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
     protected abstract String getProgramName();
 
-    private File computeInputDirectory(FileVisitDetails fileVisitDetails) {
-        File fileAbsolute = fileVisitDetails.getFile();
-        File fileRelative = new File(fileVisitDetails.getPath());
-
-        return new File(fileAbsolute.getAbsolutePath().replace(fileRelative.getPath(), ""));
-    }
+    protected abstract String supportedSuffix();
 }
