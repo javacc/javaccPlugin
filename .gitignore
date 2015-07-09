@@ -9,3 +9,4 @@
 target
 build
 build-eclipse
+!subprojects/plugin/src/test/resources/compiledJavaccFile/target
