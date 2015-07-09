@@ -105,6 +105,8 @@ compileJavacc {
 }
 ```
 
+If you prefer, you can simply have them sit in your regular java source set. Of course, a custom AST class needs to be in the same package as the original AST class it overrides.
+
 ## Compatibility
 
 This plugin requires Java 6+.
@@ -121,6 +123,10 @@ The following command can be used to release the project, upload to Maven Centra
 ```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/johnmartel/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
 
 ## Changelog
+
+### 2.2.1
+- Updated documentation for custom AST classes
+- Downgraded bintray plugin
 
 ### 2.2.0
 - Added support for custom AST classes (Issue #13)
