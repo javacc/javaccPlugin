@@ -124,10 +124,6 @@ The following command can be used to release the project, upload to Maven Centra
 
 ## Changelog
 
-### 2.2.1
-- Updated documentation for custom AST classes
-- Downgraded bintray plugin
-
 ### 2.2.0
 - Added support for custom AST classes (Issue #13)
 - Plugin now builds with Gradle 2.5
