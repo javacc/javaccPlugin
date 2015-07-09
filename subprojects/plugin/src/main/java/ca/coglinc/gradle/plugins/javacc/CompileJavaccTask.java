@@ -4,9 +4,13 @@ import java.io.File;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.gradle.api.file.FileTree;
 import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RelativePath;
+import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.TaskCollection;
+import org.gradle.api.tasks.compile.JavaCompile;
 import org.javacc.parser.Main;
 
 import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFile;
@@ -51,7 +55,7 @@ public class CompileJavaccTask extends AbstractJavaccTask {
 
     private void copyCompiledFilesFromTempOutputDirectoryToOutputDirectory() {
         CompiledJavaccFilesDirectory compiledJavaccFilesDirectory
-            = compiledJavaccFilesDirectoryFactory.getCompiledJavaccFilesDirectory(getTempOutputDirectory(), getSource(), getOutputDirectory(), getLogger());
+            = compiledJavaccFilesDirectoryFactory.getCompiledJavaccFilesDirectory(getTempOutputDirectory(), getSourceTree(), getOutputDirectory(), getLogger());
         
         for (CompiledJavaccFile compiledJavaccFile : compiledJavaccFilesDirectory.listFiles()) {
             if (compiledJavaccFile.customAstClassExists()) {
@@ -60,6 +64,26 @@ public class CompileJavaccTask extends AbstractJavaccTask {
                 compiledJavaccFile.copyCompiledFileToTargetDirectory();
             }
         }
+    }
+
+    private FileTree getSourceTree() {
+        FileTree sourceTree = getSource();
+        
+        TaskCollection<JavaCompile> javaCompileTasks = this.getProject().getTasks().withType(JavaCompile.class);
+        for (JavaCompile task : javaCompileTasks) {
+            sourceTree = sourceTree.plus(task.getSource());
+        }
+        
+        Spec<File> outputDirectoryFilter = new Spec<File>() {
+
+            @Override
+            public boolean isSatisfiedBy(File file) {
+                return file.getAbsolutePath().contains(getOutputDirectory().getAbsolutePath());
+            }
+        };
+        
+        sourceTree = sourceTree.minus(sourceTree.filter(outputDirectoryFilter)).getAsFileTree();
+        return sourceTree;
     }
 
     @Override

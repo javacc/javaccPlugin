@@ -324,6 +324,6 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.andAssertFileWasGenerated("ParseException.java");
         steps.andAssertFileWasGenerated("SimpleCharStream.java");
         steps.andAssertFileExistsButWasNotGenerated("Token.java");
-        steps.andAssertFileWasGenerated("TokenMgrError.java");
+        steps.andAssertFileExistsButWasNotGenerated("TokenMgrError.java");
     }
 }

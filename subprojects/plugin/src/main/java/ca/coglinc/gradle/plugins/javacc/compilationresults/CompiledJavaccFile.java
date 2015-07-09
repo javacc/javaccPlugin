@@ -101,9 +101,11 @@ public class CompiledJavaccFile {
         logger.debug("Not copying compiled file {} from {} to {} because it is overridden by the custom AST class {}", compiledJavaccFile, outputDirectory, targetDirectory,
             getCustomAstClassInputFile());
         
+        String packagePath = getPackageName(compiledJavaccFile).replaceAll("\\.", File.separator);
+        File destination = new File(targetDirectory.getAbsolutePath() + File.separator + packagePath, compiledJavaccFile.getName());
+        logger.debug("Copying custom AST class [{}] to [{}]", getCustomAstClassInputFile(), destination);
+        
         try {
-            String packagePath = getPackageName(compiledJavaccFile).replace("\\.", File.separator);
-            File destination = new File(targetDirectory.getAbsolutePath() + File.separator + packagePath, compiledJavaccFile.getName());
             FileUtils.copyFile(getCustomAstClassInputFile(), destination);
         } catch (IOException e) {
             String errorMessage = String.format("Could not copy %s to %s", getCustomAstClassInputFile(), targetDirectory);
