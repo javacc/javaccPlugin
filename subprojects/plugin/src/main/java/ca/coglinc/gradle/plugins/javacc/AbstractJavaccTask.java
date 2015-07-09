@@ -31,8 +31,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
         try {
             invokeCompiler(arguments);
         } catch (Exception exception) {
-            final String errorMessage = String.format("Unable to compile '%s' from '%s' into '%s'", inputRelativePath, inputDirectory,
-                getOutputDirectory());
+            final String errorMessage = String.format("Unable to compile '%s' from '%s' into '%s'", inputRelativePath, inputDirectory, getOutputDirectory());
             throw new JavaccTaskException(errorMessage, exception);
         }
     }

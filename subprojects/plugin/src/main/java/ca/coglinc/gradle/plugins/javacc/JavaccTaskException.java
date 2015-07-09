@@ -5,7 +5,6 @@ package ca.coglinc.gradle.plugins.javacc;
  * changed.
  */
 public class JavaccTaskException extends RuntimeException {
-
     private static final long serialVersionUID = 1L;
 
     public JavaccTaskException(String message, Throwable cause) {

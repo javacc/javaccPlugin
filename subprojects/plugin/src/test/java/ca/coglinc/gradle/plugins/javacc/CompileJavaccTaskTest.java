@@ -233,6 +233,17 @@ public class CompileJavaccTaskTest {
         Assert.assertEquals(1, outputFiles.getFiles().size());
         Assert.assertEquals("output", ((File) outputFiles.getFiles().toArray()[0]).getName());
     }
+    
+    @Test
+    public void argumentsGetterSetter() {
+        Map<String, String> expectedArguments = new HashMap<String, String>();
+        expectedArguments.put("static", "false");
+        task.setArguments(expectedArguments);
+        
+        Map<String, String> arguments = task.getArguments();
+        
+        assertEquals(expectedArguments, arguments);
+    }
 
     @Test
     public void javaccArgumentsAreOutputDirectoryAndFileToCompileWhenNoJavaccArgumentsProvided() {
