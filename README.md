@@ -105,6 +105,8 @@ compileJavacc {
 }
 ```
 
+If you prefer, you can simply have them sit in your regular java source set. Of course, a custom AST class needs to be in the same package as the original AST class it overrides.
+
 ## Compatibility
 
 This plugin requires Java 6+.
