@@ -124,6 +124,9 @@ The following command can be used to release the project, upload to Maven Centra
 
 ## Changelog
 
+### 2.2.1
+- Fixed support for custom AST classes defined in the Java sourcesets (Issue #15)
+
 ### 2.2.0
 - Added support for custom AST classes (Issue #13)
 - Plugin now builds with Gradle 2.5

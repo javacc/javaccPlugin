@@ -3,6 +3,7 @@ package ca.coglinc.gradle.plugins.javacc.compilationresults;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
@@ -37,5 +38,15 @@ public class CompiledJavaccFilesDirectoryTest {
         Collection<CompiledJavaccFile> files = directory.listFiles();
         
         assertThat(files, hasSize(2));
+    }
+    
+    @Test
+    public void toStringReturnsAbsoluteDirectoryPath() {
+        File outputDirectory = new File(getClass().getResource("/compiledResults").getFile());
+        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(outputDirectory, null, null, null);
+        
+        String stringValue = directory.toString();
+        
+        assertEquals(outputDirectory.getAbsolutePath(), stringValue);
     }
 }

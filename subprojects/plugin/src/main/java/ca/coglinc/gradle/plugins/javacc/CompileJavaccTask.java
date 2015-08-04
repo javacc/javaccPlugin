@@ -55,23 +55,37 @@ public class CompileJavaccTask extends AbstractJavaccTask {
 
     private void copyCompiledFilesFromTempOutputDirectoryToOutputDirectory() {
         CompiledJavaccFilesDirectory compiledJavaccFilesDirectory
-            = compiledJavaccFilesDirectoryFactory.getCompiledJavaccFilesDirectory(getTempOutputDirectory(), getSourceTree(), getOutputDirectory(), getLogger());
+            = compiledJavaccFilesDirectoryFactory.getCompiledJavaccFilesDirectory(getTempOutputDirectory(), getCompleteSourceTree(), getOutputDirectory(), getLogger());
         
         for (CompiledJavaccFile compiledJavaccFile : compiledJavaccFilesDirectory.listFiles()) {
-            if (compiledJavaccFile.customAstClassExists()) {
-                compiledJavaccFile.copyCustomAstClassToTargetDirectory();
+            FileTree javaSourceTree = getJavaSourceTree();
+            if (compiledJavaccFile.customAstClassExists(javaSourceTree)) {
+                compiledJavaccFile.ignoreCompiledFileAndUseCustomAstClassFromJavaSourceTree(javaSourceTree);
+            } else if (compiledJavaccFile.customAstClassExists()) {
+                compiledJavaccFile.copyCustomAstClassToTargetDirectory(getCompleteSourceTree());
             } else {
                 compiledJavaccFile.copyCompiledFileToTargetDirectory();
             }
         }
     }
 
-    private FileTree getSourceTree() {
-        FileTree sourceTree = getSource();
+    private FileTree getCompleteSourceTree() {
+        FileTree javaccTaskSourceTree = getSource();
+        FileTree javaTasksSourceTree = getJavaSourceTree();
+        FileTree completeSourceTree = null;
         
-        TaskCollection<JavaCompile> javaCompileTasks = this.getProject().getTasks().withType(JavaCompile.class);
-        for (JavaCompile task : javaCompileTasks) {
-            sourceTree = sourceTree.plus(task.getSource());
+        if (javaTasksSourceTree == null) {
+            completeSourceTree = javaccTaskSourceTree;
+        } else {
+            completeSourceTree = javaccTaskSourceTree.plus(javaTasksSourceTree);
+        }
+        
+        return excludeOutputDirectory(completeSourceTree);
+    }
+
+    private FileTree excludeOutputDirectory(FileTree sourceTree) {
+        if (sourceTree == null) {
+            return null;
         }
         
         Spec<File> outputDirectoryFilter = new Spec<File>() {
@@ -84,6 +98,21 @@ public class CompileJavaccTask extends AbstractJavaccTask {
         
         sourceTree = sourceTree.minus(sourceTree.filter(outputDirectoryFilter)).getAsFileTree();
         return sourceTree;
+    }
+
+    private FileTree getJavaSourceTree() {
+        FileTree javaSourceTree = null;
+        TaskCollection<JavaCompile> javaCompileTasks = this.getProject().getTasks().withType(JavaCompile.class);
+        
+        for (JavaCompile task : javaCompileTasks) {
+            if (javaSourceTree == null) {
+                javaSourceTree = task.getSource();
+            } else {
+                javaSourceTree = javaSourceTree.plus(task.getSource());
+            }
+        }
+        
+        return excludeOutputDirectory(javaSourceTree);
     }
 
     @Override
