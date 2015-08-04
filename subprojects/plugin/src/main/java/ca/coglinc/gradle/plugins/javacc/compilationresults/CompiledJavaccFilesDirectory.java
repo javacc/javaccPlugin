@@ -34,4 +34,9 @@ public class CompiledJavaccFilesDirectory {
         
         return compiledJavaccFiles;
     }
+    
+    @Override
+    public String toString() {
+        return outputDirectory.getAbsolutePath();
+    }
 }

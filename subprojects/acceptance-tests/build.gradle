@@ -27,14 +27,19 @@ checkstyle {
 findbugs {
     toolVersion = '3.0.1'
     sourceSets = [sourceSets.main, sourceSets.test]
-    effort = "min"
-    ignoreFailures = true
-    reportLevel = "high"
+    effort = "max"
+    ignoreFailures = false
+    reportLevel = "low"
     excludeFilter = file("${rootProject.projectDir}/config/findbugs/exclude.xml")
 }
 
 tasks.withType(FindBugs) {
     maxHeapSize = project.hasProperty('findBugsHeapSize') ? project.findBugsHeapSize : '1g'
+    
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
 }
 
 test {

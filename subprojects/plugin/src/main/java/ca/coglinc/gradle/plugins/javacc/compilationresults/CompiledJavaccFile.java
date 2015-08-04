@@ -22,7 +22,7 @@ public class CompiledJavaccFile {
     private FileTree customAstClassesDirectory;
     private File targetDirectory;
     private Logger logger;
-
+    
     CompiledJavaccFile(File file, File outputDirectory, FileTree customAstClassesDirectory, File targetDirectory, Logger logger) {
         this.compiledJavaccFile = file;
         this.outputDirectory = outputDirectory;
@@ -32,16 +32,24 @@ public class CompiledJavaccFile {
     }
 
     public boolean customAstClassExists() {
-        File customAstClassInputFile = getCustomAstClassInputFile();
-
+        return customAstClassExists(customAstClassesDirectory);
+    }
+    
+    public boolean customAstClassExists(FileTree fileTree) {
+        File customAstClassInputFile = getCustomAstClassInputFile(fileTree);
+        
         return (customAstClassInputFile != null) && customAstClassInputFile.exists();
     }
 
-    private File getCustomAstClassInputFile() {
+    private File getCustomAstClassInputFile(FileTree fileTree) {
         String compiledJavaccFilePackage = getPackageName(compiledJavaccFile);
         
-        Collection<File> sourceFiles = customAstClassesDirectory.getFiles();
-        return scanSourceFiles(compiledJavaccFilePackage, sourceFiles);
+        if (fileTree != null) {
+            Collection<File> sourceFiles = fileTree.getFiles();
+            return scanSourceFiles(compiledJavaccFilePackage, sourceFiles);
+        } else {
+            return null;
+        }
     }
 
     private File scanSourceFiles(String compiledJavaccFilePackage, Collection<File> sourceFiles) {
@@ -84,10 +92,10 @@ public class CompiledJavaccFile {
     }
 
     public void copyCompiledFileToTargetDirectory() {
-        logger.debug("Custom AST class {} not found", getCustomAstClassInputFile());
+        logger.info("Custom AST class not found");
         
         File destination = new File(compiledJavaccFile.getAbsolutePath().replace(outputDirectory.getAbsolutePath(), targetDirectory.getAbsolutePath()));
-        logger.debug("Moving compiled file {} to {}", compiledJavaccFile, destination);
+        logger.info("Moving compiled file {} to {}", compiledJavaccFile, destination);
         
         try {
             FileUtils.moveFile(compiledJavaccFile, destination);
@@ -97,19 +105,29 @@ public class CompiledJavaccFile {
         }
     }
 
-    public void copyCustomAstClassToTargetDirectory() {
-        logger.debug("Not copying compiled file {} from {} to {} because it is overridden by the custom AST class {}", compiledJavaccFile, outputDirectory, targetDirectory,
-            getCustomAstClassInputFile());
+    public void copyCustomAstClassToTargetDirectory(FileTree sourceTree) {
+        logger.info("Not copying compiled file {} from {} to {} because it is overridden by the custom AST class {}", compiledJavaccFile, outputDirectory, targetDirectory,
+            getCustomAstClassInputFile(sourceTree));
         
         String packagePath = getPackageName(compiledJavaccFile).replaceAll("\\.", File.separator);
         File destination = new File(targetDirectory.getAbsolutePath() + File.separator + packagePath, compiledJavaccFile.getName());
-        logger.debug("Copying custom AST class [{}] to [{}]", getCustomAstClassInputFile(), destination);
+        logger.info("Copying custom AST class [{}] to [{}]", getCustomAstClassInputFile(sourceTree), destination);
         
         try {
-            FileUtils.copyFile(getCustomAstClassInputFile(), destination);
+            FileUtils.copyFile(getCustomAstClassInputFile(sourceTree), destination);
         } catch (IOException e) {
-            String errorMessage = String.format("Could not copy %s to %s", getCustomAstClassInputFile(), targetDirectory);
+            String errorMessage = String.format("Could not copy %s to %s", getCustomAstClassInputFile(sourceTree), targetDirectory);
             throw new CompiledJavaccFileOperationException(errorMessage, e);
         }
+    }
+
+    public void ignoreCompiledFileAndUseCustomAstClassFromJavaSourceTree(FileTree javaSourceTree) {
+        logger.info("Ignoring compiled file {} from {} to {} because it is overridden by the custom AST class in Java source tree {}", compiledJavaccFile, outputDirectory,
+            targetDirectory, getCustomAstClassInputFile(javaSourceTree));
+    }
+    
+    @Override
+    public String toString() {
+        return compiledJavaccFile.getAbsolutePath();
     }
 }
