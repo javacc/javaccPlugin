@@ -1,0 +1,32 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: System.getProperty('plugin.version')
+    }
+}
+apply plugin: 'ca.coglinc.javacc'
+
+sourceCompatibility = 1.5
+version = '1.0'
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart', 'Implementation-Version': version
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
+
+compileJjtree {
+    include '**/*.java'
+}

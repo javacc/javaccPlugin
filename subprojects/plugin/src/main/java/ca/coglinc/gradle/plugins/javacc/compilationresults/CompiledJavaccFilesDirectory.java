@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.logging.Logger;
@@ -24,7 +23,7 @@ public class CompiledJavaccFilesDirectory {
     }
 
     public Collection<CompiledJavaccFile> listFiles() {
-        Collection<File> files = FileUtils.listFiles(outputDirectory, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.TRUE);
+        Collection<File> files = FileUtils.listFiles(outputDirectory, TrueFileFilter.TRUE, TrueFileFilter.TRUE);
         Collection<CompiledJavaccFile> compiledJavaccFiles = new ArrayList<CompiledJavaccFile>();
         
         for (File file : files) {

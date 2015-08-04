@@ -20,13 +20,17 @@ public class NonJavaccSourceFileVisitor extends EmptyFileVisitor {
             File sourceFile = fileDetails.getFile();
             File destinationFile = new File(sourceFile.getAbsolutePath().replace(task.getInputDirectory().getAbsolutePath(), task.getOutputDirectory().getAbsolutePath()));
             
-            task.getLogger().debug("Copying non javacc source file from {} to {}", sourceFile.getAbsolutePath(), destinationFile.getAbsolutePath());
-            
-            try {
-                FileUtils.copyFile(sourceFile, destinationFile);
-            } catch (IOException e) {
-                throw new JavaccTaskException(String.format("Could not copy file %s to %s", sourceFile.getAbsolutePath(), destinationFile.getAbsolutePath()), e);
-            }
+            copyFile(sourceFile, destinationFile);
+        }
+    }
+
+    private void copyFile(File sourceFile, File destinationFile) {
+        task.getLogger().debug("Copying non javacc source file from {} to {}", sourceFile.getAbsolutePath(), destinationFile.getAbsolutePath());
+        
+        try {
+            FileUtils.copyFile(sourceFile, destinationFile);
+        } catch (IOException e) {
+            throw new JavaccTaskException(String.format("Could not copy file %s to %s", sourceFile.getAbsolutePath(), destinationFile.getAbsolutePath()), e);
         }
     }
 

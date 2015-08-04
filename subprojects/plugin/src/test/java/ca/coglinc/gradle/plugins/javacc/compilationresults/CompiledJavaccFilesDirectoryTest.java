@@ -23,21 +23,23 @@ public class CompiledJavaccFilesDirectoryTest {
     }
     
     @Test
-    public void listFilesReturnsOnlyJavaFiles() {
+    public void listFilesReturnsAllFiles() {
         CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(new File(getClass().getResource("/compiledResults").getFile()), null, null, null);
         
         Collection<CompiledJavaccFile> files = directory.listFiles();
         
-        assertThat(files, hasSize(1));
+        final int numberOfFilesInFolder = 2;
+        assertThat(files, hasSize(numberOfFilesInFolder));
     }
     
     @Test
-    public void listFilesReturnsJavaFilesRecursively() {
+    public void listFilesReturnsAllFilesRecursively() {
         CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(new File(getClass().getResource("/compiledResultsWithSubFolders").getFile()), null, null, null);
         
         Collection<CompiledJavaccFile> files = directory.listFiles();
         
-        assertThat(files, hasSize(2));
+        final int numberOfFilesInFolder = 3;
+        assertThat(files, hasSize(numberOfFilesInFolder));
     }
     
     @Test

@@ -4,16 +4,25 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.gradle.api.file.FileTree;
 import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RelativePath;
+import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.SourceTask;
+import org.gradle.api.tasks.TaskCollection;
+import org.gradle.api.tasks.compile.JavaCompile;
+
+import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFile;
+import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFilesDirectory;
+import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFilesDirectoryFactory;
 
 public abstract class AbstractJavaccTask extends SourceTask {
     protected Map<String, String> programArguments;
     
     private File inputDirectory;
     private File outputDirectory;
+    private CompiledJavaccFilesDirectoryFactory compiledJavaccFilesDirectoryFactory = new CompiledJavaccFilesDirectoryFactory();
 
     protected AbstractJavaccTask(String inputDirectory, String outputDirectory, String filter) {
         setInputDirectory(inputDirectory);
@@ -37,6 +46,80 @@ public abstract class AbstractJavaccTask extends SourceTask {
     }
 
     protected abstract void invokeCompiler(String[] arguments) throws Exception;
+    
+    protected void copyNonJavaccFilesToOutputDirectory() {
+        getSource().visit(getNonJavaccSourceFileVisitor());
+    }
+
+    protected File getTempOutputDirectory() {
+        return new File(getOutputDirectory(), "tmp");
+    }
+
+    protected void compileSourceFilesToTempOutputDirectory() {
+        getSource().visit(getJavaccSourceFileVisitor());
+    }
+
+    protected void copyCompiledFilesFromTempOutputDirectoryToOutputDirectory() {
+        CompiledJavaccFilesDirectory compiledJavaccFilesDirectory
+            = compiledJavaccFilesDirectoryFactory.getCompiledJavaccFilesDirectory(getTempOutputDirectory(), getCompleteSourceTree(), getOutputDirectory(), getLogger());
+        
+        for (CompiledJavaccFile compiledJavaccFile : compiledJavaccFilesDirectory.listFiles()) {
+            FileTree javaSourceTree = getJavaSourceTree();
+            if (compiledJavaccFile.customAstClassExists(javaSourceTree)) {
+                compiledJavaccFile.ignoreCompiledFileAndUseCustomAstClassFromJavaSourceTree(javaSourceTree);
+            } else if (compiledJavaccFile.customAstClassExists()) {
+                compiledJavaccFile.copyCustomAstClassToTargetDirectory(getCompleteSourceTree());
+            } else {
+                compiledJavaccFile.copyCompiledFileToTargetDirectory();
+            }
+        }
+    }
+
+    private FileTree getCompleteSourceTree() {
+        FileTree javaccTaskSourceTree = getSource();
+        FileTree javaTasksSourceTree = getJavaSourceTree();
+        FileTree completeSourceTree = null;
+        
+        if (javaTasksSourceTree == null) {
+            completeSourceTree = javaccTaskSourceTree;
+        } else {
+            completeSourceTree = javaccTaskSourceTree.plus(javaTasksSourceTree);
+        }
+        
+        return excludeOutputDirectory(completeSourceTree);
+    }
+
+    private FileTree excludeOutputDirectory(FileTree sourceTree) {
+        if (sourceTree == null) {
+            return null;
+        }
+        
+        Spec<File> outputDirectoryFilter = new Spec<File>() {
+
+            @Override
+            public boolean isSatisfiedBy(File file) {
+                return file.getAbsolutePath().contains(getOutputDirectory().getAbsolutePath());
+            }
+        };
+        
+        sourceTree = sourceTree.minus(sourceTree.filter(outputDirectoryFilter)).getAsFileTree();
+        return sourceTree;
+    }
+
+    private FileTree getJavaSourceTree() {
+        FileTree javaSourceTree = null;
+        TaskCollection<JavaCompile> javaCompileTasks = this.getProject().getTasks().withType(JavaCompile.class);
+        
+        for (JavaCompile task : javaCompileTasks) {
+            if (javaSourceTree == null) {
+                javaSourceTree = task.getSource();
+            } else {
+                javaSourceTree = javaSourceTree.plus(task.getSource());
+            }
+        }
+        
+        return excludeOutputDirectory(javaSourceTree);
+    }
 
     protected abstract FileVisitor getJavaccSourceFileVisitor();
     

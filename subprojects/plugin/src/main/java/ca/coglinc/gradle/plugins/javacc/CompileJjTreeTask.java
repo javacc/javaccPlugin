@@ -3,6 +3,7 @@ package ca.coglinc.gradle.plugins.javacc;
 import java.io.File;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RelativePath;
 import org.gradle.api.tasks.TaskAction;
@@ -22,14 +23,17 @@ public class CompileJjTreeTask extends AbstractJavaccTask {
     
     @TaskAction
     public void run() {
-        getOutputDirectory().mkdirs();
-        
-        getSource().visit(getJavaccSourceFileVisitor());
+        getTempOutputDirectory().mkdirs();
+
+        compileSourceFilesToTempOutputDirectory();
+        copyCompiledFilesFromTempOutputDirectoryToOutputDirectory();
+        copyNonJavaccFilesToOutputDirectory();
+        FileUtils.deleteQuietly(getTempOutputDirectory());
     }
 
     @Override
     protected void augmentArguments(File inputDirectory, RelativePath inputRelativePath, Map<String, String> arguments) {
-        arguments.put("JJTREE_OUTPUT_DIRECTORY", inputRelativePath.getFile(getOutputDirectory()).getParentFile().getAbsolutePath());
+        arguments.put("JJTREE_OUTPUT_DIRECTORY", inputRelativePath.getFile(getTempOutputDirectory()).getParentFile().getAbsolutePath());
     }
 
     @Override
