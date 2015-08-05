@@ -4,7 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 
@@ -154,5 +157,16 @@ public class CompiledJavaccFileTest {
         String stringValue = compiledJavaccFile.toString();
         
         assertEquals(file.getAbsolutePath(), stringValue);
+    }
+    
+    @Test
+    public void ignoreCompiledFileAndUseCustomAstClassFromJavaSourceTreeOnlyLogsThatCompiledFileIsNotActedUpon() {
+        File file = mock(File.class);
+        FileTree javaSourceTree = mock(FileTree.class);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        
+        compiledJavaccFile.ignoreCompiledFileAndUseCustomAstClassFromJavaSourceTree(javaSourceTree);
+        
+        verify(logger).info(anyString(), eq(file), anyString());
     }
 }

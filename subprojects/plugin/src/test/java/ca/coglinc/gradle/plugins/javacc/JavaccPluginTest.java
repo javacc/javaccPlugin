@@ -35,4 +35,11 @@ public class JavaccPluginTest {
         Assert.assertNotNull(compileJJTreeTask);
         Assert.assertTrue(compileJJTreeTask instanceof CompileJjTreeTask);
     }
+    
+    @Test
+    public void pluginAddsCompileJjdocTaskToProject() {
+        final Task compileJjdocTask = project.getTasks().getByName("jjdoc");
+        Assert.assertNotNull(compileJjdocTask);
+        Assert.assertTrue(compileJjdocTask instanceof CompileJjdocTask);
+    }
 }

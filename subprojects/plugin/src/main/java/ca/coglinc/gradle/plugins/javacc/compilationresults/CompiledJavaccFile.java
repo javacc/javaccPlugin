@@ -122,8 +122,8 @@ public class CompiledJavaccFile {
     }
 
     public void ignoreCompiledFileAndUseCustomAstClassFromJavaSourceTree(FileTree javaSourceTree) {
-        logger.info("Ignoring compiled file {} from {} to {} because it is overridden by the custom AST class in Java source tree {}", compiledJavaccFile, outputDirectory,
-            targetDirectory, getCustomAstClassInputFile(javaSourceTree));
+        logger.info("Ignoring compiled file {} because it is overridden by the custom AST class in Java source tree {}", compiledJavaccFile,
+            getCustomAstClassInputFile(javaSourceTree));
     }
     
     @Override

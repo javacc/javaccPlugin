@@ -31,3 +31,8 @@ compileJavacc {
     inputDirectory = file(project.projectDir.absolutePath + '/src/main/custom')
     outputDirectory = file(project.buildDir.absolutePath + '/output');
 }
+
+jjdoc {
+    inputDirectory = file(project.projectDir.absolutePath + '/src/main/custom')
+    outputDirectory = file(project.buildDir.absolutePath + '/outputjjdoc');
+}

@@ -15,6 +15,7 @@ public class JavaccPlugin implements Plugin<Project> {
     public void apply(Project project) {
         addCompileJavaccTaskToProject(project);
         addCompileJJTreeTaskToProject(project);
+        addCompileJjdocTaskToProject(project);
 
         JavaToJavaccDependencyAction compileJavaDependsOnCompileJavacc = new JavaToJavaccDependencyAction();
         project.afterEvaluate(compileJavaDependsOnCompileJavacc);
@@ -27,6 +28,11 @@ public class JavaccPlugin implements Plugin<Project> {
 
     private void addCompileJJTreeTaskToProject(Project project) {
         addTaskToProject(project, CompileJjTreeTask.class, CompileJjTreeTask.TASK_NAME_VALUE, CompileJjTreeTask.TASK_DESCRIPTION_VALUE,
+            JavaccPlugin.GROUP);
+    }
+    
+    private void addCompileJjdocTaskToProject(Project project) {
+        addTaskToProject(project, CompileJjdocTask.class, CompileJjdocTask.TASK_NAME_VALUE, CompileJjdocTask.TASK_DESCRIPTION_VALUE,
             JavaccPlugin.GROUP);
     }
 

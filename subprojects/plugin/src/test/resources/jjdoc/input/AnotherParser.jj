@@ -1,0 +1,11 @@
+PARSER_BEGIN(AnotherParser)
+package test;
+
+public class AnotherParser {
+}
+PARSER_END(AnotherParser)
+
+TOKEN :
+{
+    <ABS: "abs">
+}

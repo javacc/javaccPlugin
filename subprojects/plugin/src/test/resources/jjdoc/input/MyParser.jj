@@ -1,0 +1,11 @@
+PARSER_BEGIN(MyParser)
+package test;
+
+public class MyParser {
+}
+PARSER_END(MyParser)
+
+TOKEN :
+{
+    <ABS: "abs">
+}
