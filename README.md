@@ -14,7 +14,7 @@ Add the following lines to your `build.gradle` script:
 Gradle 2.1+
 ```groovy
 plugins {
-  id "ca.coglinc.javacc" version "2.2.1"
+  id "ca.coglinc.javacc" version "2.2.2"
 }
 ```
 
@@ -25,7 +25,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.2.1'
+        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.2.2'
     }
 }
 apply plugin: 'ca.coglinc.javacc'
@@ -123,6 +123,9 @@ The following command can be used to release the project, upload to Maven Centra
 ```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/johnmartel/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
 
 ## Changelog
+
+### 2.2.2
+- Handle custom AST classes correctly in the compileJjtree task (Issue #16)
 
 ### 2.2.1
 - Fixed support for custom AST classes defined in the Java sourcesets (Issue #15)
