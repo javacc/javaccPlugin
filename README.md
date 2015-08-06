@@ -12,20 +12,20 @@ Simply grab the plugin from Maven Central:
 Add the following lines to your `build.gradle` script:
 
 Gradle 2.1+
-```groovy
+```gradle
 plugins {
-  id "ca.coglinc.javacc" version "2.2.2"
+  id "ca.coglinc.javacc" version "2.3.0"
 }
 ```
 
 Gradle <2.1
-```groovy
+```gradle
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.2.2'
+        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.3.0'
     }
 }
 apply plugin: 'ca.coglinc.javacc'
@@ -46,7 +46,7 @@ Place you JJTree code into `src/main/jjtree`
 The generated Java code will be  put under `./build/generated/jjtree` and will be compiled as part of the JavaCC compile.
 
 You can configure the input/output directory by configuring the compileJavacc task:
-```
+```gradle
 compileJavacc {
     inputDirectory = file('src/main/javacc')
     outputDirectory = file(project.buildDir.absolutePath + '/generated/javacc')
@@ -55,14 +55,14 @@ compileJavacc {
 Due to the nature of the JavaCC compiler and its use of the OUTPUT_DIRECTORY parameter, you should prefer using `inputDirectory` over `source` provided by SourceTask. To use include/exclude filters, please refer to the [SourceTask](http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.SourceTask.html) documentation. By default, only `*.jj` files are included. 
 
 You can configure commandline arguments passed to JavaCC by specifying `javaccArguments` map in compileJavacc:
-```
+```gradle
 compileJavacc {
     arguments = [grammar_encoding: 'UTF-8', static: 'false']
 }
 ```
 
 Input/output directories and arguments can be configured as well for JJTree:
-```
+```gradle
 compileJjtree {
     inputDirectory = file('src/main/jjtree')
     outputDirectory = file(project.buildDir.absolutePath + '/generated/jjtree')
@@ -73,10 +73,12 @@ compileJjtree {
 ### Eclipse
 
 If you are using Eclipse and would like your gradle project to compile nicely in eclipse and have the generated code in the build path, you can simply add the generated path to the main sourceSet and add a dependency on `compileJavacc` to `eclipseClasspath`.
-```java
-main {
-    java {
-        srcDir compileJavacc.outputDirectory
+```gradle
+sourceSets {
+    main {
+        java {
+            srcDir compileJavacc.outputDirectory
+        }
     }
 }
     
@@ -86,7 +88,7 @@ eclipseClasspath.dependsOn("compileJavacc")
 ### Dependency on another version of JavaCC
 
 If for some reason you need to depend on a different version of JavaCC than the plugin's default, you can use the following in your build script:
-```
+```gradle
 buildscript {
     configurations.all {
         resolutionStrategy {
@@ -107,6 +109,18 @@ compileJavacc {
 
 If you prefer, you can simply have them sit in your regular java source set. Of course, a custom AST class needs to be in the same package as the original AST class it overrides.
 
+### JJDoc
+
+The `jjdoc` task looks for JavaCC parser specifications in the default `src/main/javacc` directory and generates documentation into the default `./build/generated/jjdoc` directory.
+Of course, you can provide arguments and configure the input/output directories as with the `compileJavacc` and `compileJjtree` tasks:
+```gradle
+jjdoc {
+    inputDirectory = file('src/main/javacc')
+    outputDirectory = file(project.buildDir.absolutePath + '/generated/jjdoc')
+    arguments = [text: 'true']
+}
+```
+
 ## Compatibility
 
 This plugin requires Java 6+.
@@ -123,6 +137,9 @@ The following command can be used to release the project, upload to Maven Centra
 ```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/johnmartel/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
 
 ## Changelog
+
+### 2.3.0
+- Added support for JJDoc
 
 ### 2.2.2
 - Handle custom AST classes correctly in the compileJjtree task (Issue #16)
