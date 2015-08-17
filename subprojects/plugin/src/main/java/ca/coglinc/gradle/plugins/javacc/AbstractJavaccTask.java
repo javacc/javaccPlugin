@@ -1,7 +1,6 @@
 package ca.coglinc.gradle.plugins.javacc;
 
 import java.io.File;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.gradle.api.file.FileTree;
@@ -34,7 +33,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
     protected void compile(File inputDirectory, RelativePath inputRelativePath) {
         getLogger().debug("Compiling {} file [{}] from [{}] into [{}]", getProgramName(), inputRelativePath, inputDirectory, getOutputDirectory());
 
-        String[] arguments = buildProgramArguments(inputDirectory, inputRelativePath);
+        ProgramArguments arguments = buildProgramArguments(inputDirectory, inputRelativePath);
 
         getLogger().debug("Invoking {} with arguments [{}]", getProgramName(), arguments);
         try {
@@ -45,7 +44,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
         }
     }
 
-    protected abstract void invokeCompiler(String[] arguments) throws Exception;
+    protected abstract void invokeCompiler(ProgramArguments arguments) throws Exception;
     
     protected void copyNonJavaccFilesToOutputDirectory() {
         getSource().visit(getNonJavaccSourceFileVisitor());
@@ -171,24 +170,16 @@ public abstract class AbstractJavaccTask extends SourceTask {
         return this;
     }
 
-    String[] buildProgramArguments(File inputDirectory, RelativePath inputRelativePath) {
-        Map<String, String> arguments = new LinkedHashMap<String, String>();
+    ProgramArguments buildProgramArguments(File inputDirectory, RelativePath inputRelativePath) {
+        ProgramArguments commandLineArguments = new ProgramArguments();
+        
         if (programArguments != null) {
-            arguments.putAll(programArguments);
+            commandLineArguments.addAll(programArguments);
         }
-
-        augmentArguments(inputDirectory, inputRelativePath, arguments);
-
-        int index = 0;
-        String[] commandLineArguments = new String[arguments.size() + 1];
-
-        // Add normal arguments
-        for (Map.Entry<String, String> entry : arguments.entrySet()) {
-            commandLineArguments[index++] = String.format("-%1$s=%2$s", entry.getKey(), entry.getValue());
-        }
-
-        // Add file to compile as last command line argument
-        commandLineArguments[commandLineArguments.length - 1] = inputRelativePath.getFile(inputDirectory).getAbsolutePath();
+        
+        commandLineArguments.addFilename(inputRelativePath.getFile(inputDirectory).getAbsolutePath());
+        
+        augmentArguments(inputDirectory, inputRelativePath, commandLineArguments);
 
         return commandLineArguments;
     }
@@ -201,9 +192,9 @@ public abstract class AbstractJavaccTask extends SourceTask {
      * @param inputRelativePath
      *            The input path relative to the input directory. This is the file that will be "compiled".
      * @param arguments
-     *            The map to add new arguments to.
+     *            The ProgramArguments to add new arguments to.
      */
-    protected abstract void augmentArguments(File inputDirectory, RelativePath inputRelativePath, Map<String, String> arguments);
+    protected abstract void augmentArguments(File inputDirectory, RelativePath inputRelativePath, ProgramArguments arguments);
 
     protected abstract String getProgramName();
 

@@ -7,6 +7,8 @@ import java.net.URISyntaxException;
 import org.junit.Test;
 
 public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
+    private static final String CLEAN = "clean";
+    private static final String COMPILE_JJ_TREE = "compileJJTree";
 
     @Test
     public void givenAMultiProjectBuildWithJJTreeWhenExecuteCompileJJTreeTaskThenTheFilesAreGeneratedInTheDefaultDirectory()
@@ -15,7 +17,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTree");
-        steps.whenIExecuteTask(":subprojects/subproject1:compileJJTree");
+        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJJTree").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
@@ -36,7 +38,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTreeAndWithConfiguredInputsOutputs");
-        steps.whenIExecuteTask(":subprojects/subproject1:compileJJTree");
+        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJJTree").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "output";
 
@@ -57,7 +59,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTest");
-        steps.whenIExecuteTask("compileJJTree");
+        steps.whenTasks(CLEAN, COMPILE_JJ_TREE).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -78,7 +80,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithArguments");
-        steps.whenIExecuteTask("compileJJTree");
+        steps.whenTasks(CLEAN, COMPILE_JJ_TREE).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -99,7 +101,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithConfiguredInputsOutputs");
-        steps.whenIExecuteTask("compileJJTree");
+        steps.whenTasks(CLEAN, COMPILE_JJ_TREE).execute();
 
         steps.thenAssertOutputDirectoryExists("build" + File.separator + "output");
         steps.andAssertFileWasGenerated("JJTreeOutputTest.jj");
@@ -118,7 +120,29 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithCustomAstClasses");
-        steps.whenIExecuteTask("compileJJTree");
+        steps.whenTasks(CLEAN, COMPILE_JJ_TREE).execute();
+
+        String buildDirectory = "build" + File.separator + "generated";
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "jjtree");
+        steps.andAssertFileWasGenerated("JJTreeOutputTest.jj");
+        steps.andAssertFileExistsButWasNotGenerated("HelloTreeConstants.java");
+        steps.andAssertFileDoesNotExist("JJTHelloState.java");
+        steps.andAssertFileWasGenerated("Node.java");
+        steps.andAssertFileWasGenerated("SimpleNode.java");
+
+        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "javacc");
+    }
+    
+    @Test
+    public void givenASimpleJJTreeProjectWhenRerunCompileJJTreeTaskThenTheFilesThatDoNotHaveACorrespondingCustomAstClassAreGeneratedInTheDefaultDirectory()
+        throws URISyntaxException, IOException {
+        
+        CompilationSteps steps = new CompilationSteps();
+
+        steps.givenAProjectNamed("simpleJJTreeTestWithCustomAstClasses");
+        steps.whenTasks(CLEAN, COMPILE_JJ_TREE).execute();
+        steps.whenTasks(COMPILE_JJ_TREE).withArguments("--rerun-tasks").execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 

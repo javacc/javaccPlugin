@@ -81,7 +81,7 @@ public class CompileJjdocTaskTest {
     
     @Test
     public void augmentArgumentsDoesNotModifyProgramArguments() {
-        Map<String, String> arguments = new HashMap<String, String>();
+        ProgramArguments arguments = new ProgramArguments();
         
         task.augmentArguments(null, null, arguments);
         

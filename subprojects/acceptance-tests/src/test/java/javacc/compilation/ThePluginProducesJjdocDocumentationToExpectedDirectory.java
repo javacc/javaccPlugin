@@ -7,20 +7,39 @@ import java.net.URISyntaxException;
 import org.junit.Test;
 
 public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
+    private static final String CLEAN = "clean";
+    private static final String JJDOC = "jjdoc";
 
     @Test
     public void givenASimpleProjectWhenExecuteJjdocTaskThenTheDocumentationIsGeneratedInTheDefaultDirectory() throws URISyntaxException, IOException {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTest");
-        steps.whenIExecuteTask("jjdoc");
+        steps.whenTasks(CLEAN, JJDOC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
         steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "javacc");
         steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "jjtree");
 
-        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "jjdoc");
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + JJDOC);
+        steps.andAssertFileWasGenerated("MyParser.html");
+    }
+    
+    @Test
+    public void givenASimpleProjectWhenRerunJjdocTaskThenTheDocumentationIsGeneratedInTheDefaultDirectory() throws URISyntaxException, IOException {
+        CompilationSteps steps = new CompilationSteps();
+
+        steps.givenAProjectNamed("simpleTest");
+        steps.whenTasks(CLEAN, JJDOC).execute();
+        steps.whenTasks(JJDOC).withArguments("--rerun-tasks").execute();
+
+        String buildDirectory = "build" + File.separator + "generated";
+
+        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "javacc");
+        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "jjtree");
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + JJDOC);
         steps.andAssertFileWasGenerated("MyParser.html");
     }
     
@@ -31,14 +50,14 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithArguments");
-        steps.whenIExecuteTask("jjdoc");
+        steps.whenTasks(CLEAN, JJDOC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
         steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "javacc");
         steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "jjtree");
 
-        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "jjdoc");
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + JJDOC);
         steps.andAssertFileWasGenerated("MyParser.txt");
     }
     
@@ -49,14 +68,14 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuild");
-        steps.whenIExecuteTask(":subprojects/subproject1:jjdoc");
+        steps.whenTasks(CLEAN, ":subprojects/subproject1:jjdoc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
         steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "javacc");
         steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "jjtree");
 
-        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "jjdoc");
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + JJDOC);
         steps.andAssertFileWasGenerated("MyParser.html");
         steps.andAssertFileWasGenerated("JavaccOutputTest.html");
     }
@@ -68,7 +87,7 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithConfiguredInputsOutputs");
-        steps.whenIExecuteTask("jjdoc");
+        steps.whenTasks(CLEAN, JJDOC).execute();
 
         String buildDirectory = "build" + File.separator + "outputjjdoc";
 
@@ -87,7 +106,7 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithConfiguredInputsOutputs");
-        steps.whenIExecuteTask(":subprojects/subproject1:jjdoc");
+        steps.whenTasks(CLEAN, ":subprojects/subproject1:jjdoc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build";
 

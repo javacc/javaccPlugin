@@ -13,7 +13,10 @@ defaultTasks 'clean', 'build', 'install'
 dependencies {
     compile gradleApi()
     compile 'net.java.dev.javacc:javacc:6.1.2'
-    compile 'commons-io:commons-io:2.4'
+    compile('commons-io:commons-io:2.4') {
+        force = true
+    }
+    compile 'org.apache.commons:commons-lang3:3.4'
     
     testCompile('junit:junit:4.12') {
         force = true

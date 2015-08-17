@@ -7,13 +7,15 @@ import java.net.URISyntaxException;
 import org.junit.Test;
 
 public class ThePluginCompilesJavaccToExpectedDirectoryStory {
+    private static final String CLEAN = "clean";
+    private static final String COMPILE_JAVACC = "compileJavacc";
 
     @Test
     public void givenASimpleProjectWhenExecuteCompileJavaccTaskThenTheFilesAreGeneratedInTheDefaultDirectory() throws URISyntaxException, IOException {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTest");
-        steps.whenIExecuteTask("compileJavacc");
+        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -44,7 +46,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithArguments");
-        steps.whenIExecuteTask("compileJavacc");
+        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -75,7 +77,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuild");
-        steps.whenIExecuteTask(":subprojects/subproject1:compileJavacc");
+        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
@@ -106,7 +108,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTree");
-        steps.whenIExecuteTask(":subprojects/subproject1:compileJavacc");
+        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
@@ -133,7 +135,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithConfiguredInputsOutputs");
-        steps.whenIExecuteTask("compileJavacc");
+        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
 
         String buildDirectory = "build" + File.separator + "output";
 
@@ -164,7 +166,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithConfiguredInputsOutputs");
-        steps.whenIExecuteTask(":subprojects/subproject1:compileJavacc");
+        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build";
 
@@ -195,7 +197,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTreeAndWithConfiguredInputsOutputs");
-        steps.whenIExecuteTask(":subprojects/subproject1:compileJavacc");
+        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "output";
 
@@ -222,7 +224,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTest");
-        steps.whenIExecuteTask("compileJavacc");
+        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -249,7 +251,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithArguments");
-        steps.whenIExecuteTask("compileJavacc");
+        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -276,7 +278,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithConfiguredInputsOutputs");
-        steps.whenIExecuteTask("compileJavacc");
+        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
 
         steps.thenAssertOutputDirectoryExists("build" + File.separator + "output");
         steps.andAssertFileWasGenerated("JJTreeOutputTest.jj");
@@ -302,7 +304,40 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithCustomAstClass");
-        steps.whenIExecuteTask("compileJavacc");
+        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
+
+        String buildDirectory = "build" + File.separator + "generated";
+
+        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "jjtree");
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "javacc");
+        steps.andAssertFileExistsButWasNotGenerated("MyParser.java");
+        steps.andAssertFileExistsButWasNotGenerated("MyParserConstants.java");
+        steps.andAssertFileExistsButWasNotGenerated("MyParserTokenManager.java");
+        steps.andAssertFileWasGenerated("ParseException.java");
+        steps.andAssertFileWasGenerated("SimpleCharStream.java");
+        steps.andAssertFileExistsButWasNotGenerated("Token.java");
+        steps.andAssertFileExistsButWasNotGenerated("TokenMgrError.java");
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "javacc" + File.separator + "test" + File.separator + "pkg");
+        steps.andAssertFileWasGenerated("JavaccOutputTest.java");
+        steps.andAssertFileWasGenerated("JavaccOutputTestConstants.java");
+        steps.andAssertFileWasGenerated("JavaccOutputTestTokenManager.java");
+        steps.andAssertFileWasGenerated("ParseException.java");
+        steps.andAssertFileWasGenerated("SimpleCharStream.java");
+        steps.andAssertFileExistsButWasNotGenerated("Token.java");
+        steps.andAssertFileDoesNotExist("TokenMgrError.java");
+    }
+    
+    @Test
+    public void givenASimpleProjectWithCustomAstClassesWhenRerunCompileJavaccTaskThenTheFilesThatDoNotHaveACorrespondingCustomAstClassAreGeneratedInTheDefaultDirectory()
+        throws URISyntaxException, IOException {
+        
+        CompilationSteps steps = new CompilationSteps();
+
+        steps.givenAProjectNamed("simpleTestWithCustomAstClass");
+        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
+        steps.whenTasks(COMPILE_JAVACC).withArguments("--rerun-tasks").execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 

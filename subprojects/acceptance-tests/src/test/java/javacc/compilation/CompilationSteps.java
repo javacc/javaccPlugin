@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
@@ -17,6 +18,7 @@ public class CompilationSteps {
     private ProjectConnection project;
     private File projectDirectory;
     private File outputDirectory;
+    private BuildLauncher build;
 
     public void givenAProjectNamed(String projectName) throws URISyntaxException {
         String projectPath = "projects" + File.separator + projectName;
@@ -26,19 +28,42 @@ public class CompilationSteps {
         }
 
         projectDirectory = new File(resource.toURI());
-    }
-
-    public void whenIExecuteTask(String taskName) throws IOException {
-        if (projectDirectory == null) {
-            throw new IllegalStateException("JavaCC compilation steps assume a project exists. Use givenAProjectNamed(String projectName) first");
-        }
         
         project = GradleConnector.newConnector().forProjectDirectory(projectDirectory).connect();
+        build = project.newBuild();
+    }
 
-        BuildLauncher build = project.newBuild();
-        build.forTasks("clean", taskName).setStandardOutput(System.out).setStandardError(System.err);
-        build.withArguments("--info", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle",
-            "-Dplugin.version=" + System.getProperty("PLUGIN_VERSION"));
+    public CompilationSteps whenTasks(String... taskNames) throws IOException {
+        ensureGivens();
+
+        build.forTasks(taskNames).setStandardOutput(System.out).setStandardError(System.err);
+        withArguments();
+        
+        return this;
+    }
+
+    private void ensureGivens() {
+        if ((projectDirectory == null) || (build == null)) {
+            throw new IllegalStateException("JavaCC compilation steps assume a project exists. Use givenAProjectNamed(String projectName) first");
+        }
+    }
+    
+    public CompilationSteps withArguments(String... arguments) {
+        ensureGivens();
+        
+        String[] defaultArguments = new String[] {
+            "--info", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle", "-Dplugin.version=" + System.getProperty("PLUGIN_VERSION")
+        };
+        
+        String[] allArguments = ArrayUtils.addAll(defaultArguments, arguments);
+        build.withArguments(allArguments);
+        
+        return this;
+    }
+    
+    public void execute() {
+        ensureGivens();
+        
         build.run();
     }
 

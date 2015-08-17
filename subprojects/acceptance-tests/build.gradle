@@ -5,9 +5,18 @@ plugins {
 
 defaultTasks 'clean', 'build'
 
+configurations.all {
+    resolutionStrategy {
+        exclude group: 'commons-lang'
+    }
+}
+
 dependencies {
     testCompile gradleApi()
-    testCompile 'commons-io:commons-io:2.4'
+    testCompile('commons-io:commons-io:2.4') {
+        force = true
+    }
+    testCompile 'org.apache.commons:commons-lang3:3.4'
     
     testRuntime project(':javacc-gradle-plugin')
 }

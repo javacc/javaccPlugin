@@ -1,7 +1,6 @@
 package ca.coglinc.gradle.plugins.javacc;
 
 import java.io.File;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.file.FileVisitor;
@@ -28,13 +27,14 @@ public class CompileJjdocTask extends AbstractJavaccTask {
     }
 
     @Override
-    protected void invokeCompiler(String[] arguments) throws Exception {
-        int errorCode = JJDocMain.mainProgram(arguments);
+    protected void invokeCompiler(ProgramArguments arguments) throws Exception {
+        int errorCode = JJDocMain.mainProgram(arguments.toArray());
         if (errorCode != 0) {
             throw new IllegalStateException("JJDoc failed with error code: [" + errorCode + "]");
         } else {
             File jjdocOutputFile = new File(JJDocGlobals.output_file);
-            FileUtils.moveFile(jjdocOutputFile, new File(getOutputDirectory(), jjdocOutputFile.getName()));
+            FileUtils.copyFile(jjdocOutputFile, new File(getOutputDirectory(), jjdocOutputFile.getName()));
+            FileUtils.deleteQuietly(jjdocOutputFile);
         }
     }
 
@@ -44,7 +44,7 @@ public class CompileJjdocTask extends AbstractJavaccTask {
     }
 
     @Override
-    protected void augmentArguments(File inputDirectory, RelativePath inputRelativePath, Map<String, String> arguments) {
+    protected void augmentArguments(File inputDirectory, RelativePath inputRelativePath, ProgramArguments arguments) {
         // nothing to augment
     }
 

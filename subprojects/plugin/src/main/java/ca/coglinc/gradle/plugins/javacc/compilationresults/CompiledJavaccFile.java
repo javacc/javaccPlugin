@@ -95,10 +95,10 @@ public class CompiledJavaccFile {
         logger.info("Custom AST class not found");
         
         File destination = new File(compiledJavaccFile.getAbsolutePath().replace(outputDirectory.getAbsolutePath(), targetDirectory.getAbsolutePath()));
-        logger.info("Moving compiled file {} to {}", compiledJavaccFile, destination);
+        logger.info("Copying compiled file {} to {}", compiledJavaccFile, destination);
         
         try {
-            FileUtils.moveFile(compiledJavaccFile, destination);
+            FileUtils.copyFile(compiledJavaccFile, destination);
         } catch (IOException e) {
             String errorMessage = String.format("Could not copy %s from %s to %s", compiledJavaccFile, outputDirectory, targetDirectory);
             throw new CompiledJavaccFileOperationException(errorMessage, e);

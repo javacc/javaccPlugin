@@ -1,7 +1,6 @@
 package ca.coglinc.gradle.plugins.javacc;
 
 import java.io.File;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.file.FileVisitor;
@@ -32,8 +31,8 @@ public class CompileJavaccTask extends AbstractJavaccTask {
     }
 
     @Override
-    protected void augmentArguments(File inputDirectory, RelativePath inputRelativePath, Map<String, String> arguments) {
-        arguments.put("OUTPUT_DIRECTORY", inputRelativePath.getFile(getTempOutputDirectory()).getParentFile().getAbsolutePath());
+    protected void augmentArguments(File inputDirectory, RelativePath inputRelativePath, ProgramArguments arguments) {
+        arguments.add("OUTPUT_DIRECTORY", inputRelativePath.getFile(getTempOutputDirectory()).getParentFile().getAbsolutePath());
     }
 
     @Override
@@ -42,8 +41,8 @@ public class CompileJavaccTask extends AbstractJavaccTask {
     }
 
     @Override
-    protected void invokeCompiler(String[] arguments) throws Exception {
-        int errorCode = Main.mainProgram(arguments);
+    protected void invokeCompiler(ProgramArguments arguments) throws Exception {
+        int errorCode = Main.mainProgram(arguments.toArray());
         if (errorCode != 0) {
             throw new IllegalStateException("Javacc failed with error code: [" + errorCode + "]");
         }
