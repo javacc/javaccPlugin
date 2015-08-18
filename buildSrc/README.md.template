@@ -138,6 +138,9 @@ The following command can be used to release the project, upload to Maven Centra
 
 ## Changelog
 
+### 2.3.1
+- Fix handling of generated files when rerunning tasks (Issue #20)
+
 ### 2.3.0
 - Added support for JJDoc
 
