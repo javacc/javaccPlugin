@@ -10,12 +10,14 @@ import org.gradle.api.Task;
 public class JavaccPlugin implements Plugin<Project> {
 
     public static final String GROUP = "JavaCC";
-
+    
     @Override
     public void apply(Project project) {
         addCompileJavaccTaskToProject(project);
         addCompileJJTreeTaskToProject(project);
         addCompileJjdocTaskToProject(project);
+        
+        project.getExtensions().create(DependencyConfigurationExtension.DEPENDENCYCONFIGURATIONEXTENSION_NAME, DependencyConfigurationExtension.class);
 
         JavaToJavaccDependencyAction compileJavaDependsOnCompileJavacc = new JavaToJavaccDependencyAction();
         project.afterEvaluate(compileJavaDependsOnCompileJavacc);

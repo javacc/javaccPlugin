@@ -7,12 +7,16 @@ import org.gradle.api.tasks.compile.JavaCompile;
 
 public class JavaToJavaccDependencyAction implements Action<Project> {
 
+	private DependencyConfigurationExtension extension;
+	
     @Override
     public void execute(Project project) {
         if (!project.getPlugins().hasPlugin("java")) {
             return;
         }
 
+        extension = (DependencyConfigurationExtension) project.getExtensions().getByName(DependencyConfigurationExtension.DEPENDENCYCONFIGURATIONEXTENSION_NAME);
+        
         configureCompileJJTreeTask(project);
         configureCompileJavaccTask(project);
     }
@@ -37,7 +41,12 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
     }
 
     private void addJavaccDependencyToJavaCompileTask(TaskCollection<JavaCompile> javaCompilationTasks, CompileJavaccTask compileJavaccTask) {
-        for (JavaCompile task : javaCompilationTasks) {
+    	
+    	TaskCollection<JavaCompile> computedJavaCompilationTasks = null;
+    	if(extension.compileTasksDependenciesForJavacc != null) {
+    		computedJavaCompilationTasks = extension.compileTasksDependenciesForJavacc.call(javaCompilationTasks, compileJavaccTask);
+    	}    	 
+        for (JavaCompile task : computedJavaCompilationTasks == null ? javaCompilationTasks : computedJavaCompilationTasks) {
             task.dependsOn(compileJavaccTask);
             task.source(compileJavaccTask.getOutputDirectory());
         }
@@ -45,7 +54,11 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
 
     private void addJJTreeDependencyToJavaccCompileTask(TaskCollection<JavaCompile> javaCompilationTasks,
         TaskCollection<CompileJavaccTask> javaccCompilationTasks, CompileJjTreeTask compileJJTreeTask) {
-        for (JavaCompile task : javaCompilationTasks) {
+    	TaskCollection<JavaCompile> computedJavaCompilationTasks = null;
+    	if(extension.compileTasksDependenciesForJjTree != null) { 
+    		computedJavaCompilationTasks = extension.compileTasksDependenciesForJjTree.call(javaCompilationTasks, compileJJTreeTask);
+    	}    	 
+        for (JavaCompile task : computedJavaCompilationTasks == null ? javaCompilationTasks : computedJavaCompilationTasks) {
             task.dependsOn(compileJJTreeTask);
             task.source(compileJJTreeTask.getOutputDirectory());
         }
