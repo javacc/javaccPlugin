@@ -15,7 +15,7 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
             return;
         }
 
-        extension = (DependencyConfigurationExtension) project.getExtensions().getByName(DependencyConfigurationExtension.DEPENDENCYCONFIGURATIONEXTENSION_NAME);
+        extension = (DependencyConfigurationExtension) project.getExtensions().findByName(DependencyConfigurationExtension.DEPENDENCYCONFIGURATIONEXTENSION_NAME);
         
         configureCompileJJTreeTask(project);
         configureCompileJavaccTask(project);
@@ -43,7 +43,7 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
     private void addJavaccDependencyToJavaCompileTask(TaskCollection<JavaCompile> javaCompilationTasks, CompileJavaccTask compileJavaccTask) {
     	
     	TaskCollection<JavaCompile> computedJavaCompilationTasks = null;
-    	if(extension.compileTasksDependenciesForJavacc != null) {
+    	if(extension != null && extension.compileTasksDependenciesForJavacc != null) {
     		computedJavaCompilationTasks = extension.compileTasksDependenciesForJavacc.call(javaCompilationTasks, compileJavaccTask);
     	}    	 
         for (JavaCompile task : computedJavaCompilationTasks == null ? javaCompilationTasks : computedJavaCompilationTasks) {
@@ -55,7 +55,7 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
     private void addJJTreeDependencyToJavaccCompileTask(TaskCollection<JavaCompile> javaCompilationTasks,
         TaskCollection<CompileJavaccTask> javaccCompilationTasks, CompileJjTreeTask compileJJTreeTask) {
     	TaskCollection<JavaCompile> computedJavaCompilationTasks = null;
-    	if(extension.compileTasksDependenciesForJjTree != null) { 
+    	if(extension != null && extension.compileTasksDependenciesForJjTree != null) { 
     		computedJavaCompilationTasks = extension.compileTasksDependenciesForJjTree.call(javaCompilationTasks, compileJJTreeTask);
     	}    	 
         for (JavaCompile task : computedJavaCompilationTasks == null ? javaCompilationTasks : computedJavaCompilationTasks) {
