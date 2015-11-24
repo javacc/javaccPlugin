@@ -10,7 +10,7 @@ public class DependencyConfigurationExtension {
 	
 	/**
 	 * This closure should have two arguments, 
-	 * 		- {@literalTaskCollection<JavaCompile>} : contain all the project's compile targets 
+	 * 		- {@literal TaskCollection<JavaCompile>} : contain all the project's compile targets 
 	 * 		- Task the javacc task 
 	 * This closure need to return a {@literal TaskCollection<JavaCompile>}. Theses tasks will depend on the javacc task.
 	 * If this closure is not set, all the project's compile target depends on the javacc task
