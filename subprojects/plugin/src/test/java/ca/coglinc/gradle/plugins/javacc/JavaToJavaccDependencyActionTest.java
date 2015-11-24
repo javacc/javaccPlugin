@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.gradle.api.Project;
+import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -14,6 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.Mockito;
+
+import groovy.lang.Closure;
 
 public class JavaToJavaccDependencyActionTest {
     private Project project;
@@ -34,6 +37,38 @@ public class JavaToJavaccDependencyActionTest {
         pluginNames.put("plugin", "java");
         project.apply(pluginNames);
     }
+    
+    private void addDependencyConfigurationExtensionClosuresToRemoveDependencies() {
+    	DependencyConfigurationExtension extension = (DependencyConfigurationExtension) project.getExtensions().getByName(DependencyConfigurationExtension.DEPENDENCYCONFIGURATIONEXTENSION_NAME);
+    	extension.compileTasksDependenciesForJavacc = new Closure<TaskCollection<JavaCompile>>(this) {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public TaskCollection<JavaCompile> call(Object... arg0) {
+				@SuppressWarnings("unchecked")
+				TaskCollection<JavaCompile> initialCollection = (TaskCollection<JavaCompile>) arg0[0];
+				return initialCollection.matching(new Spec<JavaCompile>() {
+					@Override
+					public boolean isSatisfiedBy(JavaCompile arg0) {
+						return false;
+					}
+				});
+			}    		
+		};
+		extension.compileTasksDependenciesForJjTree = new Closure<TaskCollection<JavaCompile>>(this) {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public TaskCollection<JavaCompile> call(Object... arg0) {
+				@SuppressWarnings("unchecked")
+				TaskCollection<JavaCompile> initialCollection = (TaskCollection<JavaCompile>) arg0[0];
+				return initialCollection.matching(new Spec<JavaCompile>() {
+					@Override
+					public boolean isSatisfiedBy(JavaCompile arg0) {
+						return false;
+					}
+				});
+			}    		
+		};		
+    }
 
     @Test
     public void compileJavaDependsOnCompileJavaccAfterExecutionWhenJavaPluginApplied() {
@@ -47,6 +82,22 @@ public class JavaToJavaccDependencyActionTest {
         for (JavaCompile task : javaCompilationTasks) {
             Set<Object> dependencies = task.getDependsOn();
             Assert.assertTrue(dependencies.contains(project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE)));
+        }
+    }
+    
+    @Test
+    public void compileJavaDoNotDependsOnCompileJavaccAfterExecutionWhenJavaPluginAppliedAndClosureRemoveDependencies() {
+        applyJavaccPluginToProject();
+        applyJavaPluginToProject();
+        addDependencyConfigurationExtensionClosuresToRemoveDependencies();
+        JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
+
+        action.execute(project);
+
+        TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
+        for (JavaCompile task : javaCompilationTasks) {
+            Set<Object> dependencies = task.getDependsOn();
+            Assert.assertTrue(!dependencies.contains(project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE)));
         }
     }
 
@@ -64,6 +115,24 @@ public class JavaToJavaccDependencyActionTest {
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
             Assert.assertTrue(task.getSource().contains(new File(outputDirectory, "someSourceFile.txt")));
+        }
+    }
+    
+    @Test
+    public void generatedJavaFilesFromCompileJavaccAreNotAddedToMainJavaSourceSetWhenClosureRemoveDependencies() {
+        applyJavaccPluginToProject();
+        applyJavaPluginToProject();
+        addDependencyConfigurationExtensionClosuresToRemoveDependencies();
+        JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
+        final File outputDirectory = new File(getClass().getResource("/javacc/testgenerated").getFile());
+        CompileJavaccTask compileJavaccTask = (CompileJavaccTask) project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE);
+        compileJavaccTask.setOutputDirectory(outputDirectory);
+
+        action.execute(project);
+
+        TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
+        for (JavaCompile task : javaCompilationTasks) {
+            Assert.assertTrue(!task.getSource().contains(new File(outputDirectory, "someSourceFile.txt")));
         }
     }
 
