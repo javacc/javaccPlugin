@@ -1,12 +1,12 @@
 package ca.coglinc.gradle.plugins.javacc;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.gradle.api.Project;
-import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.Mockito;
 
-import groovy.lang.Closure;
 
 public class JavaToJavaccDependencyActionTest {
     private Project project;
@@ -39,35 +38,8 @@ public class JavaToJavaccDependencyActionTest {
     }
     
     private void addDependencyConfigurationExtensionClosuresToRemoveDependencies() {
-    	DependencyConfigurationExtension extension = (DependencyConfigurationExtension) project.getExtensions().getByName(DependencyConfigurationExtension.DEPENDENCYCONFIGURATIONEXTENSION_NAME);
-    	extension.compileTasksDependenciesForJavacc = new Closure<TaskCollection<JavaCompile>>(this) {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public TaskCollection<JavaCompile> call(Object... arg0) {
-				@SuppressWarnings("unchecked")
-				TaskCollection<JavaCompile> initialCollection = (TaskCollection<JavaCompile>) arg0[0];
-				return initialCollection.matching(new Spec<JavaCompile>() {
-					@Override
-					public boolean isSatisfiedBy(JavaCompile arg0) {
-						return false;
-					}
-				});
-			}    		
-		};
-		extension.compileTasksDependenciesForJjTree = new Closure<TaskCollection<JavaCompile>>(this) {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public TaskCollection<JavaCompile> call(Object... arg0) {
-				@SuppressWarnings("unchecked")
-				TaskCollection<JavaCompile> initialCollection = (TaskCollection<JavaCompile>) arg0[0];
-				return initialCollection.matching(new Spec<JavaCompile>() {
-					@Override
-					public boolean isSatisfiedBy(JavaCompile arg0) {
-						return false;
-					}
-				});
-			}    		
-		};		
+    	DependencyConfigurationExtension extension = (DependencyConfigurationExtension) project.getExtensions().getByName(DependencyConfigurationExtension.dependencyConfigurationExtensionName);
+    	extension.sourceSets = Collections.emptyList();
     }
 
     @Test

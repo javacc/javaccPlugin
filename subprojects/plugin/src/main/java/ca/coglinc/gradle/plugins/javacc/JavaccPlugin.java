@@ -17,7 +17,7 @@ public class JavaccPlugin implements Plugin<Project> {
         addCompileJJTreeTaskToProject(project);
         addCompileJjdocTaskToProject(project);
         
-        project.getExtensions().create(DependencyConfigurationExtension.DEPENDENCYCONFIGURATIONEXTENSION_NAME, DependencyConfigurationExtension.class);
+        project.getExtensions().create(DependencyConfigurationExtension.dependencyConfigurationExtensionName, DependencyConfigurationExtension.class);
 
         JavaToJavaccDependencyAction compileJavaDependsOnCompileJavacc = new JavaToJavaccDependencyAction();
         project.afterEvaluate(compileJavaDependsOnCompileJavacc);
