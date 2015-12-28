@@ -141,7 +141,8 @@ public class CompiledJavaccFileTest {
     @Test(expected = CompiledJavaccFileOperationException.class)
     public void copyCustomAstClassToTargetDirectoryFails() throws Exception {
         PowerMockito.mockStatic(FileUtils.class, Answers.CALLS_REAL_METHODS.get());
-        doThrow(new IOException()).when(FileUtils.class, "copyFile", any(File.class), any(File.class));
+        doThrow(new IOException()).when(FileUtils.class);
+        FileUtils.copyFile(any(File.class), any(File.class));
         
         File file = new File(outputDirectory, "FileWithCorrespondingCustomAstClass.java");
         CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
