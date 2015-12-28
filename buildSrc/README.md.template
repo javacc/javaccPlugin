@@ -138,6 +138,9 @@ The following command can be used to release the project, upload to Maven Centra
 
 ## Changelog
 
+### 2.4.0
+- Build with Gradle 2.10
+
 ### 2.3.1
 - Fix handling of generated files when rerunning tasks (Issue #20)
 
