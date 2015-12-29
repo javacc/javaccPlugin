@@ -141,6 +141,7 @@ The following command can be used to release the project, upload to Maven Centra
 ### 2.4.0
 - Build with Gradle 2.10
 - Upgraded dependencies to latest
+- Run acceptance tests with Gradle TestKit
 
 ### 2.3.1
 - Fix handling of generated files when rerunning tasks (Issue #20)
