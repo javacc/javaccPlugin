@@ -17,7 +17,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTree");
-        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJJTree").execute();
+        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJJTree").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
@@ -38,7 +38,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTreeAndWithConfiguredInputsOutputs");
-        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJJTree").execute();
+        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJJTree").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "output";
 
@@ -59,7 +59,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTest");
-        steps.whenTasks(CLEAN, COMPILE_JJ_TREE).execute();
+        steps.withArguments(CLEAN, COMPILE_JJ_TREE).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -80,7 +80,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithPackages");
-        steps.whenTasks(CLEAN, COMPILE_JJ_TREE).execute();
+        steps.withArguments(CLEAN, COMPILE_JJ_TREE).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -108,7 +108,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithArguments");
-        steps.whenTasks(CLEAN, COMPILE_JJ_TREE).execute();
+        steps.withArguments(CLEAN, COMPILE_JJ_TREE).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -129,7 +129,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithConfiguredInputsOutputs");
-        steps.whenTasks(CLEAN, COMPILE_JJ_TREE).execute();
+        steps.withArguments(CLEAN, COMPILE_JJ_TREE).execute();
 
         steps.thenAssertOutputDirectoryExists("build" + File.separator + "output");
         steps.andAssertFileWasGenerated("JJTreeOutputTest.jj");
@@ -148,7 +148,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithCustomAstClasses");
-        steps.whenTasks(CLEAN, COMPILE_JJ_TREE).execute();
+        steps.withArguments(CLEAN, COMPILE_JJ_TREE).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -169,8 +169,8 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithCustomAstClasses");
-        steps.whenTasks(CLEAN, COMPILE_JJ_TREE).execute();
-        steps.whenTasks(COMPILE_JJ_TREE).withArguments("--rerun-tasks").execute();
+        steps.withArguments(CLEAN, COMPILE_JJ_TREE).execute();
+        steps.withArguments(COMPILE_JJ_TREE).withArguments("--rerun-tasks").execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 

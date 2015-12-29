@@ -77,6 +77,18 @@ jacocoTestReport {
     }
 }
 
+task createClasspathManifest {
+    def outputDir = file("$buildDir/$name")
+
+    inputs.files sourceSets.main.runtimeClasspath
+    outputs.dir outputDir
+
+    doLast {
+        outputDir.mkdirs()
+        file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join('\n')
+    }
+}
+
 task sourceJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allJava

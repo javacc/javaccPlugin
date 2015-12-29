@@ -15,7 +15,7 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTest");
-        steps.whenTasks(CLEAN, JJDOC).execute();
+        steps.withArguments(CLEAN, JJDOC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -31,8 +31,8 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTest");
-        steps.whenTasks(CLEAN, JJDOC).execute();
-        steps.whenTasks(JJDOC).withArguments("--rerun-tasks").execute();
+        steps.withArguments(CLEAN, JJDOC).execute();
+        steps.withArguments(JJDOC).withArguments("--rerun-tasks").execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -50,7 +50,7 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithArguments");
-        steps.whenTasks(CLEAN, JJDOC).execute();
+        steps.withArguments(CLEAN, JJDOC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -68,7 +68,7 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuild");
-        steps.whenTasks(CLEAN, ":subprojects/subproject1:jjdoc").execute();
+        steps.withArguments(CLEAN, ":subprojects/subproject1:jjdoc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
@@ -87,7 +87,7 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithConfiguredInputsOutputs");
-        steps.whenTasks(CLEAN, JJDOC).execute();
+        steps.withArguments(CLEAN, JJDOC).execute();
 
         String buildDirectory = "build" + File.separator + "outputjjdoc";
 
@@ -106,7 +106,7 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithConfiguredInputsOutputs");
-        steps.whenTasks(CLEAN, ":subprojects/subproject1:jjdoc").execute();
+        steps.withArguments(CLEAN, ":subprojects/subproject1:jjdoc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build";
 

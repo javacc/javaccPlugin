@@ -15,7 +15,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTest");
-        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
+        steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -46,7 +46,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithArguments");
-        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
+        steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -77,7 +77,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuild");
-        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
+        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
@@ -108,7 +108,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTree");
-        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
+        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
@@ -135,7 +135,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithConfiguredInputsOutputs");
-        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
+        steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
 
         String buildDirectory = "build" + File.separator + "output";
 
@@ -166,7 +166,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithConfiguredInputsOutputs");
-        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
+        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build";
 
@@ -197,7 +197,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTreeAndWithConfiguredInputsOutputs");
-        steps.whenTasks(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
+        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "output";
 
@@ -224,7 +224,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTest");
-        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
+        steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -251,7 +251,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithArguments");
-        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
+        steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -278,7 +278,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTestWithConfiguredInputsOutputs");
-        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
+        steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
 
         steps.thenAssertOutputDirectoryExists("build" + File.separator + "output");
         steps.andAssertFileWasGenerated("JJTreeOutputTest.jj");
@@ -304,7 +304,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithCustomAstClass");
-        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
+        steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -336,8 +336,8 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithCustomAstClass");
-        steps.whenTasks(CLEAN, COMPILE_JAVACC).execute();
-        steps.whenTasks(COMPILE_JAVACC).withArguments("--rerun-tasks").execute();
+        steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
+        steps.withArguments(COMPILE_JAVACC).withArguments("--rerun-tasks").execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 

@@ -12,13 +12,16 @@ configurations.all {
 }
 
 dependencies {
-    testCompile gradleApi()
+    testRuntime project(':javacc-gradle-plugin')
+    testRuntime files(project(':javacc-gradle-plugin').createClasspathManifest)
+
     testCompile('commons-io:commons-io:2.4') {
         force = true
     }
     testCompile 'org.apache.commons:commons-lang3:3.4'
-    
-    testRuntime project(':javacc-gradle-plugin')
+    testCompile 'junit:junit:4.12'
+
+    testCompile gradleTestKit()
 }
 
 eclipse {
@@ -49,11 +52,6 @@ tasks.withType(FindBugs) {
         xml.enabled false
         html.enabled true
     }
-}
-
-test {
-    dependsOn ':javacc-gradle-plugin:install'
-    systemProperty 'PLUGIN_VERSION', project.version
 }
 
 task testJar(type: Jar, dependsOn: testClasses) {
