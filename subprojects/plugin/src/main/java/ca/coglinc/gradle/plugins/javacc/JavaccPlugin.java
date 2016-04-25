@@ -3,6 +3,7 @@ package ca.coglinc.gradle.plugins.javacc;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
@@ -44,5 +45,10 @@ public class JavaccPlugin implements Plugin<Project> {
         options.put(Task.TASK_GROUP, group);
 
         project.task(options, name);
+
+        Task cleanTask = project.getTasks().findByName("clean");
+        if (cleanTask != null) {
+            cleanTask.dependsOn("clean" + StringUtils.capitalize(CompileJavaccTask.TASK_NAME_VALUE));
+        }
     }
 }
