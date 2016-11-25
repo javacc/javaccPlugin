@@ -11,4 +11,4 @@ before_install:
   - cat /etc/hosts # optionally check the content *after*
 
 after_success:
-  - ./gradlew jacocoTestReport coveralls
+  - bash <(curl -s https://codecov.io/bash)

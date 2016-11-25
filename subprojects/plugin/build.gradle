@@ -1,6 +1,5 @@
 plugins {
     id 'com.jfrog.bintray' version '1.5'
-    id 'com.github.kt3k.coveralls' version '2.4.0'
     id 'checkstyle'
     id 'findbugs'
     id 'jacoco'
@@ -25,7 +24,7 @@ dependencies {
         force = true
     }
     compile 'org.apache.commons:commons-lang3:3.4'
-    
+
     testCompile('junit:junit:4.12') {
         force = true
     }
@@ -36,7 +35,7 @@ dependencies {
 }
 
 eclipse {
-    project {    
+    project {
         name = 'javacc-gradle-plugin'
     }
 }
@@ -62,7 +61,7 @@ findbugs {
 
 tasks.withType(FindBugs) {
     maxHeapSize = project.hasProperty('findBugsHeapSize') ? project.findBugsHeapSize : '1g'
-    
+
     reports {
         xml.enabled false
         html.enabled true
@@ -94,10 +93,10 @@ task sourceJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) { 
-     classifier = 'javadoc' 
-     from javadoc.destinationDir 
-} 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+     classifier = 'javadoc'
+     from javadoc.destinationDir
+}
 
 artifacts {
     archives sourceJar
@@ -108,29 +107,29 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
-            
+
             artifact sourceJar {
                 classifier "sources"
             }
             artifact javadocJar {
                 classifier "javadoc"
             }
-            
+
             pom.withXml {
                 asNode().appendNode('name', project.getName())
                 asNode().appendNode('description', 'Provides the ability to use JavaCC with Gradle. Compiles JavaCC files to Java.')
                 asNode().appendNode('url', 'https://github.com/johnmartel/javaccPlugin')
-                
+
                 def license = asNode().appendNode('licenses').appendNode('license')
                 license.appendNode('name', 'The MIT License (MIT)')
                 license.appendNode('url', 'http://opensource.org/licenses/MIT')
                 license.appendNode('distribution', 'repo')
-                
+
                 def scm = asNode().appendNode('scm')
                 scm.appendNode('url', 'https://github.com/johnmartel/javaccPlugin')
                 scm.appendNode('connection', 'scm:https://johnmartel@github.com/johnmartel/javaccPlugin.git')
                 scm.appendNode('developerConnection', 'scm:git://github.com/johnmartel/javaccPlugin.git')
-                
+
                 def developer = asNode().appendNode('developers').appendNode('developer')
                 developer.appendNode('id', 'jmartel')
                 developer.appendNode('name', 'Jonathan Martel')
@@ -144,27 +143,27 @@ bintray {
     if (!project.hasProperty('bintrayUser')) {
         ext.bintrayUser = ''
     }
-    
+
     if (!project.hasProperty('bintrayApiKey')) {
         ext.bintrayApiKey = ''
     }
-    
+
     if (!project.hasProperty('ossrhUsername')) {
         ext.ossrhUsername = ''
     }
-    
+
     if (!project.hasProperty('ossrhPassword')) {
         ext.ossrhPassword = ''
     }
-    
+
     if (!project.hasProperty('releaseVersion')) {
         ext.releaseVersion = ''
     }
-    
+
     if (!project.hasProperty('gpgPassphrase')) {
         ext.gpgPassphrase = ''
     }
-    
+
     user = bintrayUser
     key = bintrayApiKey
 
@@ -181,7 +180,7 @@ bintray {
         licenses = ['MIT']
         labels = ['javacc', 'gradle']
         publicDownloadNumbers = true
-        
+
         version {
             name = releaseVersion
             released = new Date()
