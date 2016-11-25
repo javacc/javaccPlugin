@@ -1,7 +1,6 @@
 # JavaCC Compiler Plugin for Gradle
 
-[![Build Status](https://travis-ci.org/johnmartel/javaccPlugin.svg)](https://travis-ci.org/johnmartel/javaccPlugin) 
-[![Coverage Status](https://coveralls.io/repos/johnmartel/javaccPlugin/badge.svg?branch=master&service=github)](https://coveralls.io/github/johnmartel/javaccPlugin?branch=master)
+[![Build Status](https://travis-ci.org/johnmartel/javaccPlugin.svg)](https://travis-ci.org/johnmartel/javaccPlugin)
 
 Provides the ability to use [JavaCC](http://javacc.java.net/) via [Gradle](http://www.gradle.org/). If the 'java' plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.
 
@@ -52,7 +51,7 @@ compileJavacc {
     outputDirectory = file(project.buildDir.absolutePath + '/generated/javacc')
 }
 ```
-Due to the nature of the JavaCC compiler and its use of the OUTPUT_DIRECTORY parameter, you should prefer using `inputDirectory` over `source` provided by SourceTask. To use include/exclude filters, please refer to the [SourceTask](http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.SourceTask.html) documentation. By default, only `*.jj` files are included. 
+Due to the nature of the JavaCC compiler and its use of the OUTPUT_DIRECTORY parameter, you should prefer using `inputDirectory` over `source` provided by SourceTask. To use include/exclude filters, please refer to the [SourceTask](http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.SourceTask.html) documentation. By default, only `*.jj` files are included.
 
 You can configure commandline arguments passed to JavaCC by specifying `javaccArguments` map in compileJavacc:
 ```gradle
@@ -81,7 +80,7 @@ sourceSets {
         }
     }
 }
-    
+
 eclipseClasspath.dependsOn("compileJavacc")
 ```
 
