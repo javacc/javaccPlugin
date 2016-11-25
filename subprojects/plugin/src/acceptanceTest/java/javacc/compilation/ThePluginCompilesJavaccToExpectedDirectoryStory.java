@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import org.gradle.testkit.runner.BuildResult;
+import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.Test;
 
 public class ThePluginCompilesJavaccToExpectedDirectoryStory {
@@ -296,11 +298,11 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.andAssertFileWasGenerated("ParseException.java");
         steps.andAssertFileWasGenerated("Token.java");
     }
-    
+
     @Test
     public void givenASimpleProjectWithCustomAstClassesWhenExecuteCompileJavaccTaskThenTheFilesThatDoNotHaveACorrespondingCustomAstClassAreGeneratedInTheDefaultDirectory()
         throws URISyntaxException, IOException {
-        
+
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithCustomAstClass");
@@ -328,11 +330,11 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.andAssertFileExistsButWasNotGenerated("Token.java");
         steps.andAssertFileDoesNotExist("TokenMgrError.java");
     }
-    
+
     @Test
     public void givenASimpleProjectWithCustomAstClassesWhenRerunCompileJavaccTaskThenTheFilesThatDoNotHaveACorrespondingCustomAstClassAreGeneratedInTheDefaultDirectory()
         throws URISyntaxException, IOException {
-        
+
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithCustomAstClass");
@@ -360,5 +362,16 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.andAssertFileWasGenerated("SimpleCharStream.java");
         steps.andAssertFileExistsButWasNotGenerated("Token.java");
         steps.andAssertFileDoesNotExist("TokenMgrError.java");
+    }
+
+    @Test
+    public void givenASimpleProjectWithEmptyInputDirectoryWhenExecuteCompileJavaccTaskThenTaskIsSkipped() throws IOException, URISyntaxException {
+        CompilationSteps steps = new CompilationSteps();
+
+        steps.givenAProjectNamed("simpleTestWithEmptyInputDirectory");
+        steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
+        BuildResult buildResult = steps.withArguments(COMPILE_JAVACC).execute();
+
+        steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.UP_TO_DATE);
     }
 }

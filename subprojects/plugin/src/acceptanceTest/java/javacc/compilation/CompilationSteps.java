@@ -1,5 +1,6 @@
 package javacc.compilation;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -13,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
+import org.gradle.testkit.runner.TaskOutcome;
 
 public class CompilationSteps {
     private File projectDirectory;
@@ -51,11 +53,13 @@ public class CompilationSteps {
         return this;
     }
 
-    public void execute() {
+    public BuildResult execute() {
         ensureGivens();
 
         BuildResult buildResult = buildRunner.build();
         assertNotNull(buildResult);
+
+        return buildResult;
     }
 
     public void thenAssertOutputDirectoryExists(String outputDirectory) {
@@ -82,5 +86,9 @@ public class CompilationSteps {
     public void andAssertFileDoesNotExist(String filename) {
         File javaFile = new File(outputDirectory, filename);
         assertFalse(javaFile.exists());
+    }
+
+    public void thenAssertTaskStatus(BuildResult buildResult, String taskPath, TaskOutcome expectedOutcome) {
+        assertEquals(expectedOutcome, buildResult.task(taskPath).getOutcome());
     }
 }

@@ -138,6 +138,7 @@ The following command can be used to release the project, upload to Maven Centra
 ## Changelog
 
 ### 2.4.0
+- Improve incremental build support by adding [@InputDirectory](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/InputDirectory.html) to the tasks input property
 - Build with Gradle 3.2
 - Upgraded dependencies to latest
 - Run acceptance tests with Gradle TestKit

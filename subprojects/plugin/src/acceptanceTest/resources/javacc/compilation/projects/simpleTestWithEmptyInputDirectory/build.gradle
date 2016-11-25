@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'ca.coglinc.javacc'
+}
+sourceCompatibility = 1.5
+version = '1.0'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart', 'Implementation-Version': version
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
