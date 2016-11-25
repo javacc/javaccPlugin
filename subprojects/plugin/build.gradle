@@ -1,4 +1,5 @@
 plugins {
+    id 'java-gradle-plugin'
     id 'com.jfrog.bintray' version '1.5'
     id 'checkstyle'
     id 'findbugs'
@@ -9,12 +10,22 @@ plugins {
 
 defaultTasks 'clean', 'build', 'install'
 
+sourceSets {
+    acceptanceTest {
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+
 configurations {
     all {
         resolutionStrategy {
             force 'org.hamcrest:hamcrest-core:1.3'
         }
     }
+
+    acceptanceTestCompile.extendsFrom testCompile
+    acceptanceTestRuntime.extendsFrom testRuntime
 }
 
 dependencies {
@@ -32,6 +43,11 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile 'org.powermock:powermock-module-junit4:1.6.4'
     testCompile 'org.powermock:powermock-api-mockito:1.6.4'
+
+    acceptanceTestCompile gradleTestKit()
+    acceptanceTestCompile('commons-io:commons-io:2.4') {
+        force = true
+    }
 }
 
 eclipse {
@@ -52,7 +68,7 @@ checkstyle {
 
 findbugs {
     toolVersion = '3.0.1'
-    sourceSets = [sourceSets.main, sourceSets.test]
+    sourceSets = [sourceSets.main, sourceSets.test, sourceSets.acceptanceTest]
     effort = "min"
     ignoreFailures = false
     reportLevel = "high"
@@ -68,23 +84,20 @@ tasks.withType(FindBugs) {
     }
 }
 
+task acceptanceTest(type: Test) {
+    mustRunAfter test
+
+    testClassesDir = sourceSets.acceptanceTest.output.classesDir
+    classpath = sourceSets.acceptanceTest.runtimeClasspath
+}
+
+check.dependsOn acceptanceTest
+
 jacocoTestReport {
     reports {
         xml.enabled true
         html.enabled true
         csv.enabled false
-    }
-}
-
-task createClasspathManifest {
-    def outputDir = file("$buildDir/$name")
-
-    inputs.files sourceSets.main.runtimeClasspath
-    outputs.dir outputDir
-
-    doLast {
-        outputDir.mkdirs()
-        file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join('\n')
     }
 }
 
@@ -98,9 +111,24 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
      from javadoc.destinationDir
 }
 
+task testJar(type: Jar, dependsOn: testClasses) {
+    classifier 'tests'
+    from sourceSets.acceptanceTest.output
+}
+
 artifacts {
     archives sourceJar
     archives javadocJar
+    archives testJar
+}
+
+gradlePlugin {
+    plugins {
+        javaccPlugin {
+            id = 'ca.coglinc.javacc'
+            implementationClass = 'ca.coglinc.gradle.plugins.javacc.JavaccPlugin'
+        }
+    }
 }
 
 publishing {

@@ -42,7 +42,7 @@ verifySnapshotDependencies << {
     configurations.each { configuration ->
         configuration.dependencies.each { dependency ->
             logger.info "Verifying [${configuration.name}] dependency [${dependency.group}]:[${dependency.name}]:[${dependency.version}]"
-            
+
             if (dependency.version != null && dependency.version.endsWith('SNAPSHOT')) {
                 throw new RuntimeException("Plugin can not be released with SNAPSHOT dependencies. See [${configuration.name}] [${dependency.group}]:[${dependency.name}]:[${dependency.version}]")
             }
@@ -69,15 +69,13 @@ task generateReadmeFileFromTemplate(type: Copy, dependsOn: verifyReleaseVersions
     }
     description 'Generates the README.md file from a template.'
     group 'Release'
-    
+
     from rootProject.file('buildSrc')
     into rootProject.projectDir
     include 'README.md.template'
     rename '(.*)\\.template', '$1'
     expand project.properties
 }
-
-generateReadmeFileFromTemplate.mustRunAfter project(':javacc-gradle-plugin-acceptance-tests').test
 
 generateReadmeFileFromTemplate << {
     commitChangedFiles("Generated README file for version ${releaseVersion}")
@@ -108,13 +106,13 @@ def boolean taskNameMatchesWriteRulePattern(String taskName, String prefix, Stri
 
 tasks.addRule('Pattern: write<VersionProperty>: Writes the value of VersionProperty project property to build.gradle as the project version') { taskName ->
     String prefix = 'write'
-    
+
     if (taskNameMatchesWriteRulePattern(taskName, prefix, releaseVersionProperty, nextVersionProperty)) {
         String versionProperty = taskName - prefix
         versionProperty = versionProperty[0].toLowerCase() + versionProperty.substring(1)
-        
+
         logger.info("Adding task ${taskName}: name matches pattern write<VersionProperty>")
-    
+
         Task writeTask = tasks.create(name: taskName, type: Copy)
         writeTask.outputs.upToDateWhen {
             false
@@ -134,7 +132,7 @@ tasks.addRule('Pattern: write<VersionProperty>: Writes the value of VersionPrope
                 }
             }
         }
-        
+
         if (versionProperty.equalsIgnoreCase(releaseVersionProperty)) {
             project(':javacc-gradle-plugin').build.mustRunAfter writeTask
         } else {
@@ -153,12 +151,12 @@ def boolean taskNameMatchesCopyRulePattern(String taskName, String prefix, Strin
 tasks.addRule('Pattern: copy<VersionType>BuildFile: Overwrites build.gradle with the VersionType version value') { taskName ->
     String prefix = 'copy'
     String suffix = 'BuildFile'
-    
+
     if (taskNameMatchesCopyRulePattern(taskName, prefix, suffix, releaseVersionProperty, nextVersionProperty)) {
         String versionType = taskName - prefix - suffix
-        
+
         logger.info("Adding task ${taskName}: name matches pattern copy<VersionType>BuildFile")
-        
+
         Task copyTask = tasks.create(name: taskName, type: Copy)
         copyTask.outputs.upToDateWhen {
             false
@@ -182,8 +180,6 @@ tasks.addRule('Pattern: copy<VersionType>BuildFile: Overwrites build.gradle with
     }
 }
 
-project(':javacc-gradle-plugin-acceptance-tests').test.mustRunAfter project(':javacc-gradle-plugin').build
-
 tagRelease.mustRunAfter generateReadmeFileFromTemplate, copyReleaseBuildFile
 
 project(':javacc-gradle-plugin').bintrayUpload.mustRunAfter tagRelease
@@ -192,18 +188,16 @@ writeNextVersion.mustRunAfter tagRelease
 
 copyNextBuildFile.mustRunAfter writeNextVersion
 
-task release(dependsOn: [project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies, project(':javacc-gradle-plugin').build, project(':javacc-gradle-plugin-acceptance-tests').test, generateReadmeFileFromTemplate, copyReleaseBuildFile, tagRelease, project(':javacc-gradle-plugin').bintrayUpload, copyNextBuildFile]) {
+task release(dependsOn: [project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies, project(':javacc-gradle-plugin').build, generateReadmeFileFromTemplate, copyReleaseBuildFile, tagRelease, project(':javacc-gradle-plugin').bintrayUpload, copyNextBuildFile]) {
     description "Releases the plugin by verifying there are no snapshot dependencies, writing the next version to build.gradle and committing the build file. " +
         "Versions must be specified by using the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties."
-    
+
     group 'Release'
-    
+
     if (project.hasProperty(releaseVersionProperty)) {
         version = project.getProperty(releaseVersionProperty)
         rootProject.version = project.version
         project(':javacc-gradle-plugin').version = project.version
-        project(':javacc-gradle-plugin-acceptance-tests').version = project.version
     }
     println "Changing project's version to [${version}]"
 }
-    

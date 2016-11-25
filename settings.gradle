@@ -2,5 +2,4 @@ include 'subprojects/plugin', 'subprojects/acceptance-tests', 'subprojects/relea
 
 rootProject.name = 'javacc-gradle-plugin-root'
 project(':subprojects/plugin').name = 'javacc-gradle-plugin'
-project(':subprojects/acceptance-tests').name = 'javacc-gradle-plugin-acceptance-tests'
 project(':subprojects/release').name = 'release'

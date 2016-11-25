@@ -1,14 +1,14 @@
 allprojects{
     apply plugin: 'eclipse'
     apply plugin: 'idea'
-    
+
     group = 'ca.coglinc'
 version = '2.4.0-SNAPSHOT'
 
     repositories {
         mavenCentral()
     }
-    
+
     configurations.all {
         resolutionStrategy {
             failOnVersionConflict()
@@ -25,23 +25,6 @@ version = '2.4.0-SNAPSHOT'
 }
 
 project(':javacc-gradle-plugin') {
-    apply plugin: 'java'
-
-    sourceCompatibility = 1.6
-    targetCompatibility = 1.6
-
-    compileJava {
-        options.encoding = 'UTF-8'
-        options.compilerArgs = ['-Xlint:unchecked']
-    }
-
-    compileTestJava {
-        options.encoding = 'UTF-8'
-        options.compilerArgs = ['-Xlint:unchecked']
-    }
-}
-
-project(':javacc-gradle-plugin-acceptance-tests') {
     apply plugin: 'java'
 
     sourceCompatibility = 1.6

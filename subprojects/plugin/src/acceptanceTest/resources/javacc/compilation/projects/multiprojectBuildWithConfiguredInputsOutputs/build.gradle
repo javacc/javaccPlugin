@@ -1,6 +1,5 @@
 allprojects{
     group = 'ca.coglinc.acceptance.tests'
-    version = System.getProperty('plugin.version')
 
     repositories {
         mavenCentral()
