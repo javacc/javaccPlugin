@@ -43,7 +43,7 @@ public class CompilationSteps {
         ensureGivens();
 
         String[] defaultArguments = new String[] {
-            "--info", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle"
+            "--debug", "--stacktrace", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle"
         };
 
         String[] allArguments = ArrayUtils.addAll(defaultArguments, arguments);
