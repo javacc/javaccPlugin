@@ -1,7 +1,6 @@
 # JavaCC Compiler Plugin for Gradle
 
-[![Build Status](https://travis-ci.org/johnmartel/javaccPlugin.svg)](https://travis-ci.org/johnmartel/javaccPlugin) 
-[![Coverage Status](https://coveralls.io/repos/johnmartel/javaccPlugin/badge.svg?branch=master&service=github)](https://coveralls.io/github/johnmartel/javaccPlugin?branch=master)
+[![Build Status](https://travis-ci.org/johnmartel/javaccPlugin.svg)](https://travis-ci.org/johnmartel/javaccPlugin)
 
 Provides the ability to use [JavaCC](http://javacc.java.net/) via [Gradle](http://www.gradle.org/). If the 'java' plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.
 
@@ -14,7 +13,7 @@ Add the following lines to your `build.gradle` script:
 Gradle 2.1+
 ```gradle
 plugins {
-  id "ca.coglinc.javacc" version "2.3.1"
+  id "ca.coglinc.javacc" version "2.4.0"
 }
 ```
 
@@ -25,7 +24,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.3.1'
+        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.4.0'
     }
 }
 apply plugin: 'ca.coglinc.javacc'
@@ -52,7 +51,7 @@ compileJavacc {
     outputDirectory = file(project.buildDir.absolutePath + '/generated/javacc')
 }
 ```
-Due to the nature of the JavaCC compiler and its use of the OUTPUT_DIRECTORY parameter, you should prefer using `inputDirectory` over `source` provided by SourceTask. To use include/exclude filters, please refer to the [SourceTask](http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.SourceTask.html) documentation. By default, only `*.jj` files are included. 
+Due to the nature of the JavaCC compiler and its use of the OUTPUT_DIRECTORY parameter, you should prefer using `inputDirectory` over `source` provided by SourceTask. To use include/exclude filters, please refer to the [SourceTask](http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.SourceTask.html) documentation. By default, only `*.jj` files are included.
 
 You can configure commandline arguments passed to JavaCC by specifying `javaccArguments` map in compileJavacc:
 ```gradle
@@ -81,7 +80,7 @@ sourceSets {
         }
     }
 }
-    
+
 eclipseClasspath.dependsOn("compileJavacc")
 ```
 
@@ -89,12 +88,8 @@ eclipseClasspath.dependsOn("compileJavacc")
 
 If for some reason you need to depend on a different version of JavaCC than the plugin's default, you can use the following in your build script:
 ```gradle
-buildscript {
-    configurations.all {
-        resolutionStrategy {
-            force group: 'net.java.dev.javacc', name: 'javacc', version: '4.0'
-        }
-    }
+dependencies {
+    javacc 'net.java.dev.javacc:javacc:[version]'
 }
 ```
 
@@ -137,6 +132,13 @@ The following command can be used to release the project, upload to Maven Centra
 ```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/johnmartel/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
 
 ## Changelog
+
+### 2.4.0
+- Allow configuration of the JavaCC version to use (Issue #29)
+- Improve incremental build support by adding [@InputDirectory](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/InputDirectory.html) to the tasks input property
+- Build with Gradle 3.2.1
+- Upgraded dependencies to latest
+- Run acceptance tests with Gradle TestKit
 
 ### 2.3.1
 - Fix handling of generated files when rerunning tasks (Issue #20)
