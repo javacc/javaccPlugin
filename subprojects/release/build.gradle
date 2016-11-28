@@ -27,9 +27,11 @@ task verifyReleaseVersions {
     group 'Release'
 }
 
-verifyReleaseVersions << {
-    if (!project.hasProperty(releaseVersionProperty) || !project.hasProperty(nextVersionProperty)) {
-        throw new RuntimeException("[${releaseVersionProperty}] and [${nextVersionProperty}] project properties are mandatory.")
+verifyReleaseVersions {
+    doLast {
+        if (!project.hasProperty(releaseVersionProperty) || !project.hasProperty(nextVersionProperty)) {
+            throw new RuntimeException("[${releaseVersionProperty}] and [${nextVersionProperty}] project properties are mandatory.")
+        }
     }
 }
 
@@ -38,13 +40,15 @@ task verifySnapshotDependencies {
     group 'Release'
 }
 
-verifySnapshotDependencies << {
-    configurations.each { configuration ->
-        configuration.dependencies.each { dependency ->
-            logger.info "Verifying [${configuration.name}] dependency [${dependency.group}]:[${dependency.name}]:[${dependency.version}]"
+verifySnapshotDependencies {
+    doLast {
+        configurations.each { configuration ->
+            configuration.dependencies.each { dependency ->
+                logger.info "Verifying [${configuration.name}] dependency [${dependency.group}]:[${dependency.name}]:[${dependency.version}]"
 
-            if (dependency.version != null && dependency.version.endsWith('SNAPSHOT')) {
-                throw new RuntimeException("Plugin can not be released with SNAPSHOT dependencies. See [${configuration.name}] [${dependency.group}]:[${dependency.name}]:[${dependency.version}]")
+                if (dependency.version != null && dependency.version.endsWith('SNAPSHOT')) {
+                    throw new RuntimeException("Plugin can not be released with SNAPSHOT dependencies. See [${configuration.name}] [${dependency.group}]:[${dependency.name}]:[${dependency.version}]")
+                }
             }
         }
     }
@@ -77,8 +81,10 @@ task generateReadmeFileFromTemplate(type: Copy, dependsOn: verifyReleaseVersions
     expand project.properties
 }
 
-generateReadmeFileFromTemplate << {
-    commitChangedFiles("Generated README file for version ${releaseVersion}")
+generateReadmeFileFromTemplate {
+    doLast {
+        commitChangedFiles("Generated README file for version ${releaseVersion}")
+    }
 }
 
 task tagRelease {
@@ -86,19 +92,21 @@ task tagRelease {
     group 'Release'
 }
 
-tagRelease << {
-    gitRepo.tag.add {
-        name = "javacc-gradle-plugin-${releaseVersion}"
-        annotate = false
-    }
-    gitRepo.push {
-        all = false
-        remote = "${project.scmUrl}"
-        tags = true
+tagRelease {
+    doLast {
+        gitRepo.tag.add {
+            name = "javacc-gradle-plugin-${releaseVersion}"
+            annotate = false
+        }
+        gitRepo.push {
+            all = false
+            remote = "${project.scmUrl}"
+            tags = true
+        }
     }
 }
 
-def boolean taskNameMatchesWriteRulePattern(String taskName, String prefix, String releaseVersionProperty, String nextVersionProperty) {
+private boolean taskNameMatchesWriteRulePattern(String taskName, String prefix, String releaseVersionProperty, String nextVersionProperty) {
     return (taskName.startsWith(prefix)
         && (taskName.toUpperCase().endsWith(releaseVersionProperty.toUpperCase()) || taskName.toUpperCase().endsWith(nextVersionProperty.toUpperCase()))
         && (tasks.findByPath(taskName) == null))
@@ -141,7 +149,7 @@ tasks.addRule('Pattern: write<VersionProperty>: Writes the value of VersionPrope
     }
 }
 
-def boolean taskNameMatchesCopyRulePattern(String taskName, String prefix, String suffix, String releaseVersionProperty, String nextVersionProperty) {
+private boolean taskNameMatchesCopyRulePattern(String taskName, String prefix, String suffix, String releaseVersionProperty, String nextVersionProperty) {
     return (taskName.startsWith(prefix)
         && (taskName.toUpperCase().contains((releaseVersionProperty - 'Version').toUpperCase()) || taskName.toUpperCase().contains((nextVersionProperty - 'Version').toUpperCase()))
         && taskName.endsWith(suffix)
