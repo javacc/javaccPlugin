@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'com.gradle.publish:plugin-publish-plugin:0.9.6'
+    }
+}
+
 plugins {
     id 'java-gradle-plugin'
     id 'com.jfrog.bintray' version '1.5'
@@ -7,6 +18,8 @@ plugins {
     id 'maven'
     id 'maven-publish'
 }
+
+apply plugin: 'com.gradle.plugin-publish'
 
 defaultTasks 'clean', 'build', 'install'
 
@@ -131,6 +144,20 @@ gradlePlugin {
         javaccPlugin {
             id = 'ca.coglinc.javacc'
             implementationClass = 'ca.coglinc.gradle.plugins.javacc.JavaccPlugin'
+        }
+    }
+}
+
+pluginBundle {
+    website = 'https://github.com/johnmartel/javaccPlugin'
+    vcsUrl = 'https://github.com/johnmartel/javaccPlugin'
+    description = 'A JavaCC plugin for Gradle'
+    tags = ['javacc']
+
+    plugins {
+        javaccPlugin {
+            id = 'ca.coglinc.javacc'
+            displayName = 'JavaCC Plugin'
         }
     }
 }
