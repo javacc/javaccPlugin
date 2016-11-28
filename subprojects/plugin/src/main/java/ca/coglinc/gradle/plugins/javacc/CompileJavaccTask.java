@@ -3,10 +3,12 @@ package ca.coglinc.gradle.plugins.javacc;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
+import org.gradle.api.Action;
 import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RelativePath;
 import org.gradle.api.tasks.TaskAction;
-import org.javacc.parser.Main;
+import org.gradle.process.ExecResult;
+import org.gradle.process.JavaExecSpec;
 
 public class CompileJavaccTask extends AbstractJavaccTask {
     public static final String TASK_NAME_VALUE = "compileJavacc";
@@ -15,7 +17,7 @@ public class CompileJavaccTask extends AbstractJavaccTask {
     private static final String DEFAULT_INPUT_DIRECTORY = File.separator + "src" + File.separator + "main" + File.separator + "javacc";
     private static final String DEFAULT_OUTPUT_DIRECTORY = File.separator + "generated" + File.separator + "javacc";
     private static final String SUPPORTED_FILE_SUFFIX = ".jj";
-    
+
     public CompileJavaccTask() {
         super(CompileJavaccTask.DEFAULT_INPUT_DIRECTORY, CompileJavaccTask.DEFAULT_OUTPUT_DIRECTORY, "**/*" + SUPPORTED_FILE_SUFFIX);
     }
@@ -41,10 +43,19 @@ public class CompileJavaccTask extends AbstractJavaccTask {
     }
 
     @Override
-    protected void invokeCompiler(ProgramArguments arguments) throws Exception {
-        int errorCode = Main.mainProgram(arguments.toArray());
-        if (errorCode != 0) {
-            throw new IllegalStateException("Javacc failed with error code: [" + errorCode + "]");
+    protected void invokeCompiler(final ProgramArguments arguments) throws Exception {
+        ExecResult execResult = this.getProject().javaexec(new Action<JavaExecSpec>() {
+            @Override
+            public void execute(JavaExecSpec executor) {
+                executor.classpath(getClasspath());
+                executor.setMain("org.javacc.parser.Main");
+                executor.args((Object[]) arguments.toArray());
+                executor.setIgnoreExitValue(true);
+            }
+        });
+
+        if (execResult.getExitValue() != 0) {
+            throw new IllegalStateException("Javacc failed with error code: [" + execResult.getExitValue() + "]");
         }
     }
 

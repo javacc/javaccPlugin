@@ -30,11 +30,12 @@ configurations {
 
 dependencies {
     compile gradleApi()
-    compile 'net.java.dev.javacc:javacc:6.1.2'
     compile('commons-io:commons-io:2.4') {
         force = true
     }
     compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.apache.commons:commons-collections4:4.1'
+    compile 'com.google.guava:guava-jdk5:17.0'
 
     testCompile('junit:junit:4.12') {
         force = true
@@ -43,6 +44,9 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile 'org.powermock:powermock-module-junit4:1.6.4'
     testCompile 'org.powermock:powermock-api-mockito:1.6.4'
+
+    compileOnly 'net.java.dev.javacc:javacc:6.1.2'
+    testRuntime 'net.java.dev.javacc:javacc:6.1.2'
 
     acceptanceTestCompile gradleTestKit()
     acceptanceTestCompile('commons-io:commons-io:2.4') {

@@ -3,6 +3,7 @@ package ca.coglinc.gradle.plugins.javacc;
 import java.io.File;
 import java.util.Map;
 
+import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RelativePath;
@@ -27,6 +28,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
     private File inputDirectory;
     private File outputDirectory;
+    private Configuration classpath;
     private CompiledJavaccFilesDirectoryFactory compiledJavaccFilesDirectoryFactory = new CompiledJavaccFilesDirectoryFactory();
 
     protected AbstractJavaccTask(String inputDirectory, String outputDirectory, String filter) {
@@ -85,7 +87,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
     private FileTree getCompleteSourceTree() {
         FileTree javaccTaskSourceTree = getSource();
         FileTree javaTasksSourceTree = getJavaSourceTree();
-        FileTree completeSourceTree = null;
+        FileTree completeSourceTree;
 
         if (javaTasksSourceTree == null) {
             completeSourceTree = javaccTaskSourceTree;
@@ -220,4 +222,9 @@ public abstract class AbstractJavaccTask extends SourceTask {
     protected abstract String getProgramName();
 
     protected abstract String supportedSuffix();
+
+    @Internal
+    protected Configuration getClasspath() {
+        return classpath;
+    }
 }

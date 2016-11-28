@@ -32,6 +32,7 @@ public class CompileJavaccTaskTest {
     @Before
     public void setUp() {
         Project project = ProjectBuilder.builder().build();
+        project.getRepositories().jcenter();
         applyJavaccPluginToProject(project);
 
         task = (CompileJavaccTask) project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE);
@@ -87,7 +88,7 @@ public class CompileJavaccTaskTest {
         assertEquals(CompileJavaccTaskTest.GENERATED_FILES.length, outputDirectory.list().length);
         assertTrue(Arrays.asList(outputDirectory.list()).containsAll(Arrays.asList(CompileJavaccTaskTest.GENERATED_FILES)));
     }
-    
+
     @Test
     public void compileJavaccToJavaCopiesNonJavaccFilesToOutputDirectory() {
         setTaskInputDirectory("/javacc/inputWithNonJavaccFiles");
@@ -232,15 +233,15 @@ public class CompileJavaccTaskTest {
         assertEquals(1, outputFiles.getFiles().size());
         assertEquals("output", ((File) outputFiles.getFiles().toArray()[0]).getName());
     }
-    
+
     @Test
     public void argumentsGetterSetter() {
         Map<String, String> expectedArguments = new HashMap<String, String>();
         expectedArguments.put("static", "false");
         task.setArguments(expectedArguments);
-        
+
         Map<String, String> arguments = task.getArguments();
-        
+
         assertEquals(expectedArguments, arguments);
     }
 
@@ -308,11 +309,11 @@ public class CompileJavaccTaskTest {
 
         assertTrue(sourceFileVisitor instanceof JavaccSourceFileVisitor);
     }
-    
+
     @Test
     public void supportsDotJjFiles() {
         String supportedSuffix = task.supportedSuffix();
-        
+
         assertEquals(".jj", supportedSuffix);
     }
 }

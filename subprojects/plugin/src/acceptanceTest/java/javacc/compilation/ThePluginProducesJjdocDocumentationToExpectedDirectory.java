@@ -25,7 +25,7 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + JJDOC);
         steps.andAssertFileWasGenerated("MyParser.html");
     }
-    
+
     @Test
     public void givenASimpleProjectWhenRerunJjdocTaskThenTheDocumentationIsGeneratedInTheDefaultDirectory() throws URISyntaxException, IOException {
         CompilationSteps steps = new CompilationSteps();
@@ -42,11 +42,11 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + JJDOC);
         steps.andAssertFileWasGenerated("MyParser.html");
     }
-    
+
     @Test
     public void givenASimpleProjectAndArgumentsAreProvidedWhenExecuteJjdocTaskThenTheDocumentationIsGeneratedInTheDefaultDirectory()
         throws URISyntaxException, IOException {
-        
+
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithArguments");
@@ -60,11 +60,11 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + JJDOC);
         steps.andAssertFileWasGenerated("MyParser.txt");
     }
-    
+
     @Test
     public void givenAMultiProjectBuildWhenExecuteCompileJjdocTaskThenTheFilesAreGeneratedInTheDefaultDirectory() throws URISyntaxException,
         IOException {
-        
+
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuild");
@@ -77,32 +77,36 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
 
         steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + JJDOC);
         steps.andAssertFileWasGenerated("MyParser.html");
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + JJDOC + File.separator + "test" + File.separator + "pkg");
         steps.andAssertFileWasGenerated("JavaccOutputTest.html");
     }
-    
+
     @Test
     public void givenASimpleProjectThatConfiguresTheInputOutputDirectoriesWhenExecuteCompileJjdocTaskThenTheFilesAreGeneratedInTheConfiguredDirectory()
         throws URISyntaxException, IOException {
-        
+
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleTestWithConfiguredInputsOutputs");
         steps.withArguments(CLEAN, JJDOC).execute();
 
-        String buildDirectory = "build" + File.separator + "outputjjdoc";
+        String buildDirectory = "build";
 
-        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "javacc");
-        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "jjtree");
+        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory  + File.separator + "output");
+        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "generated" + File.separator + "jjtree");
 
-        steps.thenAssertOutputDirectoryExists(buildDirectory);
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "outputjjdoc");
         steps.andAssertFileWasGenerated("MyParser.html");
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "outputjjdoc" + File.separator + "test" + File.separator + "pkg");
         steps.andAssertFileWasGenerated("JavaccOutputTest.html");
     }
-    
+
     @Test
     public void givenAMultiProjectBuildThatConfiguresTheInputOutputDirectoriesWhenExecuteCompileJjdocTaskThenTheFilesAreGeneratedInTheDefaultDirectory()
         throws URISyntaxException, IOException {
-        
+
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithConfiguredInputsOutputs");
@@ -115,6 +119,8 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
 
         steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "outputjjdoc");
         steps.andAssertFileWasGenerated("MyParser.html");
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "outputjjdoc" + File.separator + "test" + File.separator + "pkg");
         steps.andAssertFileWasGenerated("JavaccOutputTest.html");
     }
 }

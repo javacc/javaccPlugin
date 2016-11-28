@@ -3,10 +3,12 @@ package ca.coglinc.gradle.plugins.javacc;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
+import org.gradle.api.Action;
 import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RelativePath;
 import org.gradle.api.tasks.TaskAction;
-import org.javacc.jjtree.JJTree;
+import org.gradle.process.ExecResult;
+import org.gradle.process.JavaExecSpec;
 
 public class CompileJjTreeTask extends AbstractJavaccTask {
     public static final String TASK_NAME_VALUE = "compileJjtree";
@@ -19,7 +21,7 @@ public class CompileJjTreeTask extends AbstractJavaccTask {
     public CompileJjTreeTask() {
         super(CompileJjTreeTask.DEFAULT_INPUT_DIRECTORY, CompileJjTreeTask.DEFAULT_OUTPUT_DIRECTORY, "**/*" + SUPPORTED_FILE_SUFFIX);
     }
-    
+
     @TaskAction
     public void run() {
         getTempOutputDirectory().mkdirs();
@@ -41,10 +43,19 @@ public class CompileJjTreeTask extends AbstractJavaccTask {
     }
 
     @Override
-    protected void invokeCompiler(ProgramArguments arguments) throws Exception {
-        int errorCode = new JJTree().main(arguments.toArray());
-        if (errorCode != 0) {
-            throw new IllegalStateException("JJTree failed with error code: [" + errorCode + "]");
+    protected void invokeCompiler(final ProgramArguments arguments) throws Exception {
+        ExecResult execResult = this.getProject().javaexec(new Action<JavaExecSpec>() {
+            @Override
+            public void execute(JavaExecSpec executor) {
+                executor.classpath(getClasspath());
+                executor.setMain("org.javacc.jjtree.Main");
+                executor.args((Object[]) arguments.toArray());
+                executor.setIgnoreExitValue(true);
+            }
+        });
+
+        if (execResult.getExitValue() != 0) {
+            throw new IllegalStateException("JJTree failed with error code: [" + execResult.getExitValue() + "]");
         }
     }
 

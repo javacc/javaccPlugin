@@ -21,12 +21,13 @@ import org.mockito.Mockito;
 
 public class CompileJjdocTaskTest {
     private static final String[] GENERATED_FILES = {"MyParser.html", "AnotherParser.html" };
-    
+
     private CompileJjdocTask task;
-    
+
     @Before
     public void setUp() {
         Project project = ProjectBuilder.builder().build();
+        project.getRepositories().jcenter();
         applyJavaccPluginToProject(project);
 
         task = (CompileJjdocTask) project.getTasks().findByName(CompileJjdocTask.TASK_NAME_VALUE);
@@ -38,7 +39,7 @@ public class CompileJjdocTaskTest {
 
         project.apply(pluginNames);
     }
-    
+
     @After
     public void tearDown() {
         final File outputDirectory = new File(getClass().getResource("/").getFile() + "output");
@@ -57,37 +58,28 @@ public class CompileJjdocTaskTest {
         }
         outputDirectory.delete();
     }
-    
+
     @Test
     public void supportsDotJjFiles() {
         String supportedSuffix = task.supportedSuffix();
-        
+
         assertEquals(".jj", supportedSuffix);
     }
-    
+
     @Test
     public void programNameIsJjdoc() {
         String programName = task.getProgramName();
-        
+
         assertEquals("JJDoc", programName);
     }
-    
+
     @Test
     public void getFileVisitorReturnsInstanceOfJavaccSourceFileVisitor() {
         FileVisitor sourceFileVisitor = task.getJavaccSourceFileVisitor();
 
         assertTrue(sourceFileVisitor instanceof JavaccSourceFileVisitor);
     }
-    
-    @Test
-    public void augmentArgumentsDoesNotModifyProgramArguments() {
-        ProgramArguments arguments = new ProgramArguments();
-        
-        task.augmentArguments(null, null, arguments);
-        
-        assertTrue(arguments.isEmpty());
-    }
-    
+
     @Test
     public void jjdocDoesNotGenerateAnythingIfNoInputFiles() {
         testExecuteTaskWithNoInputFiles(new File[0]);
@@ -111,7 +103,7 @@ public class CompileJjdocTaskTest {
     public void jjdocDoesNotGenerateAnythingIfInputFilesNull() {
         testExecuteTaskWithNoInputFiles(null);
     }
-    
+
     @Test
     public void compileJavaccToJavaCompilesEachJavaccInputFileToJava() {
         setTaskInputDirectory("/jjdoc/input");
@@ -136,7 +128,7 @@ public class CompileJjdocTaskTest {
         task.setOutputDirectory(outputDirectory);
         return outputDirectory;
     }
-    
+
     @Test(expected = TaskExecutionException.class)
     public void compileJavaccFailsWhenParserGeneratesAnError() {
         setTaskInputDirectory("/jjdoc/inputWithErrors");

@@ -28,6 +28,7 @@ public class CompileJjtreeTaskTest {
     @Before
     public void setUp() {
         Project project = ProjectBuilder.builder().build();
+        project.getRepositories().jcenter();
         applyJavaccPluginToProject(project);
 
         task = (CompileJjTreeTask) project.getTasks().findByName(CompileJjTreeTask.TASK_NAME_VALUE);
@@ -163,18 +164,18 @@ public class CompileJjtreeTaskTest {
         Assert.assertEquals(1, outputFiles.getFiles().size());
         Assert.assertEquals("output", ((File) outputFiles.getFiles().toArray()[0]).getName());
     }
-    
+
     @Test
     public void getFileVisitorReturnsInstanceOfJavaccSourceFileVisitor() {
         FileVisitor sourceFileVisitor = task.getJavaccSourceFileVisitor();
 
         Assert.assertTrue(sourceFileVisitor instanceof JavaccSourceFileVisitor);
     }
-    
+
     @Test
     public void supportsDotJjtFiles() {
         String supportedSuffix = task.supportedSuffix();
-        
+
         assertEquals(".jjt", supportedSuffix);
     }
 }

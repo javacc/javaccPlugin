@@ -88,12 +88,8 @@ eclipseClasspath.dependsOn("compileJavacc")
 
 If for some reason you need to depend on a different version of JavaCC than the plugin's default, you can use the following in your build script:
 ```gradle
-buildscript {
-    configurations.all {
-        resolutionStrategy {
-            force group: 'net.java.dev.javacc', name: 'javacc', version: '4.0'
-        }
-    }
+dependencies {
+    javacc 'net.java.dev.javacc:javacc:[version]'
 }
 ```
 
@@ -138,6 +134,7 @@ The following command can be used to release the project, upload to Maven Centra
 ## Changelog
 
 ### 2.4.0
+- Allow configuration of the JavaCC version to use (Issue #29)
 - Improve incremental build support by adding [@InputDirectory](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/InputDirectory.html) to the tasks input property
 - Build with Gradle 3.2
 - Upgraded dependencies to latest
