@@ -14,16 +14,20 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.logging.Logger;
 
+import ca.coglinc.gradle.plugins.javacc.Language;
+
 public class CompiledJavaccFile {
     private static final Pattern PACKAGE_DECLARATION_PATTERN = Pattern.compile("package\\s+([^\\s.;]+(\\.[^\\s.;]+)*)\\s*;");
     
-    private File compiledJavaccFile;
-    private File outputDirectory;
-    private FileTree customAstClassesDirectory;
-    private File targetDirectory;
-    private Logger logger;
+    private final Language language;
+    private final File compiledJavaccFile;
+    private final File outputDirectory;
+    private final FileTree customAstClassesDirectory;
+    private final File targetDirectory;
+    private final Logger logger;
     
-    CompiledJavaccFile(File file, File outputDirectory, FileTree customAstClassesDirectory, File targetDirectory, Logger logger) {
+    CompiledJavaccFile(Language language, File file, File outputDirectory, FileTree customAstClassesDirectory, File targetDirectory, Logger logger) {
+        this.language = language;
         this.compiledJavaccFile = file;
         this.outputDirectory = outputDirectory;
         this.customAstClassesDirectory = customAstClassesDirectory;

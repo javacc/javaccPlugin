@@ -26,6 +26,7 @@ import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFilesDi
 public abstract class AbstractJavaccTask extends SourceTask {
     protected Map<String, String> programArguments;
 
+    protected Language language = Language.Java;
     private File inputDirectory;
     private File outputDirectory;
     private Configuration classpath;
@@ -69,7 +70,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
     protected void copyCompiledFilesFromTempOutputDirectoryToOutputDirectory() {
         CompiledJavaccFilesDirectory compiledJavaccFilesDirectory
-            = compiledJavaccFilesDirectoryFactory.getCompiledJavaccFilesDirectory(getTempOutputDirectory(), getCompleteSourceTree(), getOutputDirectory(), getLogger());
+            = compiledJavaccFilesDirectoryFactory.getCompiledJavaccFilesDirectory(language, getTempOutputDirectory(), getCompleteSourceTree(), getOutputDirectory(), getLogger());
 
         for (CompiledJavaccFile compiledJavaccFile : compiledJavaccFilesDirectory.listFiles()) {
             FileTree javaSourceTree = getJavaSourceTree();
@@ -190,6 +191,10 @@ public abstract class AbstractJavaccTask extends SourceTask {
         this.outputDirectory = outputDirectory;
 
         return this;
+    }
+    
+    public void setLanguage(String language) {
+    	this.language = Language.valueOf(language);
     }
 
     ProgramArguments buildProgramArguments(File inputDirectory, RelativePath inputRelativePath) {

@@ -15,7 +15,7 @@ public class CompiledJavaccFilesDirectoryTest {
 
     @Test
     public void listFilesReturnsEmptyCollectionForEmptyDirectory() {
-        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(new File(getClass().getResource("/empty").getFile()), null, null, null);
+        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(language, new File(getClass().getResource("/empty").getFile()), null, null, null);
         
         Collection<CompiledJavaccFile> files = directory.listFiles();
         
@@ -24,7 +24,7 @@ public class CompiledJavaccFilesDirectoryTest {
     
     @Test
     public void listFilesReturnsAllFiles() {
-        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(new File(getClass().getResource("/compiledResults").getFile()), null, null, null);
+        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(language, new File(getClass().getResource("/compiledResults").getFile()), null, null, null);
         
         Collection<CompiledJavaccFile> files = directory.listFiles();
         
@@ -34,7 +34,7 @@ public class CompiledJavaccFilesDirectoryTest {
     
     @Test
     public void listFilesReturnsAllFilesRecursively() {
-        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(new File(getClass().getResource("/compiledResultsWithSubFolders").getFile()), null, null, null);
+        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(language, new File(getClass().getResource("/compiledResultsWithSubFolders").getFile()), null, null, null);
         
         Collection<CompiledJavaccFile> files = directory.listFiles();
         
@@ -45,7 +45,7 @@ public class CompiledJavaccFilesDirectoryTest {
     @Test
     public void toStringReturnsAbsoluteDirectoryPath() {
         File outputDirectory = new File(getClass().getResource("/compiledResults").getFile());
-        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(outputDirectory, null, null, null);
+        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(language, outputDirectory, null, null, null);
         
         String stringValue = directory.toString();
         

@@ -5,9 +5,12 @@ import java.io.File;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.logging.Logger;
 
+import ca.coglinc.gradle.plugins.javacc.Language;
+
+
 public class CompiledJavaccFilesDirectoryFactory {
 
-    public CompiledJavaccFilesDirectory getCompiledJavaccFilesDirectory(File outputDirectory, FileTree customAstClassesDirectory, File targetDirectory, Logger logger) {
+    public CompiledJavaccFilesDirectory getCompiledJavaccFilesDirectory(Language language, File outputDirectory, FileTree customAstClassesDirectory, File targetDirectory, Logger logger) {
         if ((outputDirectory == null) || !outputDirectory.exists() || !outputDirectory.isDirectory()) {
             throw new IllegalArgumentException("outputDirectory [" + outputDirectory + "] must be an existing directory");
         }
@@ -20,6 +23,6 @@ public class CompiledJavaccFilesDirectoryFactory {
             throw new IllegalArgumentException("targetDirectory [" + targetDirectory + "] must be an existing directory");
         }
         
-        return new CompiledJavaccFilesDirectory(outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        return new CompiledJavaccFilesDirectory(language, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
     }
 }

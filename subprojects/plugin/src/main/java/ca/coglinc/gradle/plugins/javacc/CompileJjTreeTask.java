@@ -18,6 +18,8 @@ public class CompileJjTreeTask extends AbstractJavaccTask {
     private static final String DEFAULT_OUTPUT_DIRECTORY = File.separator + "generated" + File.separator + "jjtree";
     private static final String SUPPORTED_FILE_SUFFIX = ".jjt";
 
+    private File astDirectory;
+
     public CompileJjTreeTask() {
         super(CompileJjTreeTask.DEFAULT_INPUT_DIRECTORY, CompileJjTreeTask.DEFAULT_OUTPUT_DIRECTORY, "**/*" + SUPPORTED_FILE_SUFFIX);
     }
@@ -68,4 +70,9 @@ public class CompileJjTreeTask extends AbstractJavaccTask {
     protected String supportedSuffix() {
         return SUPPORTED_FILE_SUFFIX;
     }
+    
+    public File getASTDirectory() {
+        return astDirectory;
+    }
+
 }
