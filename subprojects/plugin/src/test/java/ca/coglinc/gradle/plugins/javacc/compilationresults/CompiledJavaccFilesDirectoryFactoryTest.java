@@ -12,7 +12,10 @@ import org.gradle.api.file.FileTree;
 import org.junit.Before;
 import org.junit.Test;
 
+import ca.coglinc.gradle.plugins.javacc.Language;
+
 public class CompiledJavaccFilesDirectoryFactoryTest {
+    private Language language = Language.Java;
     private CompiledJavaccFilesDirectoryFactory factory;
     private File outputDirectory;
     private FileTree customAstClassesDirectory;

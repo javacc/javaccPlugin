@@ -11,7 +11,10 @@ import java.util.Collection;
 
 import org.junit.Test;
 
+import ca.coglinc.gradle.plugins.javacc.Language;
+
 public class CompiledJavaccFilesDirectoryTest {
+    private Language language = Language.Java;
 
     @Test
     public void listFilesReturnsEmptyCollectionForEmptyDirectory() {

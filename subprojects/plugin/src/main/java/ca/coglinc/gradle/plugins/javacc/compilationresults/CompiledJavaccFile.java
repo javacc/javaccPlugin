@@ -10,6 +10,7 @@ import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.logging.Logger;
@@ -60,17 +61,42 @@ public class CompiledJavaccFile {
         for (File sourceFile : sourceFiles) {
             logger.debug("Scanning source file [{}] looking for a file named [{}] in package [{}]", sourceFile, compiledJavaccFile.getName(), compiledJavaccFilePackage);
             if (sourceFile.isDirectory()) {
-                Collection<File> childFiles = FileUtils.listFiles(sourceFile, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.TRUE);
+                Collection<File> childFiles = null;
+                IOFileFilter ioFilefilter = null;
+                if (language == Language.Java) {
+                    ioFilefilter = FileFilterUtils.suffixFileFilter(".java");
+                } else if (language == Language.Cpp) {
+                    IOFileFilter inclFilefilter = FileFilterUtils.suffixFileFilter(".h");
+                    IOFileFilter codeFilefilter = FileFilterUtils.suffixFileFilter(".cc");
+                    ioFilefilter = FileFilterUtils.or(inclFilefilter, codeFilefilter);
+                }
+                
+                childFiles = FileUtils.listFiles(sourceFile, ioFilefilter, TrueFileFilter.TRUE);
                 File matchingChildFile = scanSourceFiles(compiledJavaccFilePackage, childFiles);
                 if (matchingChildFile != null) {
                     return matchingChildFile;
                 }
             } else {
-                if (FilenameUtils.isExtension(sourceFile.getName(), "java") && compiledJavaccFile.getName().equals(sourceFile.getName())) {
-                    String packageName = getPackageName(sourceFile);
-                    
-                    if (compiledJavaccFilePackage.equals(packageName)) {
-                        return sourceFile;
+                String extension = null;
+                if (language == Language.Java) {
+                    if (getSourceFile(sourceFile, "java") != null) {
+                        String packageName = getPackageName(sourceFile);
+                        if (compiledJavaccFilePackage.equals(packageName)) {
+                            return sourceFile;
+                        }
+                    }
+                } else if (language == Language.Cpp) {
+                    if (getSourceFile(sourceFile, "h") != null) {
+                        String packageName = getPackageName(sourceFile);
+                        if (compiledJavaccFilePackage.equals(packageName)) {
+                            return sourceFile;
+                        }
+                    }
+                    if (getSourceFile(sourceFile, "cc") != null) {
+                        String packageName = getPackageName(sourceFile);
+                         if (compiledJavaccFilePackage.equals(packageName)) {
+                            return sourceFile;
+                        }
                     }
                 }
             }
@@ -79,6 +105,12 @@ public class CompiledJavaccFile {
         return null;
     }
     
+    private File getSourceFile(File sourceFile, String extension) {
+        if (FilenameUtils.isExtension(sourceFile.getName(), extension) && compiledJavaccFile.getName().equals(sourceFile.getName())) {
+            return sourceFile;
+        }
+        return null;
+    }
     private String getPackageName(File file) {
         String fileContents = "";
         try {
