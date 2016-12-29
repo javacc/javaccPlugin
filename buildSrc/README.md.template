@@ -133,6 +133,9 @@ The following command can be used to release the project, upload to Maven Centra
 
 ## Changelog
 
+### 2.5.0
+- Fix acceptance tests under Windows [Pull Request #37](https://github.com/johnmartel/javaccPlugin/pull/37)
+
 ### 2.4.0
 - Allow configuration of the JavaCC version to use (Issue #29)
 - Improve incremental build support by adding [@InputDirectory](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/InputDirectory.html) to the tasks input property
