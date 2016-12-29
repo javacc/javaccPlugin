@@ -16,13 +16,13 @@ import org.gradle.api.logging.Logger;
 
 public class CompiledJavaccFile {
     private static final Pattern PACKAGE_DECLARATION_PATTERN = Pattern.compile("package\\s+([^\\s.;]+(\\.[^\\s.;]+)*)\\s*;");
-    
+
     private File compiledJavaccFile;
     private File outputDirectory;
     private FileTree customAstClassesDirectory;
     private File targetDirectory;
     private Logger logger;
-    
+
     CompiledJavaccFile(File file, File outputDirectory, FileTree customAstClassesDirectory, File targetDirectory, Logger logger) {
         this.compiledJavaccFile = file;
         this.outputDirectory = outputDirectory;
@@ -34,16 +34,16 @@ public class CompiledJavaccFile {
     public boolean customAstClassExists() {
         return customAstClassExists(customAstClassesDirectory);
     }
-    
+
     public boolean customAstClassExists(FileTree fileTree) {
         File customAstClassInputFile = getCustomAstClassInputFile(fileTree);
-        
+
         return (customAstClassInputFile != null) && customAstClassInputFile.exists();
     }
 
     private File getCustomAstClassInputFile(FileTree fileTree) {
         String compiledJavaccFilePackage = getPackageName(compiledJavaccFile);
-        
+
         if (fileTree != null) {
             Collection<File> sourceFiles = fileTree.getFiles();
             return scanSourceFiles(compiledJavaccFilePackage, sourceFiles);
@@ -64,17 +64,17 @@ public class CompiledJavaccFile {
             } else {
                 if (FilenameUtils.isExtension(sourceFile.getName(), "java") && compiledJavaccFile.getName().equals(sourceFile.getName())) {
                     String packageName = getPackageName(sourceFile);
-                    
+
                     if (compiledJavaccFilePackage.equals(packageName)) {
                         return sourceFile;
                     }
                 }
             }
         }
-        
+
         return null;
     }
-    
+
     private String getPackageName(File file) {
         String fileContents = "";
         try {
@@ -82,21 +82,21 @@ public class CompiledJavaccFile {
         } catch (IOException e) {
             logger.warn("Could not read file contents for file [{}]", file);
         }
-        
+
         Matcher matcher = PACKAGE_DECLARATION_PATTERN.matcher(fileContents);
         if (matcher.find()) {
             return matcher.group(1);
         }
-        
+
         return "";
     }
 
     public void copyCompiledFileToTargetDirectory() {
         logger.info("Custom AST class not found");
-        
+
         File destination = new File(compiledJavaccFile.getAbsolutePath().replace(outputDirectory.getAbsolutePath(), targetDirectory.getAbsolutePath()));
         logger.info("Copying compiled file {} to {}", compiledJavaccFile, destination);
-        
+
         try {
             FileUtils.copyFile(compiledJavaccFile, destination);
         } catch (IOException e) {
@@ -108,11 +108,11 @@ public class CompiledJavaccFile {
     public void copyCustomAstClassToTargetDirectory(FileTree sourceTree) {
         logger.info("Not copying compiled file {} from {} to {} because it is overridden by the custom AST class {}", compiledJavaccFile, outputDirectory, targetDirectory,
             getCustomAstClassInputFile(sourceTree));
-        
-        String packagePath = getPackageName(compiledJavaccFile).replaceAll(Matcher.quoteReplacement("\\."), File.separator);
+
+        String packagePath = getPackageName(compiledJavaccFile).replaceAll("\\.", Matcher.quoteReplacement(File.separator));
         File destination = new File(targetDirectory.getAbsolutePath() + File.separator + packagePath, compiledJavaccFile.getName());
         logger.info("Copying custom AST class [{}] to [{}]", getCustomAstClassInputFile(sourceTree), destination);
-        
+
         try {
             FileUtils.copyFile(getCustomAstClassInputFile(sourceTree), destination);
         } catch (IOException e) {
@@ -125,7 +125,7 @@ public class CompiledJavaccFile {
         logger.info("Ignoring compiled file {} because it is overridden by the custom AST class in Java source tree {}", compiledJavaccFile,
             getCustomAstClassInputFile(javaSourceTree));
     }
-    
+
     @Override
     public String toString() {
         return compiledJavaccFile.getAbsolutePath();
