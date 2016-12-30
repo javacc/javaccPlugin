@@ -145,7 +145,7 @@ public class CompiledJavaccFile {
         logger.info("Not copying compiled file {} from {} to {} because it is overridden by the custom AST class {}", compiledJavaccFile, outputDirectory, targetDirectory,
             getCustomAstClassInputFile(sourceTree));
 
-        if (language == language.Cpp)
+        if (language == Language.Cpp)
         	return;
         
         String packagePath = getPackageName(compiledJavaccFile).replaceAll("\\.", Matcher.quoteReplacement(File.separator));
