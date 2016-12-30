@@ -3,7 +3,6 @@ package ca.coglinc.gradle.plugins.javacc;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskCollection;
-import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.language.cpp.tasks.CppCompile;
 
@@ -78,6 +77,7 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
     private void addJJTreeDependencyToCppCompileTask(TaskCollection<CppCompile> cppCompilationTasks,
         TaskCollection<CompileJavaccTask> javaccCompilationTasks, CompileJjTreeTask compileJJTreeTask) {
 
+    	
         for (CppCompile task : cppCompilationTasks) {
             task.dependsOn(compileJJTreeTask);
             task.source(compileJJTreeTask.getOutputDirectory());
