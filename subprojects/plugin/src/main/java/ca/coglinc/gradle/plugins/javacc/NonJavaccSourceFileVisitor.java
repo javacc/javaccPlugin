@@ -16,6 +16,9 @@ public class NonJavaccSourceFileVisitor extends EmptyFileVisitor {
 
     @Override
     public void visitFile(FileVisitDetails fileDetails) {
+        if (task.language == Language.Cpp)
+        	return;
+
         if (!isValidSourceFileForTask(fileDetails)) {
             File sourceFile = fileDetails.getFile();
             File destinationFile = new File(sourceFile.getAbsolutePath().replace(task.getInputDirectory().getAbsolutePath(), task.getOutputDirectory().getAbsolutePath()));
