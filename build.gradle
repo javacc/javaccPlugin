@@ -3,7 +3,7 @@ allprojects{
     apply plugin: 'idea'
 
     group = 'ca.coglinc'
-version = '2.5.0'
+version = '3.0.0'
 
     repositories {
         mavenCentral()
