@@ -24,8 +24,7 @@ public class JavaccPlugin implements Plugin<Project> {
         addCompileJJTreeTaskToProject(project, configuration);
         addCompileJjdocTaskToProject(project, configuration);
 
-        JavaToJavaccDependencyAction compileJavaDependsOnCompileJavacc = new JavaToJavaccDependencyAction();
-        project.afterEvaluate(compileJavaDependsOnCompileJavacc);
+        configureTaskDependencies(project);
     }
 
     private Configuration createJavaccConfiguration(Project project) {
@@ -69,5 +68,10 @@ public class JavaccPlugin implements Plugin<Project> {
 
         AbstractJavaccTask task = (AbstractJavaccTask) project.task(options, name);
         task.getConventionMapping().map("classpath", Callables.returning(configuration));
+    }
+
+    private void configureTaskDependencies(Project project) {
+        JavaToJavaccDependencyAction compileJavaDependsOnCompileJavacc = new JavaToJavaccDependencyAction();
+        project.afterEvaluate(compileJavaDependsOnCompileJavacc);
     }
 }
