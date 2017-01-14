@@ -1,45 +1,55 @@
 package ca.coglinc.gradle.plugins.javacc;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.artifacts.Configuration;
 import org.gradle.testfixtures.ProjectBuilder;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class JavaccPluginTest {
+    private JavaccPlugin plugin;
     private Project project;
 
     @Before
     public void applyJavaccPluginToProject() {
+        plugin = new JavaccPlugin();
         project = ProjectBuilder.builder().build();
-        Map<String, String> pluginNames = new HashMap<String, String>(1);
-        pluginNames.put("plugin", "ca.coglinc.javacc");
 
-        project.apply(pluginNames);
+        plugin.apply(project);
     }
 
     @Test
     public void pluginAddsCompileJavaccTaskToProject() {
         final Task compileJavaccTask = project.getTasks().getByName("compileJavacc");
-        Assert.assertNotNull(compileJavaccTask);
-        Assert.assertTrue(compileJavaccTask instanceof CompileJavaccTask);
+
+        assertNotNull(compileJavaccTask);
+        assertTrue(compileJavaccTask instanceof CompileJavaccTask);
     }
 
     @Test
     public void pluginAddsCompileJJTreeTaskToProject() {
         final Task compileJJTreeTask = project.getTasks().getByName("compileJjtree");
-        Assert.assertNotNull(compileJJTreeTask);
-        Assert.assertTrue(compileJJTreeTask instanceof CompileJjTreeTask);
+
+        assertNotNull(compileJJTreeTask);
+        assertTrue(compileJJTreeTask instanceof CompileJjTreeTask);
     }
-    
+
     @Test
     public void pluginAddsCompileJjdocTaskToProject() {
         final Task compileJjdocTask = project.getTasks().getByName("jjdoc");
-        Assert.assertNotNull(compileJjdocTask);
-        Assert.assertTrue(compileJjdocTask instanceof CompileJjdocTask);
+
+        assertNotNull(compileJjdocTask);
+        assertTrue(compileJjdocTask instanceof CompileJjdocTask);
+    }
+
+    @Test
+    public void pluginDefinesDefaultDependencyOnJavacc() {
+        Configuration javaccDependencyConfiguration = project.getConfigurations().getByName("javacc");
+
+        assertNotNull(javaccDependencyConfiguration);
     }
 }
