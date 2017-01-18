@@ -35,7 +35,7 @@ public class JavaccPluginTest {
         final Task compileJJTreeTask = project.getTasks().getByName("compileJjtree");
 
         assertNotNull(compileJJTreeTask);
-        assertTrue(compileJJTreeTask instanceof CompileJjTreeTask);
+        assertTrue(compileJJTreeTask instanceof CompileJjtreeTask);
     }
 
     @Test

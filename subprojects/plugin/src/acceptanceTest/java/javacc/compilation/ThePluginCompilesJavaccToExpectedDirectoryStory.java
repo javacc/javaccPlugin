@@ -75,7 +75,8 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
 
     @Test
     public void givenAMultiProjectBuildWhenExecuteCompileJavaccTaskThenTheFilesAreGeneratedInTheDefaultDirectory() throws URISyntaxException,
-    IOException {
+        IOException {
+
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuild");
@@ -222,7 +223,8 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
 
     @Test
     public void givenASimpleJJTreeProjectWhenExecuteCompileJavaccTaskThenTheFilesAreGeneratedInTheDefaultDirectory() throws URISyntaxException,
-    IOException {
+        IOException {
+
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("simpleJJTreeTest");

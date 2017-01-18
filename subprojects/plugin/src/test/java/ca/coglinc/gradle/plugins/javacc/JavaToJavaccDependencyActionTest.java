@@ -81,9 +81,9 @@ public class JavaToJavaccDependencyActionTest {
         JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
         final File inputDirectory = new File(getClass().getResource("/jjtree/input").getFile());
         final File outputDirectory = new File(getClass().getResource("/jjtree/testgenerated").getFile());
-        CompileJjTreeTask compileJJTreeTask = (CompileJjTreeTask) project.getTasks().findByName(CompileJjTreeTask.TASK_NAME_VALUE);
-        compileJJTreeTask.setInputDirectory(inputDirectory);
-        compileJJTreeTask.setOutputDirectory(outputDirectory);
+        CompileJjtreeTask compileJjtreeTask = (CompileJjtreeTask) project.getTasks().findByName(CompileJjtreeTask.TASK_NAME_VALUE);
+        compileJjtreeTask.setInputDirectory(inputDirectory);
+        compileJjtreeTask.setOutputDirectory(outputDirectory);
 
         action.execute(project);
 
@@ -122,7 +122,7 @@ public class JavaToJavaccDependencyActionTest {
         TaskCollection<JavaCompile> javaCompilationTasks = project.getTasks().withType(JavaCompile.class);
         for (JavaCompile task : javaCompilationTasks) {
             Set<Object> dependencies = task.getDependsOn();
-            assertFalse(dependencies.contains(project.getTasks().findByName(CompileJjTreeTask.TASK_NAME_VALUE)));
+            assertFalse(dependencies.contains(project.getTasks().findByName(CompileJjtreeTask.TASK_NAME_VALUE)));
         }
     }
 
@@ -133,15 +133,15 @@ public class JavaToJavaccDependencyActionTest {
         JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
 
         final File inputDirectory = new File(getClass().getResource("/jjtree/input").getFile());
-        CompileJjTreeTask compileJJTreeTask = (CompileJjTreeTask) project.getTasks().findByName(CompileJjTreeTask.TASK_NAME_VALUE);
-        compileJJTreeTask.setInputDirectory(inputDirectory);
+        CompileJjtreeTask compileJjtreeTask = (CompileJjtreeTask) project.getTasks().findByName(CompileJjtreeTask.TASK_NAME_VALUE);
+        compileJjtreeTask.setInputDirectory(inputDirectory);
 
         action.execute(project);
 
         TaskCollection<CompileJavaccTask> compileJavaccTasks = project.getTasks().withType(CompileJavaccTask.class);
         for (CompileJavaccTask task : compileJavaccTasks) {
             Set<Object> dependencies = task.getDependsOn();
-            assertTrue(dependencies.contains(project.getTasks().findByName(CompileJjTreeTask.TASK_NAME_VALUE)));
+            assertTrue(dependencies.contains(project.getTasks().findByName(CompileJjtreeTask.TASK_NAME_VALUE)));
         }
     }
 
@@ -152,15 +152,15 @@ public class JavaToJavaccDependencyActionTest {
         JavaToJavaccDependencyAction action = new JavaToJavaccDependencyAction();
 
         final File inputDirectory = new File(getClass().getResource("/empty").getFile());
-        CompileJjTreeTask compileJJTreeTask = (CompileJjTreeTask) project.getTasks().findByName(CompileJjTreeTask.TASK_NAME_VALUE);
-        compileJJTreeTask.setInputDirectory(inputDirectory);
+        CompileJjtreeTask compileJjtreeTask = (CompileJjtreeTask) project.getTasks().findByName(CompileJjtreeTask.TASK_NAME_VALUE);
+        compileJjtreeTask.setInputDirectory(inputDirectory);
 
         action.execute(project);
 
         TaskCollection<CompileJavaccTask> compileJavaccTasks = project.getTasks().withType(CompileJavaccTask.class);
         for (CompileJavaccTask task : compileJavaccTasks) {
             Set<Object> dependencies = task.getDependsOn();
-            assertFalse(dependencies.contains(project.getTasks().findByName(CompileJjTreeTask.TASK_NAME_VALUE)));
+            assertFalse(dependencies.contains(project.getTasks().findByName(CompileJjtreeTask.TASK_NAME_VALUE)));
         }
     }
 

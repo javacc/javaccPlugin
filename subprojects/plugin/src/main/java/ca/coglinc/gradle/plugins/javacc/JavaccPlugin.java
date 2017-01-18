@@ -50,7 +50,7 @@ public class JavaccPlugin implements Plugin<Project> {
     }
 
     private void addCompileJJTreeTaskToProject(Project project, Configuration configuration) {
-        addTaskToProject(project, CompileJjTreeTask.class, CompileJjTreeTask.TASK_NAME_VALUE, CompileJjTreeTask.TASK_DESCRIPTION_VALUE,
+        addTaskToProject(project, CompileJjtreeTask.class, CompileJjtreeTask.TASK_NAME_VALUE, CompileJjtreeTask.TASK_DESCRIPTION_VALUE,
             JavaccPlugin.GROUP, configuration);
     }
 

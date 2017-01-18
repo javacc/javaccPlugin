@@ -18,14 +18,14 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
     }
 
     private void configureCompileJJTreeTask(Project project) {
-        CompileJjTreeTask compileJJTreeTask = (CompileJjTreeTask) project.getTasks().findByName(CompileJjTreeTask.TASK_NAME_VALUE);
-        if (compileJJTreeTask == null) {
+        CompileJjtreeTask compileJjtreeTask = (CompileJjtreeTask) project.getTasks().findByName(CompileJjtreeTask.TASK_NAME_VALUE);
+        if (compileJjtreeTask == null) {
             return;
         }
 
-        if (!compileJJTreeTask.getSource().isEmpty()) {
+        if (!compileJjtreeTask.getSource().isEmpty()) {
             addJJTreeDependencyToJavaccCompileTask(project.getTasks().withType(JavaCompile.class),
-                project.getTasks().withType(CompileJavaccTask.class), compileJJTreeTask);
+                project.getTasks().withType(CompileJavaccTask.class), compileJjtreeTask);
         }
     }
 
@@ -44,15 +44,15 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
     }
 
     private void addJJTreeDependencyToJavaccCompileTask(TaskCollection<JavaCompile> javaCompilationTasks,
-        TaskCollection<CompileJavaccTask> javaccCompilationTasks, CompileJjTreeTask compileJJTreeTask) {
+        TaskCollection<CompileJavaccTask> javaccCompilationTasks, CompileJjtreeTask compileJjtreeTask) {
         for (JavaCompile task : javaCompilationTasks) {
-            task.dependsOn(compileJJTreeTask);
-            task.source(compileJJTreeTask.getOutputDirectory());
+            task.dependsOn(compileJjtreeTask);
+            task.source(compileJjtreeTask.getOutputDirectory());
         }
 
         for (CompileJavaccTask task : javaccCompilationTasks) {
-            task.dependsOn(compileJJTreeTask);
-            task.source(compileJJTreeTask.getOutputDirectory());
+            task.dependsOn(compileJjtreeTask);
+            task.source(compileJjtreeTask.getOutputDirectory());
         }
     }
 }

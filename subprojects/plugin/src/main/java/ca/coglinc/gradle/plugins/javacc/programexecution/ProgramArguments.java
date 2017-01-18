@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc;
+package ca.coglinc.gradle.plugins.javacc.programexecution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,22 @@ import org.apache.commons.lang3.StringUtils;
 
 public class ProgramArguments {
     private static final String JAVACC_PROGRAM_ARGUMENT_FORMAT = "-%1$s=%2$s";
-    
+
     private final List<String> programArguments = new ArrayList<String>();
     private boolean filenameAdded;
+
+    public ProgramArguments() {
+    }
+
+    public ProgramArguments(ProgramArguments source) {
+        if (source != null) {
+            for (String keyValue : source.programArguments) {
+                add(null, keyValue);
+            }
+
+            filenameAdded = source.filenameAdded;
+        }
+    }
 
     public void addAll(Map<String, String> arguments) {
         if (arguments != null) {
@@ -25,7 +38,7 @@ public class ProgramArguments {
         if (!StringUtils.isEmpty(name)) {
             argument = String.format(JAVACC_PROGRAM_ARGUMENT_FORMAT, name, value);
         }
-        
+
         if (!filenameAdded) {
             programArguments.add(argument);
         } else {
@@ -54,12 +67,17 @@ public class ProgramArguments {
             programArguments.remove(programArguments.size() - 1);
             filenameAdded = false;
         }
-        
+
         add(null, filename);
         filenameAdded = true;
     }
 
     public String getFilename() {
         return programArguments.get(programArguments.size() - 1);
+    }
+
+    @Override
+    public String toString() {
+        return programArguments.toString();
     }
 }

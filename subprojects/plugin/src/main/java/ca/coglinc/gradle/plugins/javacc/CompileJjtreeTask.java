@@ -10,18 +10,18 @@ import ca.coglinc.gradle.plugins.javacc.compiler.CompilerInputOutputConfiguratio
 import ca.coglinc.gradle.plugins.javacc.compiler.JavaccCompilerInputOutputConfiguration;
 import ca.coglinc.gradle.plugins.javacc.compiler.JavaccSourceFileCompiler;
 import ca.coglinc.gradle.plugins.javacc.compiler.SourceFileCompiler;
-import ca.coglinc.gradle.plugins.javacc.programexecution.JavaccProgramInvoker;
+import ca.coglinc.gradle.plugins.javacc.programexecution.JjtreeProgramInvoker;
 import ca.coglinc.gradle.plugins.javacc.programexecution.ProgramArguments;
 
-public class CompileJavaccTask extends AbstractJavaccTask {
-    public static final String TASK_NAME_VALUE = "compileJavacc";
-    public static final String TASK_DESCRIPTION_VALUE = "Compiles JavaCC files into Java files";
+public class CompileJjtreeTask extends AbstractJavaccTask {
+    public static final String TASK_NAME_VALUE = "compileJjtree";
+    public static final String TASK_DESCRIPTION_VALUE = "Compiles JJTree files into JavaCC files";
 
-    private static final String DEFAULT_INPUT_DIRECTORY = File.separator + "src" + File.separator + "main" + File.separator + "javacc";
-    private static final String DEFAULT_OUTPUT_DIRECTORY = File.separator + "generated" + File.separator + "javacc";
+    private static final String DEFAULT_INPUT_DIRECTORY = File.separator + "src" + File.separator + "main" + File.separator + "jjtree";
+    private static final String DEFAULT_OUTPUT_DIRECTORY = File.separator + "generated" + File.separator + "jjtree";
 
-    public CompileJavaccTask() {
-        super(CompileJavaccTask.DEFAULT_INPUT_DIRECTORY, CompileJavaccTask.DEFAULT_OUTPUT_DIRECTORY, "**/*" + JavaccProgramInvoker.SUPPORTED_FILE_SUFFIX);
+    public CompileJjtreeTask() {
+        super(CompileJjtreeTask.DEFAULT_INPUT_DIRECTORY, CompileJjtreeTask.DEFAULT_OUTPUT_DIRECTORY, "**/*" + JjtreeProgramInvoker.SUPPORTED_FILE_SUFFIX);
     }
 
     @TaskAction
@@ -29,10 +29,10 @@ public class CompileJavaccTask extends AbstractJavaccTask {
         TaskCollection<JavaCompile> javaCompileTasks = this.getProject().getTasks().withType(JavaCompile.class);
         CompilerInputOutputConfiguration inputOutputDirectories
             = new JavaccCompilerInputOutputConfiguration(getInputDirectory(), getOutputDirectory(), getSource(), javaCompileTasks);
-        JavaccProgramInvoker javaccInvoker = new JavaccProgramInvoker(getProject(), getClasspath(), inputOutputDirectories.getTempOutputDirectory());
+        JjtreeProgramInvoker jjtreeInvoker = new JjtreeProgramInvoker(getProject(), getClasspath(), inputOutputDirectories.getTempOutputDirectory());
         ProgramArguments arguments = new ProgramArguments();
         arguments.addAll(getArguments());
-        SourceFileCompiler compiler = new JavaccSourceFileCompiler(javaccInvoker, arguments, inputOutputDirectories, getLogger());
+        SourceFileCompiler compiler = new JavaccSourceFileCompiler(jjtreeInvoker, arguments, inputOutputDirectories, getLogger());
 
         compiler.createTempOutputDirectory();
         compiler.compileSourceFilesToTempOutputDirectory();

@@ -133,7 +133,7 @@ The following command can be used to release the project, upload to Maven Centra
 
 ## Changelog
 
-### 2.5.0
+### 3.0.0
 - Fix acceptance tests under Windows [Pull Request #37](https://github.com/johnmartel/javaccPlugin/pull/37)
 
 ### 2.4.0
