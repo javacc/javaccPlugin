@@ -8,7 +8,7 @@ import org.gradle.api.logging.Logger;
 /**
  * Implementations invoke a program to compile source files.
  *
- * @see {@link ca.coglinc.gradle.plugins.javacc.programexecution.ProgramInvoker}
+ * @see ca.coglinc.gradle.plugins.javacc.programexecution.ProgramInvoker
  */
 public interface SourceFileCompiler {
 

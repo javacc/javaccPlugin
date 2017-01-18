@@ -17,7 +17,7 @@ import ca.coglinc.gradle.plugins.javacc.programexecution.ProgramInvoker;
 
 /**
  * This {@link SourceFileCompiler} implementation invokes JavaCC programs to compile supported files to Java or JavaCC files.
- * <p/>
+ * <p></p>
  * It supports the following programs:
  * <ul>
  *     <li>JavaCC</li>
