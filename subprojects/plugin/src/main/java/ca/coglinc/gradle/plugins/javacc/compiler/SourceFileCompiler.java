@@ -5,6 +5,8 @@ import java.io.File;
 import org.gradle.api.file.RelativePath;
 import org.gradle.api.logging.Logger;
 
+import ca.coglinc.gradle.plugins.javacc.Language;
+
 /**
  * Implementations invoke a program to compile source files.
  *
@@ -33,4 +35,6 @@ public interface SourceFileCompiler {
     void createTempOutputDirectory();
 
     void cleanTempOutputDirectory();
+
+    Language getLanguage();
 }

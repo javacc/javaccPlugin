@@ -28,9 +28,12 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import ca.coglinc.gradle.plugins.javacc.Language;
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FileUtils.class)
 public class CompiledJavaccFileTest {
+    private Language language = Language.Java;
     private File outputDirectory;
     private FileTree customAstClassesDirectory;
     private File targetDirectory;
@@ -57,7 +60,7 @@ public class CompiledJavaccFileTest {
     @Test
     public void customAstClassDoesNotExist() {
         File file = new File(outputDirectory, "FileWithNoCorrespondingCustomAstClass.java");
-        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
         
         boolean customAstClassExists = compiledJavaccFile.customAstClassExists();
         
@@ -67,7 +70,7 @@ public class CompiledJavaccFileTest {
     @Test
     public void customAstClassExists() {
         File file = new File(outputDirectory, "FileWithCorrespondingCustomAstClass.java");
-        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
         
         boolean customAstClassExists = compiledJavaccFile.customAstClassExists();
         
@@ -77,7 +80,7 @@ public class CompiledJavaccFileTest {
     @Test
     public void customAstClassDoesNotExistInSpecificDirectory() {
         File file = new File(outputDirectory, "FileWithNoCorrespondingCustomAstClass.java");
-        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
         
         boolean customAstClassExists = compiledJavaccFile.customAstClassExists(customAstClassesDirectory);
         
@@ -87,7 +90,7 @@ public class CompiledJavaccFileTest {
     @Test
     public void customAstClassExistsInSpecificDirectory() {
         File file = new File(outputDirectory, "FileWithCorrespondingCustomAstClass.java");
-        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
         
         boolean customAstClassExists = compiledJavaccFile.customAstClassExists(customAstClassesDirectory);
         
@@ -97,7 +100,7 @@ public class CompiledJavaccFileTest {
     @Test
     public void customAstClassCantExistInNullDirectory() {
         File file = new File(outputDirectory, "FileWithCorrespondingCustomAstClass.java");
-        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
         
         boolean customAstClassExists = compiledJavaccFile.customAstClassExists(null);
         
@@ -110,7 +113,7 @@ public class CompiledJavaccFileTest {
         assertFalse(expectedFile.exists());
         
         File file = new File(outputDirectory, "FileWithNoCorrespondingCustomAstClass.java");
-        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
         
         compiledJavaccFile.copyCompiledFileToTargetDirectory();
         
@@ -120,7 +123,7 @@ public class CompiledJavaccFileTest {
     @Test(expected = CompiledJavaccFileOperationException.class)
     public void copyCompiledFileToTargetDirectoryFails() {
         File file = new File(outputDirectory, "DoesNotExist.java");
-        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
         
         compiledJavaccFile.copyCompiledFileToTargetDirectory();
     }
@@ -131,7 +134,7 @@ public class CompiledJavaccFileTest {
         assertFalse(expectedFile.exists());
         
         File file = new File(outputDirectory, "FileWithCorrespondingCustomAstClass.java");
-        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
         
         compiledJavaccFile.copyCustomAstClassToTargetDirectory(customAstClassesDirectory);
         
@@ -145,7 +148,7 @@ public class CompiledJavaccFileTest {
         FileUtils.copyFile(any(File.class), any(File.class));
         
         File file = new File(outputDirectory, "FileWithCorrespondingCustomAstClass.java");
-        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
         
         compiledJavaccFile.copyCustomAstClassToTargetDirectory(customAstClassesDirectory);
     }
@@ -153,7 +156,7 @@ public class CompiledJavaccFileTest {
     @Test
     public void toStringReturnsAbsoluteFileName() {
         File file = new File(outputDirectory, "FileWithCorrespondingCustomAstClass.java");
-        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
         
         String stringValue = compiledJavaccFile.toString();
         
@@ -164,7 +167,7 @@ public class CompiledJavaccFileTest {
     public void ignoreCompiledFileAndUseCustomAstClassFromJavaSourceTreeOnlyLogsThatCompiledFileIsNotActedUpon() {
         File file = mock(File.class);
         FileTree javaSourceTree = mock(FileTree.class);
-        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+        CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
         
         compiledJavaccFile.ignoreCompiledFileAndUseCustomAstClassFromJavaSourceTree(javaSourceTree);
         

@@ -15,6 +15,7 @@ import org.gradle.api.tasks.SourceTask;
 
 public abstract class AbstractJavaccTask extends SourceTask {
     protected Map<String, String> programArguments;
+    protected Language language = Language.Java;
 
     private File inputDirectory;
     private File outputDirectory;
@@ -79,6 +80,15 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
         return this;
     }
+
+	public void setLanguage(Language language) {
+		this.language = language;
+	}
+
+    @Internal
+    protected Language getLanguage() {
+		return language;
+	}
 
     @Internal
     protected Configuration getClasspath() {

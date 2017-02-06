@@ -32,7 +32,7 @@ public class CompileJavaccTask extends AbstractJavaccTask {
         JavaccProgramInvoker javaccInvoker = new JavaccProgramInvoker(getProject(), getClasspath(), inputOutputDirectories.getTempOutputDirectory());
         ProgramArguments arguments = new ProgramArguments();
         arguments.addAll(getArguments());
-        SourceFileCompiler compiler = new JavaccSourceFileCompiler(javaccInvoker, arguments, inputOutputDirectories, getLogger());
+        SourceFileCompiler compiler = new JavaccSourceFileCompiler(language, javaccInvoker, arguments, inputOutputDirectories, getLogger());
 
         compiler.createTempOutputDirectory();
         compiler.compileSourceFilesToTempOutputDirectory();
