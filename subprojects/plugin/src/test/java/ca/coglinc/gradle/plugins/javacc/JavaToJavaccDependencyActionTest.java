@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.Mockito;
+import org.mockito.internal.verification.Times;
+import org.mockito.verification.VerificationMode;
 
 public class JavaToJavaccDependencyActionTest {
     private JavaccPlugin plugin;
@@ -171,7 +173,11 @@ public class JavaToJavaccDependencyActionTest {
 
         action.execute(project);
 
-        Mockito.verify(project).getPlugins();
+        Mockito.verify(project, times(2)).getPlugins();
         Mockito.verifyNoMoreInteractions(project);
     }
+
+	private VerificationMode times(int i) {
+		return new Times(i);
+	}
 }
