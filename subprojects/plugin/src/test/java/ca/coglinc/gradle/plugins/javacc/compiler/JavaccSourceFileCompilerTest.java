@@ -168,7 +168,7 @@ public class JavaccSourceFileCompilerTest {
         when(compiledFilesDirectory.listFiles()).thenReturn(Arrays.asList(compiledFile));
 
         CompiledJavaccFilesDirectoryFactory factory = mock(CompiledJavaccFilesDirectoryFactory.class);
-        when(factory.getCompiledJavaccFilesDirectory(language, any(File.class), any(FileTree.class), any(File.class), any(Logger.class))).thenReturn(compiledFilesDirectory);
+        when(factory.getCompiledJavaccFilesDirectory(any(Language.class), any(File.class), any(FileTree.class), any(File.class), any(Logger.class))).thenReturn(compiledFilesDirectory);
 
         ((JavaccSourceFileCompiler) compiler).setCompiledJavaccFilesDirectoryFactoryForTest(factory);
     }
