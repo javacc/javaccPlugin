@@ -1,12 +1,12 @@
 package javacc.compilation;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class ThePluginCompilesJavaccToExpectedDirectoryStory {
     private static final String CLEAN = "clean";
@@ -374,6 +374,6 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
         BuildResult buildResult = steps.withArguments(COMPILE_JAVACC).execute();
 
-        steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.UP_TO_DATE);
+        steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.NO_SOURCE);
     }
 }
