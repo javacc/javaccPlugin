@@ -104,7 +104,7 @@ tasks.withType(FindBugs) {
 task acceptanceTest(type: Test) {
     mustRunAfter test
 
-    testClassesDir = sourceSets.acceptanceTest.output.classesDir
+    testClassesDirs = sourceSets.acceptanceTest.output.classesDirs
     classpath = sourceSets.acceptanceTest.runtimeClasspath
 }
 
