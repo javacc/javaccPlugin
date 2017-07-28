@@ -1,10 +1,10 @@
 package javacc.compilation;
 
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-
-import org.junit.Test;
 
 public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
     private static final String CLEAN = "clean";
@@ -33,6 +33,24 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         steps.givenAProjectNamed("simpleTest");
         steps.withArguments(CLEAN, JJDOC).execute();
         steps.withArguments(JJDOC).withArguments("--rerun-tasks").execute();
+
+        String buildDirectory = "build" + File.separator + "generated";
+
+        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "javacc");
+        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "jjtree");
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + JJDOC);
+        steps.andAssertFileWasGenerated("MyParser.html");
+    }
+
+    @Test
+    public void givenASimpleProjectWithGradle33() throws URISyntaxException, IOException {
+        CompilationSteps steps = new CompilationSteps();
+
+        steps.givenAProjectNamed("simpleTest");
+        steps.withArguments(CLEAN, JJDOC).execute();
+        steps.withArguments(JJDOC).withArguments("--rerun-tasks");
+        steps.withGradleVersion("3.3").execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
