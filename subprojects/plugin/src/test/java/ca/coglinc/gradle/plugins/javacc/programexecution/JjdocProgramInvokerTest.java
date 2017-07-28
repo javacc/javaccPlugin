@@ -1,5 +1,19 @@
 package ca.coglinc.gradle.plugins.javacc.programexecution;
 
+import org.gradle.api.Project;
+import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.file.RelativePath;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -9,18 +23,6 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
-
-import org.gradle.api.Project;
-import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.file.RelativePath;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.rules.TemporaryFolder;
 
 public class JjdocProgramInvokerTest {
 
@@ -85,8 +87,17 @@ public class JjdocProgramInvokerTest {
 
         ProgramArguments augmentedArguments = programInvoker.augmentArguments(inputDirectory, fileToCompile, arguments);
 
-        String expectedOutputFileArgument = String.format("-OUTPUT_FILE=%s/%s.%s", tempOutputDirectory.getAbsolutePath(), "MyClass", extension);
-        assertThat(augmentedArguments.get(augmentedArguments.size() - 1), is(equalTo(expectedOutputFileArgument)));
+        Pattern pathPat = Pattern.compile(String.format("^-OUTPUT_FILE=(.*)[\\\\/]%s\\.%s$", "MyClass", extension));
+
+        String result = augmentedArguments.get(augmentedArguments.size() - 1);
+
+        Matcher matcher = pathPat.matcher(result);
+
+        assertThat(matcher.matches(), is(true));
+
+        String tempPath = matcher.group(1);
+
+        assertThat(tempPath, is(equalTo(tempOutputDirectory.getAbsolutePath())));
     }
 
     @Test
