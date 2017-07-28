@@ -1,7 +1,6 @@
 package javacc.compilation;
 
 import org.gradle.testkit.runner.BuildResult;
-import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.Test;
 
 import java.io.File;
@@ -18,6 +17,37 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
 
         steps.givenAProjectNamed("simpleTest");
         steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
+
+        String buildDirectory = "build" + File.separator + "generated";
+
+        steps.thenAssertOutputDirectoryDoesNotExists(buildDirectory + File.separator + "jjtree");
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "javacc");
+        steps.andAssertFileWasGenerated("MyParser.java");
+        steps.andAssertFileWasGenerated("MyParserConstants.java");
+        steps.andAssertFileWasGenerated("MyParserTokenManager.java");
+        steps.andAssertFileWasGenerated("ParseException.java");
+        steps.andAssertFileWasGenerated("SimpleCharStream.java");
+        steps.andAssertFileWasGenerated("Token.java");
+        steps.andAssertFileWasGenerated("TokenMgrError.java");
+
+        steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "javacc" + File.separator + "test" + File.separator + "pkg");
+        steps.andAssertFileWasGenerated("JavaccOutputTest.java");
+        steps.andAssertFileWasGenerated("JavaccOutputTestConstants.java");
+        steps.andAssertFileWasGenerated("JavaccOutputTestTokenManager.java");
+        steps.andAssertFileWasGenerated("ParseException.java");
+        steps.andAssertFileWasGenerated("SimpleCharStream.java");
+        steps.andAssertFileWasGenerated("Token.java");
+        steps.andAssertFileWasGenerated("TokenMgrError.java");
+    }
+
+    @Test
+    public void givenASimpleProjectOnGradle33() throws URISyntaxException, IOException {
+        CompilationSteps steps = new CompilationSteps();
+
+        steps.givenAProjectNamed("simpleTest");
+        steps.withArguments(CLEAN, COMPILE_JAVACC);
+        steps.withGradleVersion("3.3").execute();
 
         String buildDirectory = "build" + File.separator + "generated";
 
@@ -374,6 +404,6 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
         BuildResult buildResult = steps.withArguments(COMPILE_JAVACC).execute();
 
-        steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.NO_SOURCE);
+        steps.thenAssertTaskWasWithoutSources(buildResult, ":compileJavacc");
     }
 }

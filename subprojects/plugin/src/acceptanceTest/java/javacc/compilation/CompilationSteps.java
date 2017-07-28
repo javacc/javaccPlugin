@@ -1,20 +1,23 @@
 package javacc.compilation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.gradle.testkit.runner.BuildResult;
+import org.gradle.testkit.runner.GradleRunner;
+import org.gradle.testkit.runner.TaskOutcome;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.gradle.testkit.runner.BuildResult;
-import org.gradle.testkit.runner.GradleRunner;
-import org.gradle.testkit.runner.TaskOutcome;
+import static org.gradle.internal.impldep.org.hamcrest.CoreMatchers.anyOf;
+import static org.gradle.internal.impldep.org.hamcrest.CoreMatchers.is;
+import static org.gradle.internal.impldep.org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class CompilationSteps {
     private File projectDirectory;
@@ -50,6 +53,11 @@ public class CompilationSteps {
         buildRunner.withArguments(allArguments);
         buildRunner.forwardOutput();
 
+        return this;
+    }
+
+    public CompilationSteps withGradleVersion(String version) {
+        buildRunner.withGradleVersion(version);
         return this;
     }
 
@@ -90,5 +98,9 @@ public class CompilationSteps {
 
     public void thenAssertTaskStatus(BuildResult buildResult, String taskPath, TaskOutcome expectedOutcome) {
         assertEquals(expectedOutcome, buildResult.task(taskPath).getOutcome());
+    }
+
+    public void thenAssertTaskWasWithoutSources(BuildResult buildResult, String taskPath) {
+        assertThat(buildResult.task(taskPath).getOutcome(), anyOf(is(TaskOutcome.NO_SOURCE), is(TaskOutcome.UP_TO_DATE)));
     }
 }
