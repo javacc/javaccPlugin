@@ -1,18 +1,19 @@
 package ca.coglinc.gradle.plugins.javacc;
 
-import java.io.File;
-
-import org.gradle.api.tasks.TaskAction;
-import org.gradle.api.tasks.TaskCollection;
-import org.gradle.api.tasks.compile.JavaCompile;
-
 import ca.coglinc.gradle.plugins.javacc.compiler.CompilerInputOutputConfiguration;
 import ca.coglinc.gradle.plugins.javacc.compiler.JavaccCompilerInputOutputConfiguration;
 import ca.coglinc.gradle.plugins.javacc.compiler.JavaccSourceFileCompiler;
 import ca.coglinc.gradle.plugins.javacc.compiler.SourceFileCompiler;
 import ca.coglinc.gradle.plugins.javacc.programexecution.JjtreeProgramInvoker;
 import ca.coglinc.gradle.plugins.javacc.programexecution.ProgramArguments;
+import org.gradle.api.tasks.CacheableTask;
+import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.TaskCollection;
+import org.gradle.api.tasks.compile.JavaCompile;
 
+import java.io.File;
+
+@CacheableTask
 public class CompileJjtreeTask extends AbstractJavaccTask {
     public static final String TASK_NAME_VALUE = "compileJjtree";
     public static final String TASK_DESCRIPTION_VALUE = "Compiles JJTree files into JavaCC files";
