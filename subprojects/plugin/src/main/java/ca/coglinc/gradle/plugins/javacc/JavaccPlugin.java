@@ -60,7 +60,7 @@ public class JavaccPlugin implements Plugin<Project> {
     }
 
     private void addTaskToProject(Project project, Class<? extends AbstractJavaccTask> type, String name, String description, String group, Configuration configuration) {
-        Map<String, Object> options = new HashMap<String, Object>(2);
+        Map<String, Object> options = new HashMap<String, Object>(3);
 
         options.put(Task.TASK_TYPE, type);
         options.put(Task.TASK_DESCRIPTION, description);
