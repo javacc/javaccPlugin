@@ -1,10 +1,5 @@
 package ca.coglinc.gradle.plugins.javacc.compiler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -17,6 +12,11 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import ca.coglinc.gradle.plugins.javacc.JavaccTaskException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class NonJavaccSourceFileVisitorTest {
     private static final String TEXT_INPUT_FILENAME = "test.txt";

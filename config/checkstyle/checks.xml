@@ -63,7 +63,7 @@
     </module>
     <module name="ImportOrder">
       <property name="severity" value="warning"/>
-      <property name="option" value="top"/>
+      <property name="option" value="bottom"/>
       <property name="groups" value="java,javax,org,com,javassist"/>
       <property name="separated" value="true"/>
     </module>

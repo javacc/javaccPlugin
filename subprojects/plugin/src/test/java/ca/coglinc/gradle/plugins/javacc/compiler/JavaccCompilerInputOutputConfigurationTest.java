@@ -1,13 +1,5 @@
 package ca.coglinc.gradle.plugins.javacc.compiler;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,6 +18,14 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import ca.coglinc.gradle.plugins.javacc.CompileJavaccTask;
+
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 public class JavaccCompilerInputOutputConfigurationTest {
 

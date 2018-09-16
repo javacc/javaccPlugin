@@ -40,7 +40,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
     @InputDirectory
     @SkipWhenEmpty
-    @PathSensitive(PathSensitivity.NONE)
+    @PathSensitive(PathSensitivity.RELATIVE)
     @Optional
     public File getInputDirectory() {
         if (!inputDirectory.exists()) {

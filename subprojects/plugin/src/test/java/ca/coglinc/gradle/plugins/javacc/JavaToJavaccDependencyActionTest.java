@@ -1,8 +1,5 @@
 package ca.coglinc.gradle.plugins.javacc;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.Mockito;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class JavaToJavaccDependencyActionTest {
     private JavaccPlugin plugin;

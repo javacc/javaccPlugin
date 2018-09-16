@@ -1,5 +1,11 @@
 package ca.coglinc.gradle.plugins.javacc.programexecution;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -9,12 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
 
 public class ProgramArgumentsTest {
     private ProgramArguments arguments;

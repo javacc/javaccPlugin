@@ -1,13 +1,13 @@
 package ca.coglinc.gradle.plugins.javacc.programexecution;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import org.gradle.api.Action;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.process.JavaExecSpec;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class JavaccExecutorActionTest {
     private JavaExecSpec javaExecSpec;
