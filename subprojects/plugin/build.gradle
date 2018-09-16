@@ -27,7 +27,6 @@ configurations {
 }
 
 dependencies {
-    compile gradleApi()
     compile('commons-io:commons-io:2.4') {
         force = true
     }
