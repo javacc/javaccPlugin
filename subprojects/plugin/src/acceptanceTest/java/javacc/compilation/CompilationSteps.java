@@ -30,7 +30,7 @@ public class CompilationSteps {
 
         projectDirectory = new File(resource.toURI());
 
-        buildRunner = GradleRunner.create().withGradleVersion("3.4").withProjectDir(projectDirectory).withPluginClasspath();
+        buildRunner = GradleRunner.create().withGradleVersion("3.4.1").withProjectDir(projectDirectory).withPluginClasspath();
     }
 
     private void ensureGivens() {
