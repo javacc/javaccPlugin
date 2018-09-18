@@ -84,7 +84,7 @@ public class JjdocProgramInvokerTest {
         RelativePath fileToCompile = new RelativePath(true, "MyClass.jj");
 
         ProgramArguments augmentedArguments = programInvoker.augmentArguments(inputDirectory, fileToCompile, arguments);
-        
+
         String expectedOutputFileArgument = String.format("-OUTPUT_FILE=%s" + File.separator + "%s.%s", tempOutputDirectory.getAbsolutePath(), "MyClass", extension);
         assertThat(augmentedArguments.get(augmentedArguments.size() - 1), is(equalTo(expectedOutputFileArgument)));
     }
