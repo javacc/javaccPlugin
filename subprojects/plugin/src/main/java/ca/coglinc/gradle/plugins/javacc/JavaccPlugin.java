@@ -2,6 +2,7 @@ package ca.coglinc.gradle.plugins.javacc;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
@@ -9,8 +10,6 @@ import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencySet;
-
-import com.google.common.util.concurrent.Callables;
 
 public class JavaccPlugin implements Plugin<Project> {
     public static final String GROUP = "JavaCC";
@@ -59,7 +58,7 @@ public class JavaccPlugin implements Plugin<Project> {
             JavaccPlugin.GROUP, configuration);
     }
 
-    private void addTaskToProject(Project project, Class<? extends AbstractJavaccTask> type, String name, String description, String group, Configuration configuration) {
+    private void addTaskToProject(Project project, Class<? extends AbstractJavaccTask> type, String name, String description, String group, final Configuration configuration) {
         Map<String, Object> options = new HashMap<String, Object>(3);
 
         options.put(Task.TASK_TYPE, type);
@@ -67,11 +66,21 @@ public class JavaccPlugin implements Plugin<Project> {
         options.put(Task.TASK_GROUP, group);
 
         AbstractJavaccTask task = (AbstractJavaccTask) project.task(options, name);
-        task.getConventionMapping().map("classpath", Callables.returning(configuration));
+        task.getConventionMapping().map("classpath", returning(configuration));
     }
 
     private void configureTaskDependencies(Project project) {
         JavaToJavaccDependencyAction compileJavaDependsOnCompileJavacc = new JavaToJavaccDependencyAction();
         project.afterEvaluate(compileJavaDependsOnCompileJavacc);
     }
+
+    private static <T> Callable<T> returning(final T value) {
+        return new Callable<T>() {
+            @Override
+            public T call() {
+                return value;
+            }
+        };
+    }
+
 }
