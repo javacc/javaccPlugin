@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/johnmartel/javaccPlugin.svg)](https://travis-ci.org/johnmartel/javaccPlugin)
 
+:warning: **This project is looking for a new maintainer**
+It has been long overdue that I look at Pull Requests, migrate the build system to Gradle 6, make bug fixes, etc. Unfortunately, I have moved to other projects since first introducing this plugin, am no longer using JavaCC on a regular basis and can't anymore spend the time maintaining the plugin the users are entitled to expect. Given all this, I am ready to hand the repository to a new maintainer that is ready to give it the love it deserves. Simply contact me in PM and we'll work it out.
+
 Provides the ability to use [JavaCC](http://javacc.java.net/) via [Gradle](http://www.gradle.org/). If the 'java' plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.
 
 ## Installation
