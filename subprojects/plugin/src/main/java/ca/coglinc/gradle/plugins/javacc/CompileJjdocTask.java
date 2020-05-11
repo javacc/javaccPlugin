@@ -32,7 +32,7 @@ public class CompileJjdocTask extends AbstractJavaccTask {
         JjdocProgramInvoker jjdocInvoker = new JjdocProgramInvoker(getProject(), getClasspath(), inputOutputDirectories.getTempOutputDirectory());
         ProgramArguments arguments = new ProgramArguments();
         arguments.addAll(getArguments());
-        SourceFileCompiler compiler = new JavaccSourceFileCompiler(jjdocInvoker, arguments, inputOutputDirectories, getLogger());
+        SourceFileCompiler compiler = new JavaccSourceFileCompiler(language, jjdocInvoker, arguments, inputOutputDirectories, getLogger());
 
         compiler.createTempOutputDirectory();
         compiler.compileSourceFilesToTempOutputDirectory();

@@ -32,7 +32,7 @@ public class CompileJjtreeTask extends AbstractJavaccTask {
         JjtreeProgramInvoker jjtreeInvoker = new JjtreeProgramInvoker(getProject(), getClasspath(), inputOutputDirectories.getTempOutputDirectory());
         ProgramArguments arguments = new ProgramArguments();
         arguments.addAll(getArguments());
-        SourceFileCompiler compiler = new JavaccSourceFileCompiler(jjtreeInvoker, arguments, inputOutputDirectories, getLogger());
+        SourceFileCompiler compiler = new JavaccSourceFileCompiler(language, jjtreeInvoker, arguments, inputOutputDirectories, getLogger());
 
         compiler.createTempOutputDirectory();
         compiler.compileSourceFilesToTempOutputDirectory();

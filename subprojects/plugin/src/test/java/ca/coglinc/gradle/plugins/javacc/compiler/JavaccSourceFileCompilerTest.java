@@ -30,6 +30,7 @@ import org.junit.rules.TemporaryFolder;
 import org.mockito.ArgumentCaptor;
 
 import ca.coglinc.gradle.plugins.javacc.JavaccTaskException;
+import ca.coglinc.gradle.plugins.javacc.Language;
 import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFile;
 import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFilesDirectory;
 import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFilesDirectoryFactory;
@@ -37,6 +38,7 @@ import ca.coglinc.gradle.plugins.javacc.programexecution.ProgramArguments;
 import ca.coglinc.gradle.plugins.javacc.programexecution.ProgramInvoker;
 
 public class JavaccSourceFileCompilerTest {
+    private Language language = Language.Java;
 
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
@@ -64,7 +66,7 @@ public class JavaccSourceFileCompilerTest {
         compilerInputOutputConfiguration = givenCompilerConfiguration(source);
         logger = givenLogger();
 
-        compiler = new JavaccSourceFileCompiler(programInvoker, programArguments, compilerInputOutputConfiguration, logger);
+        compiler = new JavaccSourceFileCompiler(language, programInvoker, programArguments, compilerInputOutputConfiguration, logger);
     }
 
     private ProgramArguments givenProgramArguments() {
@@ -166,7 +168,7 @@ public class JavaccSourceFileCompilerTest {
         when(compiledFilesDirectory.listFiles()).thenReturn(Arrays.asList(compiledFile));
 
         CompiledJavaccFilesDirectoryFactory factory = mock(CompiledJavaccFilesDirectoryFactory.class);
-        when(factory.getCompiledJavaccFilesDirectory(any(File.class), any(FileTree.class), any(File.class), any(Logger.class))).thenReturn(compiledFilesDirectory);
+        when(factory.getCompiledJavaccFilesDirectory(any(Language.class), any(File.class), any(FileTree.class), any(File.class), any(Logger.class))).thenReturn(compiledFilesDirectory);
 
         ((JavaccSourceFileCompiler) compiler).setCompiledJavaccFilesDirectoryFactoryForTest(factory);
     }

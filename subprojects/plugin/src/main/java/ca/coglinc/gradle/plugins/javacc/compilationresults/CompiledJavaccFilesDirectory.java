@@ -9,13 +9,17 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.logging.Logger;
 
-public class CompiledJavaccFilesDirectory {
-    private File outputDirectory;
-    private FileTree customAstClassesDirectory;
-    private File targetDirectory;
-    private Logger logger;
+import ca.coglinc.gradle.plugins.javacc.Language;
 
-    CompiledJavaccFilesDirectory(File outputDirectory, FileTree customAstClassesDirectory, File targetDirectory, Logger logger) {
+public class CompiledJavaccFilesDirectory {
+	private final Language language;
+	private final File outputDirectory;
+    private final FileTree customAstClassesDirectory;
+    private final File targetDirectory;
+    private final Logger logger;
+
+    CompiledJavaccFilesDirectory(Language language, File outputDirectory, FileTree customAstClassesDirectory, File targetDirectory, Logger logger) {
+        this.language = language;
         this.outputDirectory = outputDirectory;
         this.customAstClassesDirectory = customAstClassesDirectory;
         this.targetDirectory = targetDirectory;
@@ -27,7 +31,7 @@ public class CompiledJavaccFilesDirectory {
         Collection<CompiledJavaccFile> compiledJavaccFiles = new ArrayList<CompiledJavaccFile>();
         
         for (File file : files) {
-            CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
+            CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(language, file, outputDirectory, customAstClassesDirectory, targetDirectory, logger);
             compiledJavaccFiles.add(compiledJavaccFile);
         }
         

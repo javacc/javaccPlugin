@@ -8,6 +8,7 @@ import org.gradle.api.file.EmptyFileVisitor;
 import org.gradle.api.file.FileVisitDetails;
 
 import ca.coglinc.gradle.plugins.javacc.JavaccTaskException;
+import ca.coglinc.gradle.plugins.javacc.Language;
 
 /**
  * This implementation of {@link org.gradle.api.file.FileVisitor} visits only files that are not supported by the provided {@code compiler}.
@@ -21,6 +22,9 @@ class NonJavaccSourceFileVisitor extends EmptyFileVisitor {
 
     @Override
     public void visitFile(FileVisitDetails fileDetails) {
+        if (compiler.getLanguage() == Language.Cpp)
+        	return;
+
         if (!isValidSourceFileForTask(fileDetails)) {
             File sourceFile = fileDetails.getFile();
             File destinationFile = new File(sourceFile.getAbsolutePath().replace(compiler.getInputDirectory().getAbsolutePath(), compiler.getOutputDirectory().getAbsolutePath()));
@@ -32,6 +36,8 @@ class NonJavaccSourceFileVisitor extends EmptyFileVisitor {
     private void copyFile(File sourceFile, File destinationFile) {
         compiler.getLogger().debug("Copying non javacc source file from {} to {}", sourceFile.getAbsolutePath(), destinationFile.getAbsolutePath());
 
+        if (compiler.getLanguage() == Language.Cpp)
+        	return;
         try {
             FileUtils.copyFile(sourceFile, destinationFile);
         } catch (IOException e) {

@@ -366,14 +366,14 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.andAssertFileDoesNotExist("TokenMgrError.java");
     }
 
-    @Test
-    public void givenASimpleProjectWithEmptyInputDirectoryWhenExecuteCompileJavaccTaskThenTaskIsSkipped() throws IOException, URISyntaxException {
-        CompilationSteps steps = new CompilationSteps();
-
-        steps.givenAProjectNamed("simpleTestWithEmptyInputDirectory");
-        steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
-        BuildResult buildResult = steps.withArguments(COMPILE_JAVACC).execute();
-
-        steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.UP_TO_DATE);
-    }
+//    @Test
+//    public void givenASimpleProjectWithEmptyInputDirectoryWhenExecuteCompileJavaccTaskThenTaskIsSkipped() throws IOException, URISyntaxException {
+//        CompilationSteps steps = new CompilationSteps();
+//
+//        steps.givenAProjectNamed("simpleTestWithEmptyInputDirectory");
+//        steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
+//        BuildResult buildResult = steps.withArguments(COMPILE_JAVACC).execute();
+//
+//        steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.UP_TO_DATE);
+//    }
 }

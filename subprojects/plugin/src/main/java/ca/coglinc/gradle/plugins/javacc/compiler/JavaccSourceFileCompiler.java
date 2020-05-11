@@ -9,6 +9,7 @@ import org.gradle.api.file.RelativePath;
 import org.gradle.api.logging.Logger;
 
 import ca.coglinc.gradle.plugins.javacc.JavaccTaskException;
+import ca.coglinc.gradle.plugins.javacc.Language;
 import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFile;
 import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFilesDirectory;
 import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFilesDirectoryFactory;
@@ -26,13 +27,15 @@ import ca.coglinc.gradle.plugins.javacc.programexecution.ProgramInvoker;
  * </ul>
  */
 public class JavaccSourceFileCompiler implements SourceFileCompiler {
+	private final Language language;
     private final ProgramInvoker programInvoker;
     private final ProgramArguments argumentsProvidedByTask;
     private final CompilerInputOutputConfiguration configuration;
     private CompiledJavaccFilesDirectoryFactory compiledJavaccFilesDirectoryFactory = new CompiledJavaccFilesDirectoryFactory();
     private final Logger logger;
 
-    public JavaccSourceFileCompiler(ProgramInvoker programInvoker, ProgramArguments argumentsProvidedByTask, CompilerInputOutputConfiguration configuration, Logger logger) {
+    public JavaccSourceFileCompiler(Language language, ProgramInvoker programInvoker, ProgramArguments argumentsProvidedByTask, CompilerInputOutputConfiguration configuration, Logger logger) {
+        this.language = language;
         this.programInvoker = programInvoker;
         this.argumentsProvidedByTask = argumentsProvidedByTask;
         this.configuration = configuration;
@@ -82,7 +85,7 @@ public class JavaccSourceFileCompiler implements SourceFileCompiler {
     @Override
     public void copyCompiledFilesFromTempOutputDirectoryToOutputDirectory() {
         CompiledJavaccFilesDirectory compiledJavaccFilesDirectory = compiledJavaccFilesDirectoryFactory.getCompiledJavaccFilesDirectory(
-            configuration.getTempOutputDirectory(), configuration.getCompleteSourceTree(), getOutputDirectory(), getLogger());
+            language, configuration.getTempOutputDirectory(), configuration.getCompleteSourceTree(), getOutputDirectory(), getLogger());
 
         for (CompiledJavaccFile compiledJavaccFile : compiledJavaccFilesDirectory.listFiles()) {
             FileTree javaSourceTree = configuration.getJavaSourceTree();
@@ -131,7 +134,12 @@ public class JavaccSourceFileCompiler implements SourceFileCompiler {
         return logger;
     }
 
-    void setCompiledJavaccFilesDirectoryFactoryForTest(CompiledJavaccFilesDirectoryFactory factory) {
+	@Override
+	public Language getLanguage() {
+		return language;
+	}
+
+	void setCompiledJavaccFilesDirectoryFactoryForTest(CompiledJavaccFilesDirectoryFactory factory) {
         compiledJavaccFilesDirectoryFactory = factory;
     }
 }
