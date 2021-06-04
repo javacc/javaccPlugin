@@ -119,8 +119,8 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = 'https://github.com/johnmartel/javaccPlugin'
-    vcsUrl = 'https://github.com/johnmartel/javaccPlugin'
+    website = 'https://github.com/javacc/javaccPlugin'
+    vcsUrl = 'https://github.com/javacc/javaccPlugin'
     description = 'A JavaCC plugin for Gradle'
     tags = ['javacc']
 
@@ -147,7 +147,7 @@ publishing {
             pom.withXml {
                 asNode().appendNode('name', project.getName())
                 asNode().appendNode('description', 'Provides the ability to use JavaCC with Gradle. Compiles JavaCC files to Java.')
-                asNode().appendNode('url', 'https://github.com/johnmartel/javaccPlugin')
+                asNode().appendNode('url', 'https://github.com/javacc/javaccPlugin')
 
                 def license = asNode().appendNode('licenses').appendNode('license')
                 license.appendNode('name', 'The MIT License (MIT)')
@@ -155,9 +155,9 @@ publishing {
                 license.appendNode('distribution', 'repo')
 
                 def scm = asNode().appendNode('scm')
-                scm.appendNode('url', 'https://github.com/johnmartel/javaccPlugin')
-                scm.appendNode('connection', 'scm:https://johnmartel@github.com/johnmartel/javaccPlugin.git')
-                scm.appendNode('developerConnection', 'scm:git://github.com/johnmartel/javaccPlugin.git')
+                scm.appendNode('url', 'https://github.com/javacc/javaccPlugin')
+                scm.appendNode('connection', 'scm:https://github.com/javacc/javaccPlugin.git')
+                scm.appendNode('developerConnection', 'scm:git://github.com/javacc/javaccPlugin.git')
 
                 def developer = asNode().appendNode('developers').appendNode('developer')
                 developer.appendNode('id', 'jmartel')
@@ -203,9 +203,9 @@ bintray {
         repo = 'maven'
         name = 'javacc-gradle-plugin'
         desc = 'Provides the ability to use JavaCC via Gradle. If the java plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.'
-        websiteUrl = 'https://github.com/johnmartel/javaccPlugin'
-        issueTrackerUrl = 'https://github.com/johnmartel/javaccPlugin/issues'
-        vcsUrl = 'https://github.com/johnmartel/javaccPlugin.git'
+        websiteUrl = 'https://github.com/javacc/javaccPlugin'
+        issueTrackerUrl = 'https://github.com/javacc/javaccPlugin/issues'
+        vcsUrl = 'https://github.com/javacc/javaccPlugin.git'
         licenses = ['MIT']
         labels = ['javacc', 'gradle']
         publicDownloadNumbers = true
