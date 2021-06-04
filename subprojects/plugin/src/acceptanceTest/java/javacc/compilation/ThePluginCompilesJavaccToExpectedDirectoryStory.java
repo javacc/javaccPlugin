@@ -374,6 +374,6 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         steps.withArguments(CLEAN, COMPILE_JAVACC).execute();
         BuildResult buildResult = steps.withArguments(COMPILE_JAVACC).execute();
 
-        steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.UP_TO_DATE);
+        steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.NO_SOURCE);
     }
 }
