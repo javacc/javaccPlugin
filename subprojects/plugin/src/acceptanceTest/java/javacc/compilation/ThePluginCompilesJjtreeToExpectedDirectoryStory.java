@@ -17,7 +17,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTree");
-        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJJTree").execute();
+        steps.withArguments(CLEAN, ":subprojects:subproject1:compileJJTree").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
@@ -38,7 +38,7 @@ public class ThePluginCompilesJjtreeToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTreeAndWithConfiguredInputsOutputs");
-        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJJTree").execute();
+        steps.withArguments(CLEAN, ":subprojects:subproject1:compileJJTree").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "output";
 

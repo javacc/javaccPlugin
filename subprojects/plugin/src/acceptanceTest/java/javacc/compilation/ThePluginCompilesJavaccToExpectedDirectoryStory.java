@@ -80,7 +80,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuild");
-        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
+        steps.withArguments(CLEAN, ":subprojects:subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
@@ -111,7 +111,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTree");
-        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
+        steps.withArguments(CLEAN, ":subprojects:subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
@@ -169,7 +169,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithConfiguredInputsOutputs");
-        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
+        steps.withArguments(CLEAN, ":subprojects:subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build";
 
@@ -200,7 +200,7 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithJJTreeAndWithConfiguredInputsOutputs");
-        steps.withArguments(CLEAN, ":subprojects/subproject1:compileJavacc").execute();
+        steps.withArguments(CLEAN, ":subprojects:subproject1:compileJavacc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "output";
 

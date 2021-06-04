@@ -68,7 +68,7 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuild");
-        steps.withArguments(CLEAN, ":subprojects/subproject1:jjdoc").execute();
+        steps.withArguments(CLEAN, ":subprojects:subproject1:jjdoc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build" + File.separator + "generated";
 
@@ -110,7 +110,7 @@ public class ThePluginProducesJjdocDocumentationToExpectedDirectory {
         CompilationSteps steps = new CompilationSteps();
 
         steps.givenAProjectNamed("multiprojectBuildWithConfiguredInputsOutputs");
-        steps.withArguments(CLEAN, ":subprojects/subproject1:jjdoc").execute();
+        steps.withArguments(CLEAN, ":subprojects:subproject1:jjdoc").execute();
 
         String buildDirectory = "subprojects" + File.separator + "subproject1" + File.separator + "build";
 
