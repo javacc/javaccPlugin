@@ -45,7 +45,6 @@ dependencies {
     compileOnly 'net.java.dev.javacc:javacc:6.1.2'
     testRuntime 'net.java.dev.javacc:javacc:6.1.2'
 
-    acceptanceTestCompile gradleTestKit()
     acceptanceTestCompile('commons-io:commons-io:2.4') {
         force = true
     }
@@ -83,14 +82,16 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
     }
 }
 
-task acceptanceTest(type: Test) {
+tasks.register('acceptanceTest', Test) {
     mustRunAfter test
 
     testClassesDirs = sourceSets.acceptanceTest.output.classesDirs
     classpath = sourceSets.acceptanceTest.runtimeClasspath
 }
 
-check.dependsOn acceptanceTest
+tasks.named('check') {
+    dependsOn acceptanceTest
+}
 
 jacocoTestReport {
     reports {
@@ -122,6 +123,7 @@ artifacts {
 }
 
 gradlePlugin {
+    testSourceSets sourceSets.acceptanceTest
     plugins {
         javaccPlugin {
             id = 'ca.coglinc.javacc'
