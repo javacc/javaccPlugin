@@ -11,7 +11,7 @@
 <module name="Checker">
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
-    <module name="FileContentsHolder"/>
+    <module name="SuppressionCommentFilter"/>
     <module name="AnnotationUseStyle">
       <property name="severity" value="warning"/>
     </module>
@@ -80,11 +80,6 @@
       <property name="severity" value="error"/>
       <property name="tokens" value="INSTANCE_INIT,STATIC_INIT,METHOD_DEF,CTOR_DEF"/>
     </module>
-    <module name="LineLength">
-      <property name="severity" value="info"/>
-      <property name="max" value="180"/>
-      <property name="tabWidth" value="4"/>
-    </module>
     <module name="MethodLength">
       <property name="severity" value="error"/>
       <property name="max" value="50"/>
@@ -148,7 +143,6 @@
     </module>
     <module name="LeftCurly">
       <property name="severity" value="warning"/>
-      <property name="maxLineLength" value="150"/>
     </module>
     <module name="NeedBraces">
       <property name="severity" value="warning"/>
@@ -217,6 +211,11 @@
     </module>
     <module name="CyclomaticComplexity"/>
   </module>
+  <module name="LineLength">
+    <property name="severity" value="info"/>
+    <property name="max" value="180"/>
+    <property name="tabWidth" value="4"/>
+  </module>
   <module name="FileLength">
     <property name="severity" value="error"/>
     <property name="max" value="1000"/>
@@ -227,5 +226,4 @@
   <module name="NewlineAtEndOfFile">
     <property name="severity" value="warning"/>
   </module>
-  <module name="SuppressionCommentFilter"/>
 </module>
