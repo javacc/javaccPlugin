@@ -44,7 +44,7 @@ eclipse {
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'javacc-gradle-plugin', 'Implementation-Version': version
+        attributes 'Implementation-Title': 'javacc-gradle-plugin', 'Implementation-Version': archiveVersion
     }
 }
 
