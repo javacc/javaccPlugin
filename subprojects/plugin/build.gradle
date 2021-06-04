@@ -13,7 +13,7 @@ plugins {
     id 'java-gradle-plugin'
     id 'com.jfrog.bintray' version '1.5'
     id 'checkstyle'
-    id 'findbugs'
+    id 'com.github.spotbugs' version '4.7.1'
     id 'jacoco'
     id 'maven-publish'
 }
@@ -82,18 +82,16 @@ checkstyle {
     configFile = file("${rootProject.projectDir}/config/checkstyle/checks.xml")
 }
 
-findbugs {
-    toolVersion = '3.0.1'
-    sourceSets = [sourceSets.main, sourceSets.test, sourceSets.acceptanceTest]
+spotbugs {
+    toolVersion = '4.2.1'
     effort = "min"
+    maxHeapSize = project.hasProperty('spotBugsHeapSize') ? project.spotBugsHeapSize : '1g'
     ignoreFailures = false
     reportLevel = "high"
     excludeFilter = file("${rootProject.projectDir}/config/findbugs/exclude.xml")
 }
 
-tasks.withType(FindBugs) {
-    maxHeapSize = project.hasProperty('findBugsHeapSize') ? project.findBugsHeapSize : '1g'
-
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
     reports {
         xml.enabled false
         html.enabled true
