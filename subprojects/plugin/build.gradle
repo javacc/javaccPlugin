@@ -42,6 +42,11 @@ eclipse {
     }
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'javacc-gradle-plugin', 'Implementation-Version': archiveVersion
@@ -87,24 +92,12 @@ jacocoTestReport {
     }
 }
 
-task sourceJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allJava
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-     classifier = 'javadoc'
-     from javadoc.destinationDir
-}
-
 task testJar(type: Jar, dependsOn: testClasses) {
     classifier 'tests'
     from sourceSets.acceptanceTest.output
 }
 
 artifacts {
-    archives sourceJar
-    archives javadocJar
     archives testJar
 }
 
@@ -136,13 +129,6 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
-
-            artifact sourceJar {
-                classifier "sources"
-            }
-            artifact javadocJar {
-                classifier "javadoc"
-            }
 
             pom.withXml {
                 asNode().appendNode('name', project.getName())
