@@ -15,7 +15,6 @@ plugins {
     id 'checkstyle'
     id 'findbugs'
     id 'jacoco'
-    id 'maven'
     id 'maven-publish'
 }
 
