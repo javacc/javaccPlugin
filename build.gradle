@@ -48,7 +48,3 @@ eclipse {
         name = 'javacc-gradle-plugin-root'
     }
 }
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.3'
-}
