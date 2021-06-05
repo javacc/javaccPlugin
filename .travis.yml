@@ -1,11 +1,14 @@
 language: java
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 addons:
   hosts:
     - localhost
   hostname: localhost
+  apt:
+    packages:
+      - openjdk-8-jdk
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
