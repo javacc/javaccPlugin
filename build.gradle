@@ -1,44 +1,13 @@
-allprojects{
-    apply plugin: 'eclipse'
-    apply plugin: 'idea'
+plugins {
+    id 'javaccPlugin.common-conventions'
 
-    group = 'ca.coglinc'
-version = '3.0.0'
-
-    repositories {
-        mavenCentral()
-    }
-
-    configurations.all {
-        resolutionStrategy {
-            failOnVersionConflict()
-        }
-    }
-
-    eclipse {
-        classpath {
-            defaultOutputDir = file('build-eclipse')
-            downloadSources = true
-            downloadJavadoc = true
-        }
-    }
+    id 'com.gradle.plugin-publish' version '0.14.0' apply false
+    id 'com.jfrog.bintray' version '1.8.5' apply false
 }
 
-project(':javacc-gradle-plugin') {
-    apply plugin: 'java'
-
-    sourceCompatibility = 1.6
-    targetCompatibility = 1.6
-
-    compileJava {
-        options.encoding = 'UTF-8'
-        options.compilerArgs = ['-Xlint:unchecked']
-    }
-
-    compileTestJava {
-        options.encoding = 'UTF-8'
-        options.compilerArgs = ['-Xlint:unchecked']
-    }
+allprojects {
+    group = 'ca.coglinc'
+    version = '3.0.0'
 }
 
 defaultTasks 'clean', ':javacc-gradle-plugin:build'
@@ -47,8 +16,4 @@ eclipse {
     project {
         name = 'javacc-gradle-plugin-root'
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.3'
 }

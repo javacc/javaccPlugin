@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.ajoberstar:gradle-git:0.9.0'
+        classpath 'org.ajoberstar:gradle-git:1.6.0'
     }
 }
 

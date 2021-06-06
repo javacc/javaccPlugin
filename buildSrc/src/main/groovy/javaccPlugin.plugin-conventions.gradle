@@ -1,0 +1,8 @@
+plugins {
+    id 'javaccPlugin.common-conventions'
+
+    id 'java-gradle-plugin'
+    id 'com.gradle.plugin-publish'
+    id 'com.jfrog.bintray'
+    id 'maven-publish'
+}

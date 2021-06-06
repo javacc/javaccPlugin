@@ -10,14 +10,16 @@ Simply grab the plugin from Maven Central:
 
 Add the following lines to your `build.gradle` script:
 
-Gradle 2.1+
+Using the plugins DSL:
+
 ```gradle
 plugins {
-  id "ca.coglinc.javacc" version "${project.version}"
+    id "ca.coglinc.javacc" version "${project.version}"
 }
 ```
 
-Gradle <2.1
+Using the legacy `buildscript` block:
+
 ```gradle
 buildscript {
     repositories {
@@ -27,21 +29,26 @@ buildscript {
         classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '${project.version}'
     }
 }
+
 apply plugin: 'ca.coglinc.javacc'
 ```
 
-## Building
+Refer to the [Gradle Plugins portal](https://plugins.gradle.org/plugin/ca.coglinc.javacc) for additional details about the installation procedure, including syntax for the Kotlin DSL.
+
+## Building from source
 
 To build, simply run the following command in the directory where you checked out the plugin source:
 
 `./gradlew clean build`
+
+**NOTE:** Currently, the plugin must be built with Java 8. The plugin itself will build successfully with Java 9+, but a number of the tests will fail due to incompatibility with the Java 9+ module system.
 
 ## Usage
 
 Place your JavaCC code into `src/main/javacc`.
 The generated Java code will be  put under `./build/generated/javacc` and will be compiled as part of the Java compile.
 
-Place you JJTree code into `src/main/jjtree`
+Place your JJTree code into `src/main/jjtree`
 The generated Java code will be  put under `./build/generated/jjtree` and will be compiled as part of the JavaCC compile.
 
 You can configure the input/output directory by configuring the compileJavacc task:
@@ -118,9 +125,9 @@ jjdoc {
 
 ## Compatibility
 
-This plugin requires Java 6+.
+This plugin requires Java 8+.
 
-It has been tested with Gradle 1.11+. Please let us know if you have had success with other versions of Gradle.
+It has been tested with Gradle 6.0.1+. Please let us know if you have had success with other versions of Gradle.
 
 ## Signature
 
@@ -129,12 +136,17 @@ The artifacts for this plugin are signed using the [PGP key](http://pgp.mit.edu:
 ## Releasing
 
 The following command can be used to release the project, upload to Maven Central and upload to Bintray:
-```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/johnmartel/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
+```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/javacc/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
 
 ## Changelog
 
 ### 3.0.0
-- Fix acceptance tests under Windows [Pull Request #37](https://github.com/johnmartel/javaccPlugin/pull/37)
+- Fix acceptance tests under Windows [Pull Request #37](https://github.com/javacc/javaccPlugin/pull/37)
+- Build with Gradle 6.4
+
+*Breaking changes*
+- This plugin now requires Gradle 6.0.1 to work
+- Java versions <= 7 are no longer supported
 
 ### 2.4.0
 - Allow configuration of the JavaCC version to use (Issue #29)

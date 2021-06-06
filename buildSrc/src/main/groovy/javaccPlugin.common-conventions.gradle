@@ -1,0 +1,55 @@
+plugins {
+    // Apply the java Plugin to add support for Java.
+    id 'java'
+
+    // Apply IDE integration plugins.
+    id 'eclipse'
+    id 'idea'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    constraints {
+        // Define dependency versions as constraints
+        implementation('org.hamcrest:hamcrest-core') {
+            version { strictly '1.3' }
+        }
+    }
+
+    // Use JUnit test framework for unit tests
+    testImplementation('junit:junit') {
+        version { strictly '4.12' }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        failOnVersionConflict()
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs = ['-Xlint:unchecked']
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs = ['-Xlint:unchecked']
+}
+
+eclipse {
+    classpath {
+        defaultOutputDir = file('build-eclipse')
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

@@ -4,11 +4,11 @@ plugins {
     id 'ca.coglinc.javacc'
 }
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.8
 version = '1.0'
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Simple test with custom AST class', 'Implementation-Version': version
+        attributes 'Implementation-Title': 'Simple test with custom AST class', 'Implementation-Version': archiveVersion
     }
 }
 
