@@ -2,49 +2,36 @@
 
 [![Build Status](https://travis-ci.org/johnmartel/javaccPlugin.svg)](https://travis-ci.org/johnmartel/javaccPlugin)
 
-:warning: **This project is looking for a new maintainer**
-It has been long overdue that I look at Pull Requests, migrate the build system to Gradle 6, make bug fixes, etc. Unfortunately, I have moved to other projects since first introducing this plugin, am no longer using JavaCC on a regular basis and can't anymore spend the time maintaining the plugin the users are entitled to expect. Given all this, I am ready to hand the repository to a new maintainer that is ready to give it the love it deserves. Simply contact me in PM and we'll work it out.
-
 Provides the ability to use [JavaCC](http://javacc.java.net/) via [Gradle](http://www.gradle.org/). If the 'java' plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.
 
 ## Installation
 
 Simply grab the plugin from Maven Central:
 
-Add the following lines to your `build.gradle` script:
+To use the Gradle Plugins DSL, add the following lines to your `build.gradle` script:
 
-Gradle 2.1+
 ```gradle
 plugins {
-  id "ca.coglinc.javacc" version "2.4.0"
+  id "ca.coglinc.javacc" version "3.0.0"
 }
 ```
 
-Gradle <2.1
-```gradle
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'ca.coglinc', name: 'javacc-gradle-plugin', version: '2.4.0'
-    }
-}
-apply plugin: 'ca.coglinc.javacc'
-```
+Refer to the [Gradle Plugins portal](https://plugins.gradle.org/plugin/ca.coglinc.javacc) for additional details about the installation procedure, including syntax for the Kotlin DSL and the legacy `buildscript` block.
 
-## Building
+## Building from source
 
 To build, simply run the following command in the directory where you checked out the plugin source:
 
 `./gradlew clean build`
+
+**NOTE:** Currently, the plugin must be built with Java 8. The plugin itself will build successfully with Java 9+, but a number of the tests will fail due to incompatibility with the Java 9+ module system.
 
 ## Usage
 
 Place your JavaCC code into `src/main/javacc`.
 The generated Java code will be  put under `./build/generated/javacc` and will be compiled as part of the Java compile.
 
-Place you JJTree code into `src/main/jjtree`
+Place your JJTree code into `src/main/jjtree`
 The generated Java code will be  put under `./build/generated/jjtree` and will be compiled as part of the JavaCC compile.
 
 You can configure the input/output directory by configuring the compileJavacc task:
@@ -121,9 +108,9 @@ jjdoc {
 
 ## Compatibility
 
-This plugin requires Java 6+.
+This plugin requires Java 8+.
 
-It has been tested with Gradle 1.11+. Please let us know if you have had success with other versions of Gradle.
+It has been tested with Gradle 6.0.1+. Please let us know if you have had success with other versions of Gradle.
 
 ## Signature
 
@@ -135,6 +122,14 @@ The following command can be used to release the project, upload to Maven Centra
 ```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/javacc/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
 
 ## Changelog
+
+### 3.0.0-SNAPSHOT
+- Fix acceptance tests under Windows [Pull Request #37](https://github.com/javacc/javaccPlugin/pull/37)
+- Build with Gradle 6.4
+
+*Breaking changes*
+- This plugin now requires Gradle 6.0.1 to work
+- Java versions <= 7 are no longer supported
 
 ### 2.4.0
 - Allow configuration of the JavaCC version to use (Issue #29)
