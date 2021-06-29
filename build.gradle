@@ -6,7 +6,7 @@ plugins {
 }
 
 allprojects {
-    group = 'ca.coglinc'
+    group = 'org.javacc.plugin'
     version = '3.0.0'
 }
 

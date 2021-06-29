@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'eclipse'
-    id 'ca.coglinc.javacc'
+    id 'org.javacc.plugin.javacc-gradle'
 }
 
 sourceCompatibility = 1.8
