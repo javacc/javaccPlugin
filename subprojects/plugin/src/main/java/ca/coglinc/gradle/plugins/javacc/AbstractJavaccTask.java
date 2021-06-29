@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc;
+package org.javacc.plugin.gradle.javacc;
 
 import java.io.File;
 import java.util.Map;

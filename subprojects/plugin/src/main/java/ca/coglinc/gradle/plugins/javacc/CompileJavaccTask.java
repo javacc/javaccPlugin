@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc;
+package org.javacc.plugin.gradle.javacc;
 
 import java.io.File;
 
@@ -6,12 +6,12 @@ import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.api.tasks.compile.JavaCompile;
 
-import ca.coglinc.gradle.plugins.javacc.compiler.CompilerInputOutputConfiguration;
-import ca.coglinc.gradle.plugins.javacc.compiler.JavaccCompilerInputOutputConfiguration;
-import ca.coglinc.gradle.plugins.javacc.compiler.JavaccSourceFileCompiler;
-import ca.coglinc.gradle.plugins.javacc.compiler.SourceFileCompiler;
-import ca.coglinc.gradle.plugins.javacc.programexecution.JavaccProgramInvoker;
-import ca.coglinc.gradle.plugins.javacc.programexecution.ProgramArguments;
+import org.javacc.plugin.gradle.javacc.compiler.CompilerInputOutputConfiguration;
+import org.javacc.plugin.gradle.javacc.compiler.JavaccCompilerInputOutputConfiguration;
+import org.javacc.plugin.gradle.javacc.compiler.JavaccSourceFileCompiler;
+import org.javacc.plugin.gradle.javacc.compiler.SourceFileCompiler;
+import org.javacc.plugin.gradle.javacc.programexecution.JavaccProgramInvoker;
+import org.javacc.plugin.gradle.javacc.programexecution.ProgramArguments;
 
 public class CompileJavaccTask extends AbstractJavaccTask {
     public static final String TASK_NAME_VALUE = "compileJavacc";

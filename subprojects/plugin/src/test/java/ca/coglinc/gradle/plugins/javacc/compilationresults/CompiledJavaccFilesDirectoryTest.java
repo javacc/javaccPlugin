@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc.compilationresults;
+package org.javacc.plugin.gradle.javacc.compilationresults;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsEmptyCollection.empty;

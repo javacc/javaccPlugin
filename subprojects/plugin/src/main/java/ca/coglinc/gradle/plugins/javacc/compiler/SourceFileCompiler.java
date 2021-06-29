@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc.compiler;
+package org.javacc.plugin.gradle.javacc.compiler;
 
 import java.io.File;
 
@@ -8,7 +8,7 @@ import org.gradle.api.logging.Logger;
 /**
  * Implementations invoke a program to compile source files.
  *
- * @see ca.coglinc.gradle.plugins.javacc.programexecution.ProgramInvoker
+ * @see org.javacc.plugin.gradle.javacc.programexecution.ProgramInvoker
  */
 public interface SourceFileCompiler {
 

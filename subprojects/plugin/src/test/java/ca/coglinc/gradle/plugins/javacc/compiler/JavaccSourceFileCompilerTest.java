@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc.compiler;
+package org.javacc.plugin.gradle.javacc.compiler;
 
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.is;
@@ -29,12 +29,12 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.ArgumentCaptor;
 
-import ca.coglinc.gradle.plugins.javacc.JavaccTaskException;
-import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFile;
-import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFilesDirectory;
-import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFilesDirectoryFactory;
-import ca.coglinc.gradle.plugins.javacc.programexecution.ProgramArguments;
-import ca.coglinc.gradle.plugins.javacc.programexecution.ProgramInvoker;
+import org.javacc.plugin.gradle.javacc.JavaccTaskException;
+import org.javacc.plugin.gradle.javacc.compilationresults.CompiledJavaccFile;
+import org.javacc.plugin.gradle.javacc.compilationresults.CompiledJavaccFilesDirectory;
+import org.javacc.plugin.gradle.javacc.compilationresults.CompiledJavaccFilesDirectoryFactory;
+import org.javacc.plugin.gradle.javacc.programexecution.ProgramArguments;
+import org.javacc.plugin.gradle.javacc.programexecution.ProgramInvoker;
 
 public class JavaccSourceFileCompilerTest {
 

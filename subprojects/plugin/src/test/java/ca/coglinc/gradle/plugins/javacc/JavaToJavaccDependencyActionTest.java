@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc;
+package org.javacc.plugin.gradle.javacc;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

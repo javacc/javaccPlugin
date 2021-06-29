@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc.programexecution;
+package org.javacc.plugin.gradle.javacc.programexecution;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

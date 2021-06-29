@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc.programexecution;
+package org.javacc.plugin.gradle.javacc.programexecution;
 
 import org.gradle.api.Action;
 import org.gradle.api.artifacts.Configuration;

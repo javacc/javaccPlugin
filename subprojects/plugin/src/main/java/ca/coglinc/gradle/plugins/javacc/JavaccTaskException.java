@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc;
+package org.javacc.plugin.gradle.javacc;
 
 /**
  * Extends from {@link RuntimeException} because this exception is used to trapped checked exception in code not expecting it and that cannot be

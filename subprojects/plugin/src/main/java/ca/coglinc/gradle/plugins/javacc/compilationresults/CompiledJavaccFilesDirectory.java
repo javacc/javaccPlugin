@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc.compilationresults;
+package org.javacc.plugin.gradle.javacc.compilationresults;
 
 import java.io.File;
 import java.util.ArrayList;

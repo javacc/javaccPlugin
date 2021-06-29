@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc.compiler;
+package org.javacc.plugin.gradle.javacc.compiler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -16,7 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import ca.coglinc.gradle.plugins.javacc.JavaccTaskException;
+import org.javacc.plugin.gradle.javacc.JavaccTaskException;
 
 public class NonJavaccSourceFileVisitorTest {
     private static final String TEXT_INPUT_FILENAME = "test.txt";

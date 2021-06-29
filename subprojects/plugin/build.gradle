@@ -106,7 +106,7 @@ gradlePlugin {
     plugins {
         javaccPlugin {
             id = 'org.javacc.plugin.javacc-gradle'
-            implementationClass = 'ca.coglinc.gradle.plugins.javacc.JavaccPlugin'
+            implementationClass = 'org.javacc.plugin.gradle.javacc.JavaccPlugin'
         }
     }
 }

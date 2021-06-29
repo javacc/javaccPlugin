@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc;
+package org.javacc.plugin.gradle.javacc;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;

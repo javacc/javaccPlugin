@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc.compiler;
+package org.javacc.plugin.gradle.javacc.compiler;
 
 import java.io.File;
 
@@ -8,12 +8,12 @@ import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RelativePath;
 import org.gradle.api.logging.Logger;
 
-import ca.coglinc.gradle.plugins.javacc.JavaccTaskException;
-import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFile;
-import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFilesDirectory;
-import ca.coglinc.gradle.plugins.javacc.compilationresults.CompiledJavaccFilesDirectoryFactory;
-import ca.coglinc.gradle.plugins.javacc.programexecution.ProgramArguments;
-import ca.coglinc.gradle.plugins.javacc.programexecution.ProgramInvoker;
+import org.javacc.plugin.gradle.javacc.JavaccTaskException;
+import org.javacc.plugin.gradle.javacc.compilationresults.CompiledJavaccFile;
+import org.javacc.plugin.gradle.javacc.compilationresults.CompiledJavaccFilesDirectory;
+import org.javacc.plugin.gradle.javacc.compilationresults.CompiledJavaccFilesDirectoryFactory;
+import org.javacc.plugin.gradle.javacc.programexecution.ProgramArguments;
+import org.javacc.plugin.gradle.javacc.programexecution.ProgramInvoker;
 
 /**
  * This {@link SourceFileCompiler} implementation invokes JavaCC programs to compile supported files to Java or JavaCC files.

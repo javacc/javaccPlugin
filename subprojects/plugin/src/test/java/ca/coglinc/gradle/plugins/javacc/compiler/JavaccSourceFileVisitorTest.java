@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc.compiler;
+package org.javacc.plugin.gradle.javacc.compiler;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;

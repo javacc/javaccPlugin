@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc.compiler;
+package org.javacc.plugin.gradle.javacc.compiler;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.gradle.api.file.EmptyFileVisitor;
 import org.gradle.api.file.FileVisitDetails;
 
-import ca.coglinc.gradle.plugins.javacc.JavaccTaskException;
+import org.javacc.plugin.gradle.javacc.JavaccTaskException;
 
 /**
  * This implementation of {@link org.gradle.api.file.FileVisitor} visits only files that are not supported by the provided {@code compiler}.

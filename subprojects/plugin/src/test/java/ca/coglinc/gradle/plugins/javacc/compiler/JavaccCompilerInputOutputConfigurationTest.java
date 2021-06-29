@@ -1,4 +1,4 @@
-package ca.coglinc.gradle.plugins.javacc.compiler;
+package org.javacc.plugin.gradle.javacc.compiler;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -25,7 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import ca.coglinc.gradle.plugins.javacc.CompileJavaccTask;
+import org.javacc.plugin.gradle.javacc.CompileJavaccTask;
 
 public class JavaccCompilerInputOutputConfigurationTest {
 
