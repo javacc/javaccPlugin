@@ -1,5 +1,5 @@
 allprojects{
-    group = 'ca.coglinc.acceptance.tests'
+    group = 'org.javacc.plugin.gradle.acceptanceTests'
 
     repositories {
         mavenCentral()

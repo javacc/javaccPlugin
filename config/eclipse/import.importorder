@@ -1,7 +1,6 @@
 #Organize Import Order
 #Wed Jan 30 20:46:54 EST 2013
-5=javassist
-4=acceptance
+4=org.javacc.plugin
 3=com
 2=org
 1=javax
