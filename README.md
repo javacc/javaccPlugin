@@ -74,6 +74,43 @@ sourceSets {
 eclipseClasspath.dependsOn("compileJavacc")
 ```
 
+### Intellij
+
+If you are using Intellij and would like your gradle project to compile nicely in intellij and have the generated code in the build path; 
+you can add the `idea` plugin and add the generated path to the main sourceSet, and the `idea.module`.
+(The following uses the Kotlin DSL for gradle.)
+```gradle
+plugins {
+    ...
+    `idea`
+}
+
+tasks.compileJavacc {
+        inputDirectory = layout.projectDirectory.dir("src/main/javacc").asFile
+        outputDirectory = layout.buildDirectory.dir("generated/javacc").get().asFile
+    }
+    
+sourceSets {
+    named("main") {
+        java {
+            srcDirs.add(tasks.compileJavacc.get().outputDirectory)
+        }
+    }
+}
+
+idea {
+    module {
+        val genSrc = setOf(
+            tasks.compileJavacc.get().outputDirectory,
+            tasks.jjdoc.get().outputDirectory,
+        )
+        sourceDirs.addAll(genSrc)
+        generatedSourceDirs.addAll(genSrc)
+    }
+}
+
+```
+
 ### Dependency on another version of JavaCC
 
 If for some reason you need to depend on a different version of JavaCC than the plugin's default, you can use the following in your build script:
