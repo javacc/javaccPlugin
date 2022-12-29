@@ -18,7 +18,7 @@ class JjdocExecutorAction implements Action<JavaExecSpec> {
     @Override
     public void execute(JavaExecSpec executor) {
         executor.classpath(classpath);
-        executor.setMain("org.javacc.jjdoc.JJDocMain");
+        executor.getMainClass().set("org.javacc.jjdoc.JJDocMain");
         executor.args((Object[]) arguments.toArray());
         executor.setIgnoreExitValue(true);
     }

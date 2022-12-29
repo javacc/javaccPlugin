@@ -1,5 +1,6 @@
 package org.javacc.plugin.gradle.javacc.programexecution;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -17,7 +18,7 @@ public class JjdocExecutorActionTest {
 
     @Before
     public void setUp() throws Exception {
-        javaExecSpec = mock(JavaExecSpec.class);
+        javaExecSpec = JavaExecFactory.createSpec();
         providedClasspath = mock(Configuration.class);
         providedArguments = new ProgramArguments();
         action = new JjdocExecutorAction(providedClasspath, providedArguments);
@@ -34,7 +35,7 @@ public class JjdocExecutorActionTest {
     public void executorInvokesJjdoc() {
         action.execute(javaExecSpec);
 
-        verify(javaExecSpec).setMain("org.javacc.jjdoc.JJDocMain");
+        assertEquals("org.javacc.jjdoc.JJDocMain", javaExecSpec.getMainClass().get());
     }
 
     @Test
