@@ -83,7 +83,7 @@ public class JavaccCompilerInputOutputConfigurationTest {
     }
 
     private File addTaskWithSourceFile(Project project, String taskName, String sourceFileName, Class<? extends SourceTask> taskType) throws IOException {
-        Map<String, Object> options = new HashMap<String, Object>();
+        Map<String, Object> options = new HashMap<>();
         options.put(Task.TASK_TYPE, taskType);
 
         SourceTask compileJava = (SourceTask) project.task(options, taskName);

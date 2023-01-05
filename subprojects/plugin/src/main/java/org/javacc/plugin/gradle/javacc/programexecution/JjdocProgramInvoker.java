@@ -2,9 +2,8 @@ package org.javacc.plugin.gradle.javacc.programexecution;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.function.Predicate;
 
-import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.collections4.Predicate;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.file.RelativePath;
@@ -34,20 +33,14 @@ public class JjdocProgramInvoker extends AbstractProgramInvoker {
 
     private String getJjdocOutputFileExtension(ProgramArguments arguments) {
         String outputFileExtension = ".html";
-        if (IterableUtils.matchesAny(Arrays.asList(arguments.toArray()), outputTextPredicate())) {
+        if (Arrays.stream(arguments.toArray()).anyMatch(outputTextPredicate())) {
             outputFileExtension = ".txt";
         }
         return outputFileExtension;
     }
 
     private Predicate<String> outputTextPredicate() {
-        return new Predicate<String>() {
-
-            @Override
-            public boolean evaluate(String argument) {
-                return "-text=true".equals(argument.toLowerCase());
-            }
-        };
+        return "-text=true"::equalsIgnoreCase;
     }
 
     @Override

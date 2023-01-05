@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.TaskCollection;
@@ -20,9 +19,9 @@ public class JavaccCompilerInputOutputConfiguration implements CompilerInputOutp
         this.inputDirectory = inputDirectory;
         this.outputDirectory = outputDirectory;
         this.source = source;
-        this.javaCompileTasks = new HashSet<JavaCompile>();
+        this.javaCompileTasks = new HashSet<>();
 
-        if (!CollectionUtils.isEmpty(javaCompileTasks)) {
+        if (javaCompileTasks != null) {
             this.javaCompileTasks.addAll(javaCompileTasks);
         }
     }
@@ -82,13 +81,8 @@ public class JavaccCompilerInputOutputConfiguration implements CompilerInputOutp
             return null;
         }
 
-        Spec<File> outputDirectoryFilter = new Spec<File>() {
-
-            @Override
-            public boolean isSatisfiedBy(File file) {
-                return file.getAbsolutePath().contains(getOutputDirectory().getAbsolutePath());
-            }
-        };
+        Spec<File> outputDirectoryFilter = file -> file.getAbsolutePath()
+            .contains(getOutputDirectory().getAbsolutePath());
 
         FileTree fileTree = sourceTree.minus(sourceTree.filter(outputDirectoryFilter)).getAsFileTree();
         return fileTree;
