@@ -62,7 +62,7 @@ public class ProgramArgumentsTest {
     }
 
     private void addMultipleArguments() {
-        Map<String, String> addedArguments = new LinkedHashMap<String, String>();
+        Map<String, String> addedArguments = new LinkedHashMap<>();
         addedArguments.put("STATIC", "false");
         addedArguments.put("OUTPUT_DIRECTORY", "/tmp");
 

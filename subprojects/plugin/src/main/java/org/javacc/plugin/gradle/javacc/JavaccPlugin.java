@@ -3,14 +3,10 @@ package org.javacc.plugin.gradle.javacc;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.artifacts.DependencySet;
-
-import com.google.common.util.concurrent.Callables;
 
 public class JavaccPlugin implements Plugin<Project> {
     public static final String GROUP = "JavaCC";
@@ -36,12 +32,8 @@ public class JavaccPlugin implements Plugin<Project> {
     }
 
     private void configureDefaultJavaccDependency(final Project project, Configuration configuration) {
-        configuration.defaultDependencies(new Action<DependencySet>() {
-            @Override
-            public void execute(DependencySet dependencies) {
-                dependencies.add(project.getDependencies().create("net.java.dev.javacc:javacc:6.1.2"));
-            }
-        });
+        configuration.defaultDependencies(dependencies ->
+            dependencies.add(project.getDependencies().create("net.java.dev.javacc:javacc:6.1.2")));
     }
 
     private void addCompileJavaccTaskToProject(Project project, Configuration configuration) {
@@ -60,14 +52,14 @@ public class JavaccPlugin implements Plugin<Project> {
     }
 
     private void addTaskToProject(Project project, Class<? extends AbstractJavaccTask> type, String name, String description, String group, Configuration configuration) {
-        Map<String, Object> options = new HashMap<String, Object>();
+        Map<String, Object> options = new HashMap<>();
 
         options.put(Task.TASK_TYPE, type);
         options.put(Task.TASK_DESCRIPTION, description);
         options.put(Task.TASK_GROUP, group);
 
         AbstractJavaccTask task = (AbstractJavaccTask) project.task(options, name);
-        task.getConventionMapping().map("classpath", Callables.returning(configuration));
+        task.getConventionMapping().map("classpath", () -> configuration);
     }
 
     private void configureTaskDependencies(Project project) {

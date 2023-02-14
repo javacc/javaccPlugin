@@ -36,7 +36,7 @@ public class JavaToJavaccDependencyActionTest {
     }
 
     private void applyJavaPluginToProject() {
-        Map<String, String> pluginNames = new HashMap<String, String>(1);
+        Map<String, String> pluginNames = new HashMap<>(1);
         pluginNames.put("plugin", "java");
         project.apply(pluginNames);
     }

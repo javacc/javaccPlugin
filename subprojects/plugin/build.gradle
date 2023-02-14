@@ -24,8 +24,6 @@ dependencies {
         version { strictly '2.4' }
     }
     implementation 'org.apache.commons:commons-lang3:3.4'
-    implementation 'org.apache.commons:commons-collections4:4.1'
-    implementation 'com.google.guava:guava-jdk5:17.0'
 
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
     testImplementation 'org.mockito:mockito-all:1.10.19'

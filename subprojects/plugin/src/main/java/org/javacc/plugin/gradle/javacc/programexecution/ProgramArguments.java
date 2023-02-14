@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 public class ProgramArguments {
     private static final String JAVACC_PROGRAM_ARGUMENT_FORMAT = "-%1$s=%2$s";
 
-    private final List<String> programArguments = new ArrayList<String>();
+    private final List<String> programArguments = new ArrayList<>();
     private boolean filenameAdded;
 
     public ProgramArguments() {
