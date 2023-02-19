@@ -12,7 +12,7 @@ To use the Gradle Plugins DSL, add the following lines to your `build.gradle` sc
 
 ```gradle
 plugins {
-  id "org.javacc.plugin.javacc-gradle" version "3.0.0"
+  id "org.javacc.javacc" version "3.0.0"
 }
 ```
 
@@ -128,7 +128,7 @@ The following command can be used to release the project, upload to Maven Centra
 - Build with Gradle 6.4
 
 *Breaking changes*
-- Plugin id changed to 'org.javacc.plugin.javacc-gradle'
+- Plugin id changed to 'org.javacc.javacc'
 - Plugin now requires Gradle 6.0.1 to work
 - Plugin now requies Java 8 or higher
 
