@@ -25,6 +25,8 @@ jobs:
       run: ./gradlew build
       shell: bash
     - name: checkstyle
-      uses: jwgmeligmeyling/checkstyle-github-action@master
+      uses: dbelyaev/action-checkstyle@v0.7.4
       with:
-        path: '**/reports/checkstyle/*.xml'
+        github_token: ${{ secrets.github_token }}
+        reporter: github-check
+        level: warning
