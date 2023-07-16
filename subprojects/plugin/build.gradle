@@ -107,7 +107,7 @@ gradlePlugin {
     testSourceSets sourceSets.acceptanceTest
     plugins {
         javaccPlugin {
-            id = 'org.javacc.plugin.javacc-gradle'
+            id = 'org.javacc.javacc'
             implementationClass = 'org.javacc.plugin.gradle.javacc.JavaccPlugin'
         }
     }
@@ -121,7 +121,7 @@ pluginBundle {
 
     plugins {
         javaccPlugin {
-            id = 'org.javacc.plugin.javacc-gradle'
+            id = 'org.javacc.javacc'
             displayName = 'JavaCC Plugin'
         }
     }
@@ -202,7 +202,7 @@ bintray {
             name = releaseVersion
             released = new Date()
             vcsTag = 'javacc-gradle-plugin-' + releaseVersion
-            attributes = ['gradle-plugin': 'org.javacc.plugin.javacc-gradle:org.javacc.plugin:javacc-gradle-plugin']
+            attributes = ['gradle-plugin': 'org.javacc.javacc:org.javacc.plugin:javacc-gradle-plugin']
             gpg {
                 sign = true
                 passphrase = gpgPassphrase
