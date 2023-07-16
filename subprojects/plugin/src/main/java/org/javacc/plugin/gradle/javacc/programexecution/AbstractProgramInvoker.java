@@ -3,10 +3,13 @@ package org.javacc.plugin.gradle.javacc.programexecution;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.Dependency;
 import org.gradle.process.ExecResult;
 import org.gradle.process.JavaExecSpec;
 
@@ -37,5 +40,39 @@ abstract class AbstractProgramInvoker implements ProgramInvoker {
         Constructor<? extends Action<JavaExecSpec>> constructor = executorType.getConstructor(Configuration.class, ProgramArguments.class);
 
         return constructor.newInstance(classpath, arguments);
+    }
+
+    protected void addCodeGenerator(ProgramArguments augmentedArguments) {
+        Integer[] version = getJavaccVersion();
+        if (version.length >  0 && version[0] >= 8) {
+            augmentedArguments.add("CODE_GENERATOR", "java");
+        }
+    }
+
+    protected Integer[] getJavaccVersion() {
+        String version = "";
+        try {
+            Configuration configuration = project.getConfigurations().getByName("javacc");
+            for (Dependency dependency : configuration.getAllDependencies()) {
+                String id = dependency.getGroup() + ":" + dependency.getName();
+                if (dependency.getVersion() != null
+                    && ("net.java.dev.javacc:javacc".equals(id)
+                    || "org.javacc.generator:java".equals(id))) {
+                    version = dependency.getVersion();
+                }
+            }
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+        return Arrays.stream(version.split("\\.")).map(this::safeParseInt).toArray(Integer[]::new);
+    }
+
+    private int safeParseInt(String num) {
+        try {
+            return Integer.parseInt(num);
+        } catch (RuntimeException ignore) {
+            // non-numeric version
+        }
+        return 0;
     }
 }

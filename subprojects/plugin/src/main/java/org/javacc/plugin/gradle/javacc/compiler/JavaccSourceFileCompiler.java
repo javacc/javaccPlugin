@@ -75,7 +75,6 @@ public class JavaccSourceFileCompiler implements SourceFileCompiler {
     private ProgramArguments buildProgramArguments(File inputDirectory, RelativePath inputRelativePath) {
         ProgramArguments commandLineArguments = new ProgramArguments(argumentsProvidedByTask);
         commandLineArguments.addFilename(inputRelativePath.getFile(inputDirectory).getAbsolutePath());
-
         return programInvoker.augmentArguments(inputDirectory, inputRelativePath, commandLineArguments);
     }
 

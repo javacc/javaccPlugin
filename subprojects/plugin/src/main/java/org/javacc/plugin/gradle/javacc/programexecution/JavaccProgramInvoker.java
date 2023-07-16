@@ -20,6 +20,7 @@ public class JavaccProgramInvoker extends AbstractProgramInvoker {
     public ProgramArguments augmentArguments(File inputDirectory, RelativePath inputRelativePath, ProgramArguments arguments) {
         ProgramArguments augmentedArguments = new ProgramArguments(arguments);
         augmentedArguments.add("OUTPUT_DIRECTORY", inputRelativePath.getFile(tempOutputDirectory).getParentFile().getAbsolutePath());
+        addCodeGenerator(augmentedArguments);
         return augmentedArguments;
     }
 

@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'org.javacc.plugin.javacc-gradle'
+}
+
+sourceCompatibility = 1.8
+version = '1.0'
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart', 'Implementation-Version': archiveVersion
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    javacc project.findProperty("javaccDep")
+}
