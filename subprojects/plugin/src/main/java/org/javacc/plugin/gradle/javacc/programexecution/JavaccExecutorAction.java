@@ -18,7 +18,7 @@ class JavaccExecutorAction implements Action<JavaExecSpec> {
     @Override
     public void execute(JavaExecSpec executor) {
         executor.classpath(classpath);
-        executor.setMain("org.javacc.parser.Main");
+        executor.getMainClass().set("org.javacc.parser.Main");
         executor.args((Object[]) arguments.toArray());
         executor.setIgnoreExitValue(true);
     }

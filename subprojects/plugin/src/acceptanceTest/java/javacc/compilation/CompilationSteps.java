@@ -31,7 +31,7 @@ public class CompilationSteps {
         projectDirectory = new File(resource.toURI());
 
         buildRunner = GradleRunner.create()
-                                  .withGradleVersion("6.0.1")
+                                  .withGradleVersion("6.4")
                                   .withProjectDir(projectDirectory)
                                   .withPluginClasspath();
     }
