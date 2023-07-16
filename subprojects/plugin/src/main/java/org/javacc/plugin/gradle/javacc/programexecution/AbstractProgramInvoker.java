@@ -4,7 +4,6 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
@@ -14,6 +13,9 @@ import org.gradle.process.ExecResult;
 import org.gradle.process.JavaExecSpec;
 
 abstract class AbstractProgramInvoker implements ProgramInvoker {
+
+    protected static final int VERSION_4 = 4;
+    protected static final int VERSION_8 = 8;
     protected final File tempOutputDirectory;
 
     private final Project project;
@@ -44,7 +46,7 @@ abstract class AbstractProgramInvoker implements ProgramInvoker {
 
     protected void addCodeGenerator(ProgramArguments augmentedArguments) {
         Integer[] version = getJavaccVersion();
-        if (version.length >  0 && version[0] >= 8) {
+        if (version.length >  0 && version[0] >= VERSION_8) {
             augmentedArguments.add("CODE_GENERATOR", "java");
         }
     }

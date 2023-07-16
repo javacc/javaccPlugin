@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.file.RelativePath;
 
 /**
@@ -21,8 +20,8 @@ public class JjtreeProgramInvoker extends AbstractProgramInvoker {
 
     private String getOutputDirectoryArgName() {
         Integer[] version = getJavaccVersion();
-        if (version[0] == 4 && version[1] <=0) {
-           return "OUTPUT_DIRECTORY";
+        if (version[0] == VERSION_4 && version[1] <= 0) {
+            return "OUTPUT_DIRECTORY";
         }
         return "JJTREE_OUTPUT_DIRECTORY";
     }

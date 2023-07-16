@@ -24,3 +24,7 @@ jobs:
     - name: Run build script
       run: ./gradlew build
       shell: bash
+    - name: checkstyle
+      uses: jwgmeligmeyling/checkstyle-github-action@master
+      with:
+        path: '**/reports/checkstyle/*.xml'
