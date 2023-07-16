@@ -1,0 +1,7 @@
+allprojects{
+    group = 'org.javacc.plugin.gradle.acceptanceTests'
+
+    repositories {
+        mavenCentral()
+    }
+}

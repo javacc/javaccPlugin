@@ -54,7 +54,11 @@ jar {
 checkstyle {
     configFile = file("${rootProject.projectDir}/config/checkstyle/checks.xml")
 }
-
+tasks.withType(Checkstyle) {
+    reports {
+        xml.required = true
+    }
+}
 spotbugs {
     toolVersion = '4.2.1'
     effort = "min"

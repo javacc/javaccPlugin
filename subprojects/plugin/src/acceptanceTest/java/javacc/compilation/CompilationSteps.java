@@ -46,7 +46,7 @@ public class CompilationSteps {
         ensureGivens();
 
         String[] defaultArguments = new String[] {
-            "--debug", "--stacktrace", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle"
+            "--info", "--stacktrace", "--project-dir", projectDirectory.getAbsolutePath(), "-b", "build.gradle"
         };
 
         String[] allArguments = ArrayUtils.addAll(defaultArguments, arguments);
@@ -67,7 +67,7 @@ public class CompilationSteps {
 
     public void thenAssertOutputDirectoryExists(String outputDirectory) {
         this.outputDirectory = new File(projectDirectory, outputDirectory);
-        assertTrue(this.outputDirectory.exists());
+        assertExists(this.outputDirectory);
     }
 
     public void thenAssertOutputDirectoryDoesNotExists(String outputDirectory) {
@@ -75,12 +75,16 @@ public class CompilationSteps {
     }
 
     public void andAssertFileWasGenerated(String filename) {
-        assertTrue((new File(outputDirectory, filename)).exists());
+        assertExists(new File(outputDirectory, filename));
+    }
+
+    private void assertExists(File file) {
+        assertTrue("File " + file + " should exist", file.exists());
     }
 
     public void andAssertFileExistsButWasNotGenerated(String filename) throws IOException {
         File javaFile = new File(outputDirectory, filename);
-        assertTrue(javaFile.exists());
+        assertExists(javaFile);
 
         String fileContent = FileUtils.readFileToString(javaFile);
         assertTrue(fileContent.contains("public static final boolean IS_CUSTOM = true;"));
