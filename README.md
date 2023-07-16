@@ -76,10 +76,20 @@ eclipseClasspath.dependsOn("compileJavacc")
 
 ### Dependency on another version of JavaCC
 
-If for some reason you need to depend on a different version of JavaCC than the plugin's default, you can use the following in your build script:
+If for some reason you need to depend on a different version of JavaCC than the plugin's default, you can use one of the following scripts.
+
+For JavaCC up to 7.x:
+
 ```gradle
 dependencies {
     javacc 'net.java.dev.javacc:javacc:[version]'
+}
+```
+
+For JavaCC 8.x and later:
+```gradle
+dependencies {
+    javacc 'org.javacc.generator:java:[version]'
 }
 ```
 
