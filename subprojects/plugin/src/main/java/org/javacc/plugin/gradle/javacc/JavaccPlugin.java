@@ -19,7 +19,7 @@ public class JavaccPlugin implements Plugin<Project> {
         addCompileJavaccTaskToProject(project, configuration);
         addCompileJJTreeTaskToProject(project, configuration);
         addCompileJjdocTaskToProject(project, configuration);
-
+        project.getExtensions().create(JavaccExtension.JAVACC_EXTENSION_NAME, JavaccExtension.class);
         configureTaskDependencies(project);
     }
 

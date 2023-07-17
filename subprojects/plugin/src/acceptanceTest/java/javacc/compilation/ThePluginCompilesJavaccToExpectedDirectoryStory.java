@@ -8,6 +8,9 @@ import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class ThePluginCompilesJavaccToExpectedDirectoryStory {
     private static final String CLEAN = "clean";
     private static final String COMPILE_JAVACC = "compileJavacc";
@@ -375,5 +378,20 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         BuildResult buildResult = steps.withArguments(COMPILE_JAVACC).execute();
 
         steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.NO_SOURCE);
+    }
+
+    @Test
+    public void givenMultipleSourceSetsTaskShouldOnlyRunWhenNeeded() throws IOException, URISyntaxException {
+        CompilationSteps steps = new CompilationSteps();
+
+        steps.givenAProjectNamed("multipleSourceSets");
+        steps.withArguments(CLEAN).execute();
+
+        BuildResult buildResult = steps.withArguments("compileExtraJava").execute();
+        assertThat(buildResult.task(":compileJavacc"), nullValue());
+
+        buildResult = steps.withArguments("compileJava").execute();
+        steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.SUCCESS);
+        steps.withArguments(CLEAN).execute();
     }
 }

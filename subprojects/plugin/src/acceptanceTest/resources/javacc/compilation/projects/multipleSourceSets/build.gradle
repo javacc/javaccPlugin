@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'org.javacc.javacc'
+}
+sourceCompatibility = 1.8
+version = '1.0'
+
+sourceSets {
+    main
+    extra
+}
+
+javacc {
+    dependentSourceSets = [sourceSets.main]
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
