@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.ConfigurationContainer;
 import org.gradle.api.file.RelativePath;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,6 +39,7 @@ public class JavaccProgramInvokerTest {
     @Before
     public void setUp() throws Exception {
         project = mock(Project.class);
+        doReturn(mock(ConfigurationContainer.class)).when(project).getConfigurations();
         Configuration classpath = mock(Configuration.class);
         tempOutputDirectory = testFolder.newFolder("tempOutput");
         programInvoker = new JavaccProgramInvoker(project, classpath, tempOutputDirectory);

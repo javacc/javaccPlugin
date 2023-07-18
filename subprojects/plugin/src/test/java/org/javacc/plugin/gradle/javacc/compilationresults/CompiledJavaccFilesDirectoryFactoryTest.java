@@ -32,51 +32,46 @@ public class CompiledJavaccFilesDirectoryFactoryTest {
 
     @Test
     public void createInstance() {
-        CompiledJavaccFilesDirectory directory = factory.getCompiledJavaccFilesDirectory(outputDirectory, customAstClassesDirectory, targetDirectory, null);
+        CompiledJavaccFilesDirectory directory = factory.getCompiledJavaccFilesDirectory(outputDirectory, targetDirectory, null);
 
         assertNotNull(directory);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void outputDirectoryMustBeProvided() {
-        factory.getCompiledJavaccFilesDirectory(null, customAstClassesDirectory, targetDirectory, null);
+        factory.getCompiledJavaccFilesDirectory(null, targetDirectory, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void outputDirectoryMustExist() {
         File inexistingOutputDirectory = new File(getClass().getResource("/").getFile() + "doesNotExist");
 
-        factory.getCompiledJavaccFilesDirectory(inexistingOutputDirectory, customAstClassesDirectory, targetDirectory, null);
+        factory.getCompiledJavaccFilesDirectory(inexistingOutputDirectory, targetDirectory, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void outputDirectoryMustBeADirectory() {
         File invalidOutputDirectory = new File(getClass().getResource("/javacc/input/JavaccOutputTest.jj").getFile());
 
-        factory.getCompiledJavaccFilesDirectory(invalidOutputDirectory, customAstClassesDirectory, targetDirectory, null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void customAstClassesDirectoryMustBeProvided() {
-        factory.getCompiledJavaccFilesDirectory(outputDirectory, null, targetDirectory, null);
+        factory.getCompiledJavaccFilesDirectory(invalidOutputDirectory, targetDirectory, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void targetDirectoryMustBeProvided() {
-        factory.getCompiledJavaccFilesDirectory(outputDirectory, customAstClassesDirectory, null, null);
+        factory.getCompiledJavaccFilesDirectory(outputDirectory, null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void targetDirectoryMustExist() {
         File inexistingOutputDirectory = new File(getClass().getResource("/").getFile() + "doesNotExist");
 
-        factory.getCompiledJavaccFilesDirectory(outputDirectory, customAstClassesDirectory, inexistingOutputDirectory, null);
+        factory.getCompiledJavaccFilesDirectory(outputDirectory, inexistingOutputDirectory, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void targetDirectoryMustBeADirectory() {
         File invalidOutputDirectory = new File(getClass().getResource("/javacc/input/JavaccOutputTest.jj").getFile());
 
-        factory.getCompiledJavaccFilesDirectory(outputDirectory, customAstClassesDirectory, invalidOutputDirectory, null);
+        factory.getCompiledJavaccFilesDirectory(outputDirectory, invalidOutputDirectory, null);
     }
 }

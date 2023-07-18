@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -18,6 +19,9 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 import org.gradle.api.file.FileTree;
 import org.gradle.api.file.RelativePath;
@@ -45,24 +49,24 @@ public class JavaccSourceFileCompilerTest {
     public ExpectedException thrown = ExpectedException.none();
 
     private File inputFolder;
-    private File outputFolder;
     private ProgramArguments programArguments;
     private ProgramInvoker programInvoker;
     private FileTree source;
+    private Set<File> sourceFiles;
     private CompilerInputOutputConfiguration compilerInputOutputConfiguration;
-    private Logger logger;
     private SourceFileCompiler compiler;
 
     @Before
     public void setUp() throws Exception {
         inputFolder = testFolder.newFolder("input");
-        outputFolder = testFolder.newFolder("output");
 
         programArguments = givenProgramArguments();
         programInvoker = givenProgramInvoker(programArguments);
+        sourceFiles = Collections.singleton(mock(File.class));
         source = givenSources();
+        doReturn(sourceFiles).when(source).getFiles();
         compilerInputOutputConfiguration = givenCompilerConfiguration(source);
-        logger = givenLogger();
+        Logger logger = givenLogger();
 
         compiler = new JavaccSourceFileCompiler(programInvoker, programArguments, compilerInputOutputConfiguration, logger);
     }
@@ -149,13 +153,13 @@ public class JavaccSourceFileCompilerTest {
 
         compiler.copyCompiledFilesFromTempOutputDirectoryToOutputDirectory();
 
-        verify(compiledFile).ignoreCompiledFileAndUseCustomAstClassFromJavaSourceTree(any(FileTree.class));
+        verify(compiledFile).ignoreCompiledFileAndUseCustomAstClassFromJavaSourceTree(any());
     }
 
     private CompiledJavaccFile givenACompiledFileWithACustomAstClassInJavaSourceTree() {
         CompiledJavaccFile compiledFile = mock(CompiledJavaccFile.class);
-        when(compiledFile.customAstClassExists(any(FileTree.class))).thenReturn(true);
-
+        when(compiledFile.handleCustomAstInJava(any())).thenCallRealMethod();
+        when(compiledFile.getCustomAstClassInputFile(any())).thenReturn(mock(File.class));
         fileIsCompiledByCompiler(compiledFile);
 
         return compiledFile;
@@ -166,7 +170,7 @@ public class JavaccSourceFileCompilerTest {
         when(compiledFilesDirectory.listFiles()).thenReturn(Arrays.asList(compiledFile));
 
         CompiledJavaccFilesDirectoryFactory factory = mock(CompiledJavaccFilesDirectoryFactory.class);
-        when(factory.getCompiledJavaccFilesDirectory(any(File.class), any(FileTree.class), any(File.class), any(Logger.class))).thenReturn(compiledFilesDirectory);
+        when(factory.getCompiledJavaccFilesDirectory(any(File.class), any(File.class), any(Logger.class))).thenReturn(compiledFilesDirectory);
 
         ((JavaccSourceFileCompiler) compiler).setCompiledJavaccFilesDirectoryFactoryForTest(factory);
     }
@@ -177,13 +181,20 @@ public class JavaccSourceFileCompilerTest {
 
         compiler.copyCompiledFilesFromTempOutputDirectoryToOutputDirectory();
 
-        verify(compiledFile).copyCustomAstClassToTargetDirectory(any(FileTree.class));
+        verify(compiledFile).copyCustomAstClassToTargetDirectory(any());
     }
 
     private CompiledJavaccFile givenACompiledFileWithACustomAstClassInCompilerSourceTree() {
         CompiledJavaccFile compiledFile = mock(CompiledJavaccFile.class);
-        when(compiledFile.customAstClassExists(any(FileTree.class))).thenReturn(false);
-        when(compiledFile.customAstClassExists()).thenReturn(true);
+        when(compiledFile.handleCustomAstInJavacc(any())).thenCallRealMethod();
+        when(compiledFile.handleCustomAstInJava(any())).thenCallRealMethod();
+        when(compiledFile.getCustomAstClassInputFile(any())).thenAnswer(
+            invocationOnMock -> {
+                Collection coll = invocationOnMock.getArgumentAt(0, Collection.class);
+                System.err.println(coll);
+                return coll == sourceFiles ? mock(File.class) : null;
+            }
+        );
 
         fileIsCompiledByCompiler(compiledFile);
 
@@ -201,8 +212,7 @@ public class JavaccSourceFileCompilerTest {
 
     private CompiledJavaccFile givenACompiledFileWithNoCustomAstClass() {
         CompiledJavaccFile compiledFile = mock(CompiledJavaccFile.class);
-        when(compiledFile.customAstClassExists(any(FileTree.class))).thenReturn(false);
-        when(compiledFile.customAstClassExists()).thenReturn(false);
+        when(compiledFile.getCustomAstClassInputFile(any())).thenReturn(null);
 
         fileIsCompiledByCompiler(compiledFile);
 

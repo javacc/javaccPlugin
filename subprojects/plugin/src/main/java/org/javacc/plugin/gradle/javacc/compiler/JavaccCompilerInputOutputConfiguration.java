@@ -81,10 +81,9 @@ public class JavaccCompilerInputOutputConfiguration implements CompilerInputOutp
             return null;
         }
 
-        Spec<File> outputDirectoryFilter = file -> file.getAbsolutePath()
+        Spec<File> notInOutputDirectory = file -> !file.getAbsolutePath()
             .contains(getOutputDirectory().getAbsolutePath());
 
-        FileTree fileTree = sourceTree.minus(sourceTree.filter(outputDirectoryFilter)).getAsFileTree();
-        return fileTree;
+        return sourceTree.filter(notInOutputDirectory).getAsFileTree();
     }
 }
