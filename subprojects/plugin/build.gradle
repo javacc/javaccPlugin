@@ -30,8 +30,8 @@ dependencies {
     testImplementation 'org.powermock:powermock-module-junit4:1.6.4'
     testImplementation 'org.powermock:powermock-api-mockito:1.6.4'
 
-    compileOnly        'net.java.dev.javacc:javacc:6.1.2'
-    testImplementation 'net.java.dev.javacc:javacc:6.1.2'
+    compileOnly        'net.java.dev.javacc:javacc:7.0.12'
+    testImplementation 'net.java.dev.javacc:javacc:7.0.12'
 }
 
 eclipse {

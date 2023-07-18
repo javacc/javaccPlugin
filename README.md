@@ -131,7 +131,7 @@ jjdoc {
 
 This plugin requires Java 8+.
 
-It has been tested with Gradle 6.0.1+. Please let us know if you have had success with other versions of Gradle.
+It has been tested with Gradle 6.4+. Please let us know if you have had success with other versions of Gradle.
 
 ## Signature
 
@@ -144,14 +144,7 @@ The following command can be used to release the project, upload to Maven Centra
 
 ## Changelog
 
-### 3.0.0-SNAPSHOT
-- Fix acceptance tests under Windows [Pull Request #37](https://github.com/javacc/javaccPlugin/pull/37)
-- Build with Gradle 6.4
-
-*Breaking changes*
-- Plugin id changed to 'org.javacc.javacc'
-- Plugin now requires Gradle 6.0.1 to work
-- Plugin now requies Java 8 or higher
+### For version 3.0 and later see [GitHub Releases](https://github.com/javacc/javaccPlugin/releases).
 
 ### 2.4.0
 - Allow configuration of the JavaCC version to use (Issue #29)
