@@ -15,40 +15,40 @@ public class CompiledJavaccFilesDirectoryTest {
 
     @Test
     public void listFilesReturnsEmptyCollectionForEmptyDirectory() {
-        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(new File(getClass().getResource("/empty").getFile()), null, null, null);
-        
+        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(new File(getClass().getResource("/empty").getFile()), null, null);
+
         Collection<CompiledJavaccFile> files = directory.listFiles();
-        
+
         assertThat(files, is(empty()));
     }
-    
+
     @Test
     public void listFilesReturnsAllFiles() {
-        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(new File(getClass().getResource("/compiledResults").getFile()), null, null, null);
-        
+        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(new File(getClass().getResource("/compiledResults").getFile()), null, null);
+
         Collection<CompiledJavaccFile> files = directory.listFiles();
-        
+
         final int numberOfFilesInFolder = 2;
         assertThat(files, hasSize(numberOfFilesInFolder));
     }
-    
+
     @Test
     public void listFilesReturnsAllFilesRecursively() {
-        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(new File(getClass().getResource("/compiledResultsWithSubFolders").getFile()), null, null, null);
-        
+        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(new File(getClass().getResource("/compiledResultsWithSubFolders").getFile()),  null, null);
+
         Collection<CompiledJavaccFile> files = directory.listFiles();
-        
+
         final int numberOfFilesInFolder = 3;
         assertThat(files, hasSize(numberOfFilesInFolder));
     }
-    
+
     @Test
     public void toStringReturnsAbsoluteDirectoryPath() {
         File outputDirectory = new File(getClass().getResource("/compiledResults").getFile());
-        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(outputDirectory, null, null, null);
-        
+        CompiledJavaccFilesDirectory directory = new CompiledJavaccFilesDirectory(outputDirectory,  null, null);
+
         String stringValue = directory.toString();
-        
+
         assertEquals(outputDirectory.getAbsolutePath(), stringValue);
     }
 }

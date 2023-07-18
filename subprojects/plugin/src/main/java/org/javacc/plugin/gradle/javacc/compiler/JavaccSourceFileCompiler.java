@@ -1,6 +1,8 @@
 package org.javacc.plugin.gradle.javacc.compiler;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.file.FileTree;
@@ -81,18 +83,23 @@ public class JavaccSourceFileCompiler implements SourceFileCompiler {
     @Override
     public void copyCompiledFilesFromTempOutputDirectoryToOutputDirectory() {
         CompiledJavaccFilesDirectory compiledJavaccFilesDirectory = compiledJavaccFilesDirectoryFactory.getCompiledJavaccFilesDirectory(
-            configuration.getTempOutputDirectory(), configuration.getCompleteSourceTree(), getOutputDirectory(), getLogger());
-
+            configuration.getTempOutputDirectory(), getOutputDirectory(), getLogger());
+        Collection<File> javaSourceFiles = getFiles(configuration.getJavaSourceTree());
+        Collection<File> javaccSourceFiles = getFiles(configuration.getSource());
         for (CompiledJavaccFile compiledJavaccFile : compiledJavaccFilesDirectory.listFiles()) {
-            FileTree javaSourceTree = configuration.getJavaSourceTree();
-            if (compiledJavaccFile.customAstClassExists(javaSourceTree)) {
-                compiledJavaccFile.ignoreCompiledFileAndUseCustomAstClassFromJavaSourceTree(javaSourceTree);
-            } else if (compiledJavaccFile.customAstClassExists()) {
-                compiledJavaccFile.copyCustomAstClassToTargetDirectory(configuration.getCompleteSourceTree());
-            } else {
+
+            if (!compiledJavaccFile.handleCustomAstInJava(javaSourceFiles)
+                && !compiledJavaccFile.handleCustomAstInJavacc(javaccSourceFiles)) {
                 compiledJavaccFile.copyCompiledFileToTargetDirectory();
             }
         }
+    }
+
+    private Collection<File> getFiles(FileTree javaSourceTree) {
+        if (javaSourceTree == null) {
+            return Collections.emptySet();
+        }
+        return javaSourceTree.getFiles();
     }
 
     @Override
