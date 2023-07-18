@@ -1,5 +1,8 @@
 package javacc.compilation;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -375,5 +378,20 @@ public class ThePluginCompilesJavaccToExpectedDirectoryStory {
         BuildResult buildResult = steps.withArguments(COMPILE_JAVACC).execute();
 
         steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.NO_SOURCE);
+    }
+
+    @Test
+    public void givenMultipleSourceSetsTaskShouldOnlyRunWhenNeeded() throws IOException, URISyntaxException {
+        CompilationSteps steps = new CompilationSteps();
+
+        steps.givenAProjectNamed("multipleSourceSets");
+        steps.withArguments(CLEAN).execute();
+
+        BuildResult buildResult = steps.withArguments("compileExtraJava").execute();
+        assertThat(buildResult.task(":compileJavacc"), nullValue());
+
+        buildResult = steps.withArguments("compileJava").execute();
+        steps.thenAssertTaskStatus(buildResult, ":compileJavacc", TaskOutcome.SUCCESS);
+        steps.withArguments(CLEAN).execute();
     }
 }

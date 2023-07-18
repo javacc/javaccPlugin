@@ -1,5 +1,9 @@
 package org.javacc.plugin.gradle.javacc;
 
+import java.util.Collection;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskCollection;
@@ -12,39 +16,50 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
         if (!project.getPlugins().hasPlugin("java")) {
             return;
         }
-
-        configureCompileJJTreeTask(project);
-        configureCompileJavaccTask(project);
+        Collection<JavaCompile> javaTasks = project.getTasks().withType(JavaCompile.class)
+            .stream().filter(getJavaTaskFilter(project)).collect(Collectors.toList());
+        configureCompileJJTreeTask(project, javaTasks);
+        configureCompileJavaccTask(project, javaTasks);
     }
 
-    private void configureCompileJJTreeTask(Project project) {
+    private Predicate<? super JavaCompile> getJavaTaskFilter(Project project) {
+        JavaccExtension extension = (JavaccExtension) project.getExtensions()
+            .findByName(JavaccExtension.JAVACC_EXTENSION_NAME);
+        if (extension != null && extension.dependentSourceSets != null) {
+            return task -> extension.dependentSourceSets.stream()
+                .anyMatch(set -> set.getCompileJavaTaskName().equals(task.getName()));
+        }
+        return any -> true;
+    }
+
+    private void configureCompileJJTreeTask(Project project, Collection<JavaCompile> javaTasks) {
         CompileJjtreeTask compileJjtreeTask = (CompileJjtreeTask) project.getTasks().findByName(CompileJjtreeTask.TASK_NAME_VALUE);
         if (compileJjtreeTask == null) {
             return;
         }
 
         if (!compileJjtreeTask.getSource().isEmpty()) {
-            addJJTreeDependencyToJavaccCompileTask(project.getTasks().withType(JavaCompile.class),
+            addJJTreeDependencyToJavaccCompileTask(javaTasks,
                 project.getTasks().withType(CompileJavaccTask.class), compileJjtreeTask);
         }
     }
 
-    private void configureCompileJavaccTask(Project project) {
+    private void configureCompileJavaccTask(Project project, Collection<JavaCompile> javaTasks) {
         CompileJavaccTask compileJavaccTask = (CompileJavaccTask) project.getTasks().findByName(CompileJavaccTask.TASK_NAME_VALUE);
         if (compileJavaccTask != null) {
-            addJavaccDependencyToJavaCompileTask(project.getTasks().withType(JavaCompile.class), compileJavaccTask);
+            addJavaccDependencyToJavaCompileTask(javaTasks, compileJavaccTask);
         }
     }
 
-    private void addJavaccDependencyToJavaCompileTask(TaskCollection<JavaCompile> javaCompilationTasks, CompileJavaccTask compileJavaccTask) {
+    private void addJavaccDependencyToJavaCompileTask(Collection<JavaCompile> javaCompilationTasks, CompileJavaccTask compileJavaccTask) {
         for (JavaCompile task : javaCompilationTasks) {
             task.dependsOn(compileJavaccTask);
             task.source(compileJavaccTask.getOutputDirectory());
         }
     }
 
-    private void addJJTreeDependencyToJavaccCompileTask(TaskCollection<JavaCompile> javaCompilationTasks,
-        TaskCollection<CompileJavaccTask> javaccCompilationTasks, CompileJjtreeTask compileJjtreeTask) {
+    private void addJJTreeDependencyToJavaccCompileTask(Collection<JavaCompile> javaCompilationTasks,
+                                                        TaskCollection<CompileJavaccTask> javaccCompilationTasks, CompileJjtreeTask compileJjtreeTask) {
         for (JavaCompile task : javaCompilationTasks) {
             task.dependsOn(compileJjtreeTask);
             task.source(compileJjtreeTask.getOutputDirectory());
