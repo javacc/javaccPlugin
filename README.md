@@ -59,6 +59,17 @@ compileJjtree {
 }
 ```
 
+### Multiple source sets support
+
+If your project uses multiple source sets, JavaCC output directory will by default become a dependency for all of them.
+If you want to make it dependency only for selected source sets, you can do so with global plugin configuration
+
+```
+javacc {
+    dependentSourceSets = [sourceSets.main]
+}
+```
+
 ### Eclipse
 
 If you are using Eclipse and would like your gradle project to compile nicely in eclipse and have the generated code in the build path, you can simply add the generated path to the main sourceSet and add a dependency on `compileJavacc` to `eclipseClasspath`.
