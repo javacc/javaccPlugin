@@ -62,6 +62,8 @@ public class ThePluginIsCompatibleWithAllSpportedJavaccVersions {
         }
         steps.thenAssertOutputDirectoryExists(buildDirectory + File.separator + "jjdoc");
         steps.andAssertFileWasGenerated("MyParser.html");
+        // clean again after
+        steps.withArguments("clean", "-PjavaccDep=" + javaccDependency).execute();
     }
 
 }
