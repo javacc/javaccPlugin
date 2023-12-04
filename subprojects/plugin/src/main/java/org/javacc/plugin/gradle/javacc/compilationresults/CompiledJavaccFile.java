@@ -15,11 +15,15 @@ import org.gradle.api.logging.Logger;
 
 public class CompiledJavaccFile {
     private static final Pattern PACKAGE_DECLARATION_PATTERN = Pattern.compile("package\\s+([^\\s.;]+(\\.[^\\s.;]+)*)\\s*;");
-
+    protected FileCopyUtil fileCopyUtil = FileUtils::copyFile;
     private File compiledJavaccFile;
     private File outputDirectory;
     private File targetDirectory;
     private Logger logger;
+
+    protected interface FileCopyUtil {
+        void copyFile(File from, File to) throws IOException;
+    }
 
     public CompiledJavaccFile(File file, File outputDirectory, File targetDirectory, Logger logger) {
         this.compiledJavaccFile = file;
@@ -87,7 +91,7 @@ public class CompiledJavaccFile {
         logger.info("Copying compiled file {} to {}", compiledJavaccFile, destination);
 
         try {
-            FileUtils.copyFile(compiledJavaccFile, destination);
+            fileCopyUtil.copyFile(compiledJavaccFile, destination);
         } catch (IOException e) {
             String errorMessage = String.format("Could not copy %s from %s to %s", compiledJavaccFile, outputDirectory, targetDirectory);
             throw new CompiledJavaccFileOperationException(errorMessage, e);
@@ -103,7 +107,7 @@ public class CompiledJavaccFile {
         logger.info("Copying custom AST class [{}] to [{}]", customAstClassInputFile, destination);
 
         try {
-            FileUtils.copyFile(customAstClassInputFile, destination);
+            fileCopyUtil.copyFile(customAstClassInputFile, destination);
         } catch (IOException e) {
             String errorMessage = String.format("Could not copy %s to %s", customAstClassInputFile, targetDirectory);
             throw new CompiledJavaccFileOperationException(errorMessage, e);

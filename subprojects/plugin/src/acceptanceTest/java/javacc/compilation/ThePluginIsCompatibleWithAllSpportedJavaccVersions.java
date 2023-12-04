@@ -25,7 +25,7 @@ public class ThePluginIsCompatibleWithAllSpportedJavaccVersions {
 
     @Test
     public void givenVersion7WhenExecuteAllTasksFilesAreGenerated() throws URISyntaxException, IOException {
-        givenVersionWhenExecuteAllTasksFilesAreGenerated("net.java.dev.javacc:javacc:7.0.12", true);
+        givenVersionWhenExecuteAllTasksFilesAreGenerated("net.java.dev.javacc:javacc:7.0.13", true);
     }
 
     @Test

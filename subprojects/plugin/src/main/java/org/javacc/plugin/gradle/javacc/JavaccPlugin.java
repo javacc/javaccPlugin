@@ -33,7 +33,7 @@ public class JavaccPlugin implements Plugin<Project> {
 
     private void configureDefaultJavaccDependency(final Project project, Configuration configuration) {
         configuration.defaultDependencies(dependencies ->
-            dependencies.add(project.getDependencies().create("net.java.dev.javacc:javacc:7.0.12")));
+            dependencies.add(project.getDependencies().create("net.java.dev.javacc:javacc:7.0.13")));
     }
 
     private void addCompileJavaccTaskToProject(Project project, Configuration configuration) {

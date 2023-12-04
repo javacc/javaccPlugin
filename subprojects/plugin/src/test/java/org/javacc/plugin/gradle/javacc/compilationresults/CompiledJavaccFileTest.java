@@ -1,16 +1,10 @@
 package org.javacc.plugin.gradle.javacc.compilationresults;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.doThrow;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,14 +17,7 @@ import org.gradle.api.logging.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Answers;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(FileUtils.class)
 public class CompiledJavaccFileTest {
     private File outputDirectory;
     private Collection<File> customAstClassesDirectory;
@@ -139,14 +126,12 @@ public class CompiledJavaccFileTest {
     }
 
     @Test(expected = CompiledJavaccFileOperationException.class)
-    public void copyCustomAstClassToTargetDirectoryFails() throws Exception {
-        PowerMockito.mockStatic(FileUtils.class, Answers.CALLS_REAL_METHODS.get());
-        doThrow(new IOException()).when(FileUtils.class);
-        FileUtils.copyFile(any(File.class), any(File.class));
-
+    public void copyCustomAstClassToTargetDirectoryFails() {
         File file = new File(outputDirectory, "FileWithCorrespondingCustomAstClass.java");
         CompiledJavaccFile compiledJavaccFile = new CompiledJavaccFile(file, outputDirectory, targetDirectory, logger);
-
+        compiledJavaccFile.fileCopyUtil = (from, to) -> {
+            throw new IOException();
+        };
         compiledJavaccFile.handleCustomAstInJavacc(customAstClassesDirectory);
     }
 

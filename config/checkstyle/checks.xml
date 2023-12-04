@@ -57,6 +57,7 @@
     </module>
     <module name="AvoidStarImport">
       <property name="severity" value="warning"/>
+      <property name="excludes" value="org.junit.Assert"/>
     </module>
     <module name="IllegalImport">
       <property name="severity" value="error"/>
