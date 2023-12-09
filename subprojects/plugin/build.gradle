@@ -154,6 +154,19 @@ publishing {
     }
 }
 
+afterEvaluate {
+    publishing {
+        publications {
+            it.find({ it.artifactId == 'org.javacc.javacc.gradle.plugin'}).pom.withXml {
+                def scm = asNode().appendNode('scm')
+                scm.appendNode('url', 'https://github.com/javacc/javaccPlugin')
+                scm.appendNode('connection', 'scm:https://github.com/javacc/javaccPlugin.git')
+                scm.appendNode('developerConnection', 'scm:git://github.com/javacc/javaccPlugin.git')
+            }
+        }
+    }
+}
+
 bintray {
     if (!project.hasProperty('bintrayUser')) {
         ext.bintrayUser = ''
