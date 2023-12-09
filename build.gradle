@@ -7,7 +7,7 @@ plugins {
 
 allprojects {
     group = 'org.javacc.plugin'
-    version = '3.0.1'
+    version = '3.0.2'
 }
 
 defaultTasks 'clean', ':javacc-gradle-plugin:build'

@@ -2,6 +2,7 @@ package org.javacc.plugin.gradle.javacc;
 
 import java.io.File;
 
+import org.gradle.api.tasks.CacheableTask;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.api.tasks.compile.JavaCompile;
@@ -13,6 +14,7 @@ import org.javacc.plugin.gradle.javacc.compiler.SourceFileCompiler;
 import org.javacc.plugin.gradle.javacc.programexecution.JjdocProgramInvoker;
 import org.javacc.plugin.gradle.javacc.programexecution.ProgramArguments;
 
+@CacheableTask
 public class CompileJjdocTask extends AbstractJavaccTask {
     public static final String TASK_NAME_VALUE = "jjdoc";
     public static final String TASK_DESCRIPTION_VALUE = "Takes a JavaCC parser specification and produces documentation for the BNF grammar";
