@@ -1,6 +1,6 @@
 # JavaCC Compiler Plugin for Gradle
 
-[![Build Status](https://travis-ci.com/javacc/javaccPlugin.svg?branch=master)](https://travis-ci.com/javacc/javaccPlugin/branches)
+[![Gradle Plugin Portal Version](https://img.shields.io/gradle-plugin-portal/v/org.javacc.javacc)](https://plugins.gradle.org/plugin/org.javacc.javacc)
 
 Provides the ability to use [JavaCC](http://javacc.java.net/) via [Gradle](http://www.gradle.org/). If the 'java' plugin is also applied, JavaCompile tasks will depend upon the compileJavacc task.
 
@@ -16,7 +16,7 @@ plugins {
 }
 ```
 
-Refer to the [Gradle Plugins portal](https://plugins.gradle.org/plugin/ca.coglinc.javacc) for additional details about the installation procedure, including syntax for the Kotlin DSL and the legacy `buildscript` block.
+Refer to the [Gradle Plugins portal](https://plugins.gradle.org/plugin/org.javacc.javacc) for additional details about the installation procedure, including syntax for the Kotlin DSL and the legacy `buildscript` block.
 
 ## Building from source
 
