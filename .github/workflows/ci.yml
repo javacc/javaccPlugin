@@ -28,6 +28,7 @@ jobs:
       shell: bash
     - name: checkstyle
       uses: dbelyaev/action-checkstyle@v1.5.6
+      if: github.event_name == 'pull_request'
       with:
         github_token: ${{ secrets.github_token }}
         checkstyle_config: 'config/checkstyle/checks.xml'
