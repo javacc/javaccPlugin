@@ -9,6 +9,7 @@
     Description: none
 -->
 <module name="Checker">
+  <property name="fileExtensions" value="java, xml, properties, gradle"/>
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
     <module name="SuppressionCommentFilter"/>
