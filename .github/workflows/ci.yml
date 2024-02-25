@@ -27,7 +27,7 @@ jobs:
       run: ./gradlew build
       shell: bash
     - name: checkstyle
-      uses: dbelyaev/action-checkstyle@v0.7.4
+      uses: dbelyaev/action-checkstyle@v1.5.6
       with:
         github_token: ${{ secrets.github_token }}
         checkstyle_config: 'config/checkstyle/checks.xml'
