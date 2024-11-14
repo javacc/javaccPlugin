@@ -174,8 +174,10 @@ writeNextVersion.mustRunAfter tagRelease
 
 copyNextBuildFile.mustRunAfter writeNextVersion
 
-task release(dependsOn: [project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies, project(':javacc-gradle-plugin').build, copyReleaseBuildFile, tagRelease, copyNextBuildFile]) {
-    description "Releases the plugin by verifying there are no snapshot dependencies, writing the next version to build.gradle and committing the build file. " +
+task release(dependsOn: [project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies,
+         project(':javacc-gradle-plugin').build, copyReleaseBuildFile, tagRelease, copyNextBuildFile]) {
+    description "Releases the plugin by verifying there are no snapshot dependencies, " +
+        "writing the next version to build.gradle and committing the build file. " +
         "Versions must be specified by using the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties."
 
     group 'Release'
