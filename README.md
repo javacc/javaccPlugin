@@ -139,8 +139,8 @@ The artifacts for this plugin are signed using the [PGP key](http://pgp.mit.edu:
 
 ## Releasing
 
-The following command can be used to release the project, upload to Maven Central and upload to Bintray:
-```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/javacc/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] -PbintrayUser=[username] -PbintrayApiKey=[apiKey] clean :release:release```
+The following command can be used to release the project, upload to Maven Central:
+```./gradlew -PreleaseVersion=[version] -PnextVersion=[snapshot version] -PscmUrl=https://github.com/javacc/javaccPlugin.git -PossrhUsername=[username] -PossrhPassword=[password] -PgpgPassphrase=[passphrase] clean :release:release```
 
 ## Changelog
 
