@@ -2,9 +2,9 @@ package org.javacc.plugin.gradle.javacc.programexecution;
 
 import java.io.File;
 
-import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.file.RelativePath;
+import org.gradle.process.ExecOperations;
 
 /**
  * This {@link ProgramInvoker} implementation invokes the JavaCC program to generate Java files from JavaCC grammar files.
@@ -12,8 +12,9 @@ import org.gradle.api.file.RelativePath;
 public class JavaccProgramInvoker extends AbstractProgramInvoker {
     public static final String SUPPORTED_FILE_SUFFIX = ".jj";
 
-    public JavaccProgramInvoker(Project project, Configuration classpath, File tempOutputDirectory) {
-        super(project, classpath, tempOutputDirectory, JavaccExecutorAction.class);
+    public JavaccProgramInvoker(Configuration classpath, File tempOutputDirectory,
+                                ExecOperations execOperations) {
+        super(classpath, tempOutputDirectory, JavaccExecutorAction.class, execOperations);
     }
 
     @Override

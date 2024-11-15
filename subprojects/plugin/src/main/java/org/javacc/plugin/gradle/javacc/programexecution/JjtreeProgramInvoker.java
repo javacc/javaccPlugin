@@ -2,9 +2,9 @@ package org.javacc.plugin.gradle.javacc.programexecution;
 
 import java.io.File;
 
-import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.file.RelativePath;
+import org.gradle.process.ExecOperations;
 
 /**
  * This {@link ProgramInvoker} implementation invokes the JJTree program to generate JavaCC grammar files from JJTree files.
@@ -13,8 +13,9 @@ public class JjtreeProgramInvoker extends AbstractProgramInvoker {
     public static final String SUPPORTED_FILE_SUFFIX = ".jjt";
     private final String outputDirectoryArgName;
 
-    public JjtreeProgramInvoker(Project project, Configuration classpath, File tempOutputDirectory) {
-        super(project, classpath, tempOutputDirectory, JjtreeExecutorAction.class);
+    public JjtreeProgramInvoker(Configuration classpath, File tempOutputDirectory,
+           ExecOperations execOperations) {
+        super(classpath, tempOutputDirectory, JjtreeExecutorAction.class, execOperations);
         outputDirectoryArgName = getOutputDirectoryArgName();
     }
 

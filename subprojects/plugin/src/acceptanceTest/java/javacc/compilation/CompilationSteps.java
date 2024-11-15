@@ -17,6 +17,8 @@ import org.gradle.testkit.runner.GradleRunner;
 import org.gradle.testkit.runner.TaskOutcome;
 
 public class CompilationSteps {
+
+    private static final int JAVA_11 = 11;
     private File projectDirectory;
     private GradleRunner buildRunner;
     private File outputDirectory;
@@ -30,8 +32,9 @@ public class CompilationSteps {
 
         projectDirectory = new File(resource.toURI());
 
+        String gradleVersion = Runtime.version().feature() > JAVA_11 ? "7.3" : "6.4";
         buildRunner = GradleRunner.create()
-                                  .withGradleVersion("6.4")
+                                  .withGradleVersion(gradleVersion)
                                   .withProjectDir(projectDirectory)
                                   .withPluginClasspath();
     }

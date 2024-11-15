@@ -6,9 +6,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import org.gradle.api.Action;
-import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.Dependency;
+import org.gradle.process.ExecOperations;
 import org.gradle.process.ExecResult;
 import org.gradle.process.JavaExecSpec;
 
@@ -18,20 +18,22 @@ abstract class AbstractProgramInvoker implements ProgramInvoker {
     protected static final int VERSION_8 = 8;
     protected final File tempOutputDirectory;
 
-    private final Project project;
     private final Configuration classpath;
     private final Class<? extends Action<JavaExecSpec>> executorType;
+    private final ExecOperations execOperations;
 
-    protected AbstractProgramInvoker(Project project, Configuration classpath, File tempOutputDirectory, Class<? extends Action<JavaExecSpec>> executorType) {
-        this.project = project;
+    protected AbstractProgramInvoker(Configuration classpath,
+            File tempOutputDirectory, Class<? extends Action<JavaExecSpec>> executorType,
+            ExecOperations ops) {
         this.classpath = classpath;
         this.tempOutputDirectory = tempOutputDirectory;
         this.executorType = executorType;
+        this.execOperations = ops;
     }
 
     @Override
     public void invokeCompiler(ProgramArguments arguments) throws Exception {
-        ExecResult execResult = project.javaexec(executor(arguments));
+        ExecResult execResult = execOperations.javaexec(executor(arguments));
 
         if (execResult.getExitValue() != 0) {
             throw new IllegalStateException("JJTree failed with error code: [" + execResult.getExitValue() + "]");
@@ -54,8 +56,7 @@ abstract class AbstractProgramInvoker implements ProgramInvoker {
     protected Integer[] getJavaccVersion() {
         String version = "";
         try {
-            Configuration configuration = project.getConfigurations().getByName("javacc");
-            for (Dependency dependency : configuration.getAllDependencies()) {
+            for (Dependency dependency : classpath.getAllDependencies()) {
                 String id = dependency.getGroup() + ":" + dependency.getName();
                 if (dependency.getVersion() != null
                     && ("net.java.dev.javacc:javacc".equals(id)

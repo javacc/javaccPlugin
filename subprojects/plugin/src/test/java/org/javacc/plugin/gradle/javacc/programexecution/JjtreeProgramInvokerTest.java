@@ -13,9 +13,9 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 
-import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.file.RelativePath;
+import org.gradle.process.ExecOperations;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,16 +30,16 @@ public class JjtreeProgramInvokerTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private Project project;
+    private ExecOperations execOperations;
     private ProgramInvoker programInvoker;
     private File tempOutputDirectory;
 
     @Before
     public void setUp() throws Exception {
-        project = mock(Project.class);
+        execOperations = mock(ExecOperations.class);
         Configuration classpath = mock(Configuration.class);
         tempOutputDirectory = testFolder.newFolder("tempOutput");
-        programInvoker = new JjtreeProgramInvoker(project, classpath, tempOutputDirectory);
+        programInvoker = new JjtreeProgramInvoker(classpath, tempOutputDirectory, execOperations);
     }
 
     @Test
@@ -48,11 +48,11 @@ public class JjtreeProgramInvokerTest {
 
         programInvoker.invokeCompiler(new ProgramArguments());
 
-        verify(project).javaexec(isA(JjtreeExecutorAction.class));
+        verify(execOperations).javaexec(isA(JjtreeExecutorAction.class));
     }
 
     private void givenSuccessfulExecution() {
-        when(project.javaexec(any(JjtreeExecutorAction.class))).thenReturn(new SuccessExecResult());
+        when(execOperations.javaexec(any(JjtreeExecutorAction.class))).thenReturn(new SuccessExecResult());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class JjtreeProgramInvokerTest {
 
     private FailureExecResult givenFailedExecution() {
         FailureExecResult execResult = new FailureExecResult();
-        when(project.javaexec(any(JjtreeExecutorAction.class))).thenReturn(execResult);
+        when(execOperations.javaexec(any(JjtreeExecutorAction.class))).thenReturn(execResult);
 
         return execResult;
     }

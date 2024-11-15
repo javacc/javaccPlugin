@@ -2,10 +2,11 @@ package org.javacc.plugin.gradle.javacc;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 import org.gradle.api.tasks.CacheableTask;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.api.tasks.TaskCollection;
-import org.gradle.api.tasks.compile.JavaCompile;
+import org.gradle.process.ExecOperations;
 
 import org.javacc.plugin.gradle.javacc.compiler.CompilerInputOutputConfiguration;
 import org.javacc.plugin.gradle.javacc.compiler.JavaccCompilerInputOutputConfiguration;
@@ -22,16 +23,17 @@ public class CompileJjdocTask extends AbstractJavaccTask {
     private static final String DEFAULT_INPUT_DIRECTORY = File.separator + "src" + File.separator + "main" + File.separator + "javacc";
     private static final String DEFAULT_OUTPUT_DIRECTORY = File.separator + "generated" + File.separator + "jjdoc";
 
-    public CompileJjdocTask() {
-        super(DEFAULT_INPUT_DIRECTORY, DEFAULT_OUTPUT_DIRECTORY, "**/*" + JjdocProgramInvoker.SUPPORTED_FILE_SUFFIX);
+    @Inject
+    public CompileJjdocTask(ExecOperations execOperations) {
+        super(DEFAULT_INPUT_DIRECTORY, DEFAULT_OUTPUT_DIRECTORY, "**/*" + JjdocProgramInvoker.SUPPORTED_FILE_SUFFIX, execOperations);
     }
 
     @TaskAction
     public void run() {
-        TaskCollection<JavaCompile> javaCompileTasks = this.getProject().getTasks().withType(JavaCompile.class);
         CompilerInputOutputConfiguration inputOutputDirectories
             = new JavaccCompilerInputOutputConfiguration(getInputDirectory(), getOutputDirectory(), getSource(), javaCompileTasks);
-        JjdocProgramInvoker jjdocInvoker = new JjdocProgramInvoker(getProject(), getClasspath(), inputOutputDirectories.getTempOutputDirectory());
+        JjdocProgramInvoker jjdocInvoker = new JjdocProgramInvoker(getClasspath(),
+            inputOutputDirectories.getTempOutputDirectory(), execOperations);
         ProgramArguments arguments = new ProgramArguments();
         arguments.addAll(getArguments());
         SourceFileCompiler compiler = new JavaccSourceFileCompiler(jjdocInvoker, arguments, inputOutputDirectories, getLogger());

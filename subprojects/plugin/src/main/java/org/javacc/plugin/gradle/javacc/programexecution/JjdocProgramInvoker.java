@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.file.RelativePath;
+import org.gradle.process.ExecOperations;
 
 /**
  * This {@link ProgramInvoker} implementation invokes the JJDoc program to generate grammar representations from JavaCC files.
@@ -14,8 +14,8 @@ import org.gradle.api.file.RelativePath;
 public class JjdocProgramInvoker extends AbstractProgramInvoker {
     public static final String SUPPORTED_FILE_SUFFIX = ".jj";
 
-    public JjdocProgramInvoker(Project project, Configuration classpath, File tempOutputDirectory) {
-        super(project, classpath, tempOutputDirectory, JjdocExecutorAction.class);
+    public JjdocProgramInvoker(Configuration classpath, File tempOutputDirectory, ExecOperations execOperations) {
+        super(classpath, tempOutputDirectory, JjdocExecutorAction.class, execOperations);
     }
 
     @Override

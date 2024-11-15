@@ -3,6 +3,7 @@ package org.javacc.plugin.gradle.javacc;
 import java.io.File;
 import java.util.Map;
 
+import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.Internal;
@@ -12,19 +13,34 @@ import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.SkipWhenEmpty;
 import org.gradle.api.tasks.SourceTask;
+import org.gradle.api.tasks.TaskCollection;
+import org.gradle.api.tasks.compile.JavaCompile;
+import org.gradle.process.ExecOperations;
+
+import groovy.lang.Closure;
 
 public abstract class AbstractJavaccTask extends SourceTask {
     protected Map<String, String> programArguments;
+    protected final ExecOperations execOperations;
+    protected TaskCollection<JavaCompile> javaCompileTasks;
 
     private File inputDirectory;
     private File outputDirectory;
     private Configuration classpath;
 
-    protected AbstractJavaccTask(String inputDirectory, String outputDirectory, String filter) {
+    protected AbstractJavaccTask(String inputDirectory, String outputDirectory, String filter,
+                                 ExecOperations execOperations) {
         setInputDirectory(inputDirectory);
         setOutputDirectory(outputDirectory);
 
         include(filter);
+        this.execOperations = execOperations;
+    }
+
+    @Override
+    public Task configure(Closure closure) {
+        javaCompileTasks = this.getProject().getTasks().withType(JavaCompile.class);
+        return super.configure(closure);
     }
 
     @Internal
