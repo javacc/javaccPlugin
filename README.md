@@ -12,7 +12,7 @@ To use the Gradle Plugins DSL, add the following lines to your `build.gradle` sc
 
 ```gradle
 plugins {
-  id "org.javacc.javacc" version "3.0.2"
+  id "org.javacc.javacc" version "4.0.0"
 }
 ```
 
