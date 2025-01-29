@@ -22,12 +22,9 @@ ext.gitRepo = Grgit.open(rootProject.projectDir)
 def releaseVersionProperty = 'releaseVersion'
 def nextVersionProperty = 'nextVersion'
 
-task verifyReleaseVersions {
+tasks.register('verifyReleaseVersions') {
     description "Verifies that the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties are specified"
     group 'Release'
-}
-
-verifyReleaseVersions {
     doLast {
         if (!project.hasProperty(releaseVersionProperty) || !project.hasProperty(nextVersionProperty)) {
             throw new RuntimeException("[${releaseVersionProperty}] and [${nextVersionProperty}] project properties are mandatory.")
@@ -35,12 +32,9 @@ verifyReleaseVersions {
     }
 }
 
-task verifySnapshotDependencies {
+tasks.register('verifySnapshotDependencies') {
     description 'Fails the build if there are SNAPSHOT dependencies.'
     group 'Release'
-}
-
-verifySnapshotDependencies {
     doLast {
         configurations.each { configuration ->
             configuration.dependencies.each { dependency ->
@@ -67,12 +61,9 @@ def commitChangedFiles(String commitMessage) {
     }
 }
 
-task tagRelease {
+tasks.register('tagRelease') {
     description 'Creates a tag in SCM for the release.'
     group 'Release'
-}
-
-tagRelease {
     doLast {
         gitRepo.tag.add {
             name = "javacc-gradle-plugin-${releaseVersion}"
@@ -174,8 +165,9 @@ writeNextVersion.mustRunAfter tagRelease
 
 copyNextBuildFile.mustRunAfter writeNextVersion
 
-task release(dependsOn: [project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies,
-         project(':javacc-gradle-plugin').build, copyReleaseBuildFile, tagRelease, copyNextBuildFile]) {
+tasks.register('release') {
+    dependsOn project(':javacc-gradle-plugin').clean, verifyReleaseVersions, verifySnapshotDependencies,
+        project(':javacc-gradle-plugin').build, copyReleaseBuildFile, tagRelease, copyNextBuildFile
     description "Releases the plugin by verifying there are no snapshot dependencies, " +
         "writing the next version to build.gradle and committing the build file. " +
         "Versions must be specified by using the [${releaseVersionProperty}] and [${nextVersionProperty}] project properties."

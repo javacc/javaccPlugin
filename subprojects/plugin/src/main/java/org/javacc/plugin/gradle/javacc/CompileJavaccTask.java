@@ -32,7 +32,7 @@ public class CompileJavaccTask extends AbstractJavaccTask {
     @TaskAction
     public void run() {
         CompilerInputOutputConfiguration inputOutputDirectories
-            = new JavaccCompilerInputOutputConfiguration(getInputDirectory(), getOutputDirectory(), getSource(), javaCompileTasks);
+            = new JavaccCompilerInputOutputConfiguration(getInputDirectory(), getOutputDirectory(), getSource(), javaSources);
         JavaccProgramInvoker javaccInvoker = new JavaccProgramInvoker(getClasspath(),
             inputOutputDirectories.getTempOutputDirectory(), execOperations);
         ProgramArguments arguments = new ProgramArguments();
