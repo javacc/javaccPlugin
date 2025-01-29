@@ -1,10 +1,12 @@
 package org.javacc.plugin.gradle.javacc;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.file.FileTree;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.Optional;
@@ -13,16 +15,12 @@ import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.SkipWhenEmpty;
 import org.gradle.api.tasks.SourceTask;
-import org.gradle.api.tasks.TaskCollection;
-import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.process.ExecOperations;
-
-import groovy.lang.Closure;
 
 public abstract class AbstractJavaccTask extends SourceTask {
     protected Map<String, String> programArguments;
     protected final ExecOperations execOperations;
-    protected TaskCollection<JavaCompile> javaCompileTasks;
+    protected final List<FileTree> javaSources = new ArrayList<>();
 
     private File inputDirectory;
     private File outputDirectory;
@@ -35,12 +33,6 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
         include(filter);
         this.execOperations = execOperations;
-    }
-
-    @Override
-    public Task configure(Closure closure) {
-        javaCompileTasks = this.getProject().getTasks().withType(JavaCompile.class);
-        return super.configure(closure);
     }
 
     @Internal
@@ -99,5 +91,9 @@ public abstract class AbstractJavaccTask extends SourceTask {
     @Internal
     protected Configuration getClasspath() {
         return classpath;
+    }
+
+    public void addJavaSources(FileTree source) {
+        javaSources.add(source);
     }
 }

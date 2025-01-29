@@ -31,7 +31,7 @@ public class CompileJjdocTask extends AbstractJavaccTask {
     @TaskAction
     public void run() {
         CompilerInputOutputConfiguration inputOutputDirectories
-            = new JavaccCompilerInputOutputConfiguration(getInputDirectory(), getOutputDirectory(), getSource(), javaCompileTasks);
+            = new JavaccCompilerInputOutputConfiguration(getInputDirectory(), getOutputDirectory(), getSource(), javaSources);
         JjdocProgramInvoker jjdocInvoker = new JjdocProgramInvoker(getClasspath(),
             inputOutputDirectories.getTempOutputDirectory(), execOperations);
         ProgramArguments arguments = new ProgramArguments();

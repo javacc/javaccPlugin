@@ -55,6 +55,7 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
         for (JavaCompile task : javaCompilationTasks) {
             task.dependsOn(compileJavaccTask);
             task.source(compileJavaccTask.getOutputDirectory());
+            compileJavaccTask.addJavaSources(task.getSource());
         }
     }
 
@@ -63,6 +64,7 @@ public class JavaToJavaccDependencyAction implements Action<Project> {
         for (JavaCompile task : javaCompilationTasks) {
             task.dependsOn(compileJjtreeTask);
             task.source(compileJjtreeTask.getOutputDirectory());
+            compileJjtreeTask.addJavaSources(task.getSource());
         }
 
         for (CompileJavaccTask task : javaccCompilationTasks) {

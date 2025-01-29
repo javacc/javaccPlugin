@@ -34,10 +34,4 @@ public interface CompilerInputOutputConfiguration {
      */
     FileTree getJavaSourceTree();
 
-    /**
-     * @return a {@link FileTree} representation of all the source files, both Java and specific to the compiler
-     * @see #getSource()
-     * @see #getJavaSourceTree()
-     */
-    FileTree getCompleteSourceTree();
 }

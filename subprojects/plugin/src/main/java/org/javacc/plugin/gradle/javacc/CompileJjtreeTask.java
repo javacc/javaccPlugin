@@ -31,7 +31,7 @@ public class CompileJjtreeTask extends AbstractJavaccTask {
     @TaskAction
     public void run() {
         CompilerInputOutputConfiguration inputOutputDirectories
-            = new JavaccCompilerInputOutputConfiguration(getInputDirectory(), getOutputDirectory(), getSource(), javaCompileTasks);
+            = new JavaccCompilerInputOutputConfiguration(getInputDirectory(), getOutputDirectory(), getSource(), javaSources);
         JjtreeProgramInvoker jjtreeInvoker = new JjtreeProgramInvoker(getClasspath(),
             inputOutputDirectories.getTempOutputDirectory(), execOperations);
         ProgramArguments arguments = new ProgramArguments();

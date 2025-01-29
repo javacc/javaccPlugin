@@ -10,22 +10,22 @@ import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.tasks.SourceTask;
-import org.gradle.api.tasks.TaskCollection;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import org.javacc.plugin.gradle.javacc.CompileJavaccTask;
 
 public class JavaccCompilerInputOutputConfigurationTest {
 
@@ -74,12 +74,17 @@ public class JavaccCompilerInputOutputConfigurationTest {
         CompilerInputOutputConfiguration configuration = builder
             .withInputDirectory(inputDirectory)
             .withOutputDirectory(outputDirectory)
-            .withJavaCompileTasks(project.getTasks().withType(JavaCompile.class))
+            .withJavaSources(getJavaSources(project))
             .build();
 
         FileTree javaSourceTree = configuration.getJavaSourceTree();
 
         assertThat(javaSourceTree, contains(javaFile.getCanonicalFile()));
+    }
+
+    private List<FileTree> getJavaSources(Project project) {
+        return project.getTasks().withType(JavaCompile.class)
+            .stream().map(JavaCompile::getSource).collect(Collectors.toList());
     }
 
     private File addTaskWithSourceFile(Project project, String taskName, String sourceFileName, Class<? extends SourceTask> taskType) throws IOException {
@@ -102,7 +107,7 @@ public class JavaccCompilerInputOutputConfigurationTest {
         CompilerInputOutputConfiguration configuration = builder
             .withInputDirectory(inputDirectory)
             .withOutputDirectory(outputDirectory)
-            .withJavaCompileTasks(project.getTasks().withType(JavaCompile.class))
+            .withJavaSources(getJavaSources(project))
             .build();
 
         FileTree javaSourceTree = configuration.getJavaSourceTree();
@@ -118,7 +123,7 @@ public class JavaccCompilerInputOutputConfigurationTest {
         CompilerInputOutputConfiguration configuration = builder
             .withInputDirectory(inputDirectory)
             .withOutputDirectory(outputDirectory)
-            .withJavaCompileTasks(project.getTasks().withType(JavaCompile.class))
+            .withJavaSources(getJavaSources(project))
             .build();
 
         FileTree javaSourceTree = configuration.getJavaSourceTree();
@@ -127,61 +132,11 @@ public class JavaccCompilerInputOutputConfigurationTest {
         assertThat(javaSourceTree, not(contains(outputFile.getCanonicalFile())));
     }
 
-    @Test
-    public void getCompleteSourceTreeReturnsSourceWhenNoJavaCompileTask() throws IOException {
-        Project project = ProjectBuilder.builder().withProjectDir(testFolder.getRoot()).build();
-        File javaccFile = addTaskWithSourceFile(project, "compileJavacc", "input/TestClass.jj", CompileJavaccTask.class);
-        CompilerInputOutputConfiguration configuration = builder
-            .withInputDirectory(inputDirectory)
-            .withOutputDirectory(outputDirectory)
-            .withSource(((SourceTask) project.getTasks().getByName("compileJavacc")).getSource())
-            .build();
-
-        FileTree completeSourceTree = configuration.getCompleteSourceTree();
-
-        assertThat(completeSourceTree, contains(javaccFile.getCanonicalFile()));
-    }
-
-    @Test
-    public void getCompleteSourceTreeReturnsSourceAndJavaSourceWhenProjectHasJavaCompileTasks() throws IOException {
-        Project project = ProjectBuilder.builder().withProjectDir(testFolder.getRoot()).build();
-        File javaccFile = addTaskWithSourceFile(project, "compileJavacc", "input/TestClass.jj", CompileJavaccTask.class);
-        testFolder.newFolder("inputJava");
-        File javaFile = addTaskWithSourceFile(project, "compileJava", "inputJava/MyClass.java", JavaCompile.class);
-        CompilerInputOutputConfiguration configuration = builder
-            .withInputDirectory(inputDirectory)
-            .withOutputDirectory(outputDirectory)
-            .withSource(((SourceTask) project.getTasks().getByName("compileJavacc")).getSource())
-            .withJavaCompileTasks(project.getTasks().withType(JavaCompile.class))
-            .build();
-
-        FileTree completeSourceTree = configuration.getCompleteSourceTree();
-
-        assertThat(completeSourceTree, containsInAnyOrder(javaccFile.getCanonicalFile(), javaFile.getCanonicalFile()));
-    }
-
-    @Test
-    public void getCompleteSourceTreeExcludesOutputFolder() throws IOException {
-        Project project = ProjectBuilder.builder().withProjectDir(testFolder.getRoot()).build();
-        File javaccFile = addTaskWithSourceFile(project, "compileJavacc", "input/TestClass.jj", CompileJavaccTask.class);
-        File outputFile = addTaskWithSourceFile(project, "compileJavaccGenerated", "output/Generated.java", JavaCompile.class);
-        CompilerInputOutputConfiguration configuration = builder
-            .withInputDirectory(inputDirectory)
-            .withOutputDirectory(outputDirectory)
-            .withSource(((SourceTask) project.getTasks().getByName("compileJavacc")).getSource())
-            .withJavaCompileTasks(project.getTasks().withType(JavaCompile.class))
-            .build();
-
-        FileTree completeSourceTree = configuration.getCompleteSourceTree();
-
-        assertThat(completeSourceTree, contains(javaccFile.getCanonicalFile()));
-        assertThat(completeSourceTree, not(contains(outputFile.getCanonicalFile())));
-    }
 
     private static class JavaccConfigurationBuilder {
         private File inputDirectory;
         private File outputDirectory;
-        private TaskCollection<JavaCompile> javaCompileTasks;
+        private List<FileTree> javaSourceTrees = new ArrayList<>();
         private FileTree source;
 
         private JavaccConfigurationBuilder() {
@@ -203,20 +158,14 @@ public class JavaccCompilerInputOutputConfigurationTest {
             return this;
         }
 
-        public JavaccConfigurationBuilder withJavaCompileTasks(TaskCollection<JavaCompile> javaCompileTasks) {
-            this.javaCompileTasks = javaCompileTasks;
-
-            return this;
-        }
-
-        public JavaccConfigurationBuilder withSource(FileTree source) {
-            this.source = source;
+        public JavaccConfigurationBuilder withJavaSources(List<FileTree> javaSourceTrees) {
+            this.javaSourceTrees.addAll(javaSourceTrees);
 
             return this;
         }
 
         public JavaccCompilerInputOutputConfiguration build() {
-            return new JavaccCompilerInputOutputConfiguration(inputDirectory, outputDirectory, source, javaCompileTasks);
+            return new JavaccCompilerInputOutputConfiguration(inputDirectory, outputDirectory, source, javaSourceTrees);
         }
     }
 }
