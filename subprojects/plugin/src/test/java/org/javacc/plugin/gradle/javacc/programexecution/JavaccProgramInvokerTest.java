@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,10 +13,9 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 
-import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.artifacts.ConfigurationContainer;
 import org.gradle.api.file.RelativePath;
+import org.gradle.process.ExecOperations;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,17 +30,16 @@ public class JavaccProgramInvokerTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private Project project;
+    ExecOperations execOperations;
     private ProgramInvoker programInvoker;
     private File tempOutputDirectory;
 
     @Before
     public void setUp() throws Exception {
-        project = mock(Project.class);
-        doReturn(mock(ConfigurationContainer.class)).when(project).getConfigurations();
         Configuration classpath = mock(Configuration.class);
         tempOutputDirectory = testFolder.newFolder("tempOutput");
-        programInvoker = new JavaccProgramInvoker(project, classpath, tempOutputDirectory);
+        execOperations = mock(ExecOperations.class);
+        programInvoker = new JavaccProgramInvoker(classpath, tempOutputDirectory, execOperations);
     }
 
     @Test
@@ -51,11 +48,11 @@ public class JavaccProgramInvokerTest {
 
         programInvoker.invokeCompiler(new ProgramArguments());
 
-        verify(project).javaexec(isA(JavaccExecutorAction.class));
+        verify(execOperations).javaexec(isA(JavaccExecutorAction.class));
     }
 
     private void givenSuccessfulExecution() {
-        when(project.javaexec(any(JavaccExecutorAction.class))).thenReturn(new SuccessExecResult());
+        when(execOperations.javaexec(any(JavaccExecutorAction.class))).thenReturn(new SuccessExecResult());
     }
 
     @Test
@@ -70,7 +67,7 @@ public class JavaccProgramInvokerTest {
 
     private FailureExecResult givenFailedExecution() {
         FailureExecResult execResult = new FailureExecResult();
-        when(project.javaexec(any(JavaccExecutorAction.class))).thenReturn(execResult);
+        when(execOperations.javaexec(any(JavaccExecutorAction.class))).thenReturn(execResult);
 
         return execResult;
     }

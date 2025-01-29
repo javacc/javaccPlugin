@@ -2,17 +2,25 @@ plugins {
     id 'javaccPlugin.plugin-conventions'
 
     id 'checkstyle'
-    id 'com.github.spotbugs' version '4.7.1'
+    id 'com.github.spotbugs' version '6.0.26'
     id 'jacoco'
 }
 
+import com.github.spotbugs.snom.Confidence
+import com.github.spotbugs.snom.Effort
+
 defaultTasks 'clean', 'build', 'install'
+
 
 sourceSets {
     acceptanceTest {
         compileClasspath += main.output + test.output
         runtimeClasspath += main.output + test.output
     }
+}
+
+test {
+    jvmArgs = ["--add-opens=java.base/java.io=ALL-UNNAMED"]
 }
 
 configurations {
@@ -56,11 +64,11 @@ tasks.withType(Checkstyle) {
     }
 }
 spotbugs {
-    toolVersion = '4.2.1'
-    effort = "min"
+    toolVersion = '4.8.6'
+    effort = Effort.MAX
     maxHeapSize = project.hasProperty('spotBugsHeapSize') ? project.spotBugsHeapSize : '1g'
     ignoreFailures = false
-    reportLevel = "high"
+    reportLevel = Confidence.values()[3]
     excludeFilter = file("${rootProject.projectDir}/config/findbugs/exclude.xml")
 }
 
