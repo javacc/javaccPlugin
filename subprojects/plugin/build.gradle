@@ -2,7 +2,7 @@ plugins {
     id 'javaccPlugin.plugin-conventions'
 
     id 'checkstyle'
-    id 'com.github.spotbugs' version '6.1.5'
+    id 'com.github.spotbugs' version '6.1.6'
     id 'jacoco'
 }
 
