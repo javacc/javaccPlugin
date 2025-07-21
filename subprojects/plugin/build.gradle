@@ -28,7 +28,7 @@ configurations {
 }
 
 dependencies {
-    implementation 'commons-io:commons-io:2.19.0'
+    implementation 'commons-io:commons-io:2.20.0'
     implementation 'org.apache.commons:commons-lang3:3.17.0'
 
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
