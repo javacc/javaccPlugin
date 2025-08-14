@@ -29,7 +29,7 @@ configurations {
 
 dependencies {
     implementation 'commons-io:commons-io:2.19.0'
-    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
 
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
     testImplementation 'org.mockito:mockito-all:1.10.19'
