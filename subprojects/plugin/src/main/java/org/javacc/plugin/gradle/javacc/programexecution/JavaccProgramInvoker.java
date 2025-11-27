@@ -2,7 +2,7 @@ package org.javacc.plugin.gradle.javacc.programexecution;
 
 import java.io.File;
 
-import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.RelativePath;
 import org.gradle.process.ExecOperations;
 
@@ -12,9 +12,9 @@ import org.gradle.process.ExecOperations;
 public class JavaccProgramInvoker extends AbstractProgramInvoker {
     public static final String SUPPORTED_FILE_SUFFIX = ".jj";
 
-    public JavaccProgramInvoker(Configuration classpath, File tempOutputDirectory,
+    public JavaccProgramInvoker(FileCollection classpath, String javaccVersion, File tempOutputDirectory,
                                 ExecOperations execOperations) {
-        super(classpath, tempOutputDirectory, JavaccExecutorAction.class, execOperations);
+        super(classpath, javaccVersion, tempOutputDirectory, JavaccExecutorAction.class, execOperations);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class JjtreeProgramInvokerTest {
         execOperations = mock(ExecOperations.class);
         Configuration classpath = mock(Configuration.class);
         tempOutputDirectory = testFolder.newFolder("tempOutput");
-        programInvoker = new JjtreeProgramInvoker(classpath, tempOutputDirectory, execOperations);
+        programInvoker = new JjtreeProgramInvoker(classpath, "", tempOutputDirectory, execOperations);
     }
 
     @Test

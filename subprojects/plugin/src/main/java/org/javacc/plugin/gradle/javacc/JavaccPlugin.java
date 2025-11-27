@@ -7,6 +7,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.Dependency;
 
 public class JavaccPlugin implements Plugin<Project> {
     public static final String GROUP = "JavaCC";
@@ -52,14 +53,23 @@ public class JavaccPlugin implements Plugin<Project> {
     }
 
     private void addTaskToProject(Project project, Class<? extends AbstractJavaccTask> type, String name, String description, String group, Configuration configuration) {
-        Map<String, Object> options = new HashMap<>();
+        project.getTasks().register(name, type, t -> {
+           t.setDescription(description);
+           t.setGroup(group);
 
-        options.put(Task.TASK_TYPE, type);
-        options.put(Task.TASK_DESCRIPTION, description);
-        options.put(Task.TASK_GROUP, group);
-
-        AbstractJavaccTask task = (AbstractJavaccTask) project.task(options, name);
-        task.getConventionMapping().map("classpath", () -> configuration);
+           t.getClasspath().from(configuration);
+           t.getJavaccVersion().set(project.provider(() -> {
+               for (Dependency dependency : configuration.getAllDependencies()) {
+                   String id = dependency.getGroup() + ":" + dependency.getName();
+                   if (dependency.getVersion() != null
+                       && ("net.java.dev.javacc:javacc".equals(id)
+                       || "org.javacc.generator:java".equals(id))) {
+                       return dependency.getVersion();
+                   }
+               }
+               return "";
+           }));
+        });
     }
 
     private void configureTaskDependencies(Project project) {

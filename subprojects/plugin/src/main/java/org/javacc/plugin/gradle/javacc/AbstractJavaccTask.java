@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.FileTree;
+import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.Optional;
@@ -24,7 +25,11 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
     private File inputDirectory;
     private File outputDirectory;
-    private Configuration classpath;
+
+    @Internal
+    abstract ConfigurableFileCollection getClasspath();
+    @Internal
+    abstract Property<String> getJavaccVersion();
 
     protected AbstractJavaccTask(String inputDirectory, String outputDirectory, String filter,
                                  ExecOperations execOperations) {
@@ -86,11 +91,6 @@ public abstract class AbstractJavaccTask extends SourceTask {
         this.outputDirectory = outputDirectory;
 
         return this;
-    }
-
-    @Internal
-    protected Configuration getClasspath() {
-        return classpath;
     }
 
     public void addJavaSources(FileTree source) {

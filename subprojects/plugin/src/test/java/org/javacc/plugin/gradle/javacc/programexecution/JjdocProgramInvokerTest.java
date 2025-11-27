@@ -39,7 +39,7 @@ public class JjdocProgramInvokerTest {
         execOperations = mock(ExecOperations.class);
         Configuration classpath = mock(Configuration.class);
         tempOutputDirectory = testFolder.newFolder("tempOutput");
-        programInvoker = new JjdocProgramInvoker(classpath, tempOutputDirectory, execOperations);
+        programInvoker = new JjdocProgramInvoker(classpath, "", tempOutputDirectory, execOperations);
     }
 
     @Test

@@ -16,7 +16,7 @@ import org.javacc.plugin.gradle.javacc.programexecution.JjdocProgramInvoker;
 import org.javacc.plugin.gradle.javacc.programexecution.ProgramArguments;
 
 @CacheableTask
-public class CompileJjdocTask extends AbstractJavaccTask {
+public abstract class CompileJjdocTask extends AbstractJavaccTask {
     public static final String TASK_NAME_VALUE = "jjdoc";
     public static final String TASK_DESCRIPTION_VALUE = "Takes a JavaCC parser specification and produces documentation for the BNF grammar";
 
@@ -32,7 +32,7 @@ public class CompileJjdocTask extends AbstractJavaccTask {
     public void run() {
         CompilerInputOutputConfiguration inputOutputDirectories
             = new JavaccCompilerInputOutputConfiguration(getInputDirectory(), getOutputDirectory(), getSource(), javaSources);
-        JjdocProgramInvoker jjdocInvoker = new JjdocProgramInvoker(getClasspath(),
+        JjdocProgramInvoker jjdocInvoker = new JjdocProgramInvoker(getClasspath(), getJavaccVersion().get(),
             inputOutputDirectories.getTempOutputDirectory(), execOperations);
         ProgramArguments arguments = new ProgramArguments();
         arguments.addAll(getArguments());

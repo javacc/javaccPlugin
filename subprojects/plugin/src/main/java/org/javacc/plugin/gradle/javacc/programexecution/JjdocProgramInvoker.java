@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.RelativePath;
 import org.gradle.process.ExecOperations;
 
@@ -14,8 +14,8 @@ import org.gradle.process.ExecOperations;
 public class JjdocProgramInvoker extends AbstractProgramInvoker {
     public static final String SUPPORTED_FILE_SUFFIX = ".jj";
 
-    public JjdocProgramInvoker(Configuration classpath, File tempOutputDirectory, ExecOperations execOperations) {
-        super(classpath, tempOutputDirectory, JjdocExecutorAction.class, execOperations);
+    public JjdocProgramInvoker(FileCollection classpath, String javaccVersion, File tempOutputDirectory, ExecOperations execOperations) {
+        super(classpath, javaccVersion, tempOutputDirectory, JjdocExecutorAction.class, execOperations);
     }
 
     @Override
