@@ -54,21 +54,21 @@ public class JavaccPlugin implements Plugin<Project> {
 
     private void addTaskToProject(Project project, Class<? extends AbstractJavaccTask> type, String name, String description, String group, Configuration configuration) {
         project.getTasks().register(name, type, t -> {
-           t.setDescription(description);
-           t.setGroup(group);
+            t.setDescription(description);
+            t.setGroup(group);
 
-           t.getClasspath().from(configuration);
-           t.getJavaccVersion().set(project.provider(() -> {
-               for (Dependency dependency : configuration.getAllDependencies()) {
-                   String id = dependency.getGroup() + ":" + dependency.getName();
-                   if (dependency.getVersion() != null
-                       && ("net.java.dev.javacc:javacc".equals(id)
-                       || "org.javacc.generator:java".equals(id))) {
-                       return dependency.getVersion();
-                   }
-               }
-               return "";
-           }));
+            t.getClasspath().from(configuration);
+            t.getJavaccVersion().set(project.provider(() -> {
+                for (Dependency dependency : configuration.getAllDependencies()) {
+                    String id = dependency.getGroup() + ":" + dependency.getName();
+                    if (dependency.getVersion() != null
+                        && ("net.java.dev.javacc:javacc".equals(id)
+                        || "org.javacc.generator:java".equals(id))) {
+                        return dependency.getVersion();
+                    }
+                }
+                return "";
+            }));
         });
     }
 
