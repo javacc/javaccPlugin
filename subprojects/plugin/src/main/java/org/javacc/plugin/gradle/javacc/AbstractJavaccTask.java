@@ -26,11 +26,6 @@ public abstract class AbstractJavaccTask extends SourceTask {
     private File inputDirectory;
     private File outputDirectory;
 
-    @Internal
-    abstract ConfigurableFileCollection getClasspath();
-    @Internal
-    abstract Property<String> getJavaccVersion();
-
     protected AbstractJavaccTask(String inputDirectory, String outputDirectory, String filter,
                                  ExecOperations execOperations) {
         setInputDirectory(inputDirectory);
@@ -41,13 +36,17 @@ public abstract class AbstractJavaccTask extends SourceTask {
     }
 
     @Internal
+    abstract ConfigurableFileCollection getClasspath();
+    @Internal
+    abstract Property<String> getJavaccVersion();
+
+    @Internal
     public Map<String, String> getArguments() {
         return programArguments;
     }
 
     public AbstractJavaccTask setArguments(Map<String, String> arguments) {
         this.programArguments = arguments;
-
         return this;
     }
 
@@ -77,7 +76,6 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
         this.inputDirectory = inputDirectory;
         setSource(inputDirectory);
-
         return this;
     }
 
@@ -87,9 +85,7 @@ public abstract class AbstractJavaccTask extends SourceTask {
 
     public AbstractJavaccTask setOutputDirectory(File outputDirectory) {
         getLogger().debug("Changing output directory to [{}]", outputDirectory);
-
         this.outputDirectory = outputDirectory;
-
         return this;
     }
 
