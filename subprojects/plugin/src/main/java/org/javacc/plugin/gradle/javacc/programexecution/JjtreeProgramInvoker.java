@@ -2,7 +2,7 @@ package org.javacc.plugin.gradle.javacc.programexecution;
 
 import java.io.File;
 
-import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.RelativePath;
 import org.gradle.process.ExecOperations;
 
@@ -13,9 +13,9 @@ public class JjtreeProgramInvoker extends AbstractProgramInvoker {
     public static final String SUPPORTED_FILE_SUFFIX = ".jjt";
     private final String outputDirectoryArgName;
 
-    public JjtreeProgramInvoker(Configuration classpath, File tempOutputDirectory,
+    public JjtreeProgramInvoker(FileCollection classpath, String javaccVersion, File tempOutputDirectory,
            ExecOperations execOperations) {
-        super(classpath, tempOutputDirectory, JjtreeExecutorAction.class, execOperations);
+        super(classpath, javaccVersion, tempOutputDirectory, JjtreeExecutorAction.class, execOperations);
         outputDirectoryArgName = getOutputDirectoryArgName();
     }
 

@@ -1,15 +1,15 @@
 package org.javacc.plugin.gradle.javacc.programexecution;
 
 import org.gradle.api.Action;
-import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.file.FileCollection;
 import org.gradle.process.JavaExecSpec;
 
 class JjtreeExecutorAction implements Action<JavaExecSpec> {
-    private final Configuration classpath;
+    private final FileCollection classpath;
     private final ProgramArguments arguments;
 
     // CHECKSTYLE:OFF RedundantModifierCheck
-    public JjtreeExecutorAction(Configuration classpath, ProgramArguments arguments) {
+    public JjtreeExecutorAction(FileCollection classpath, ProgramArguments arguments) {
         this.classpath = classpath;
         this.arguments = arguments;
     }

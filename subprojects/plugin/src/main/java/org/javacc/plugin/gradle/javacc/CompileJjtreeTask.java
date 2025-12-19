@@ -16,7 +16,7 @@ import org.javacc.plugin.gradle.javacc.programexecution.JjtreeProgramInvoker;
 import org.javacc.plugin.gradle.javacc.programexecution.ProgramArguments;
 
 @CacheableTask
-public class CompileJjtreeTask extends AbstractJavaccTask {
+public abstract class CompileJjtreeTask extends AbstractJavaccTask {
     public static final String TASK_NAME_VALUE = "compileJjtree";
     public static final String TASK_DESCRIPTION_VALUE = "Compiles JJTree files into JavaCC files";
 
@@ -32,7 +32,7 @@ public class CompileJjtreeTask extends AbstractJavaccTask {
     public void run() {
         CompilerInputOutputConfiguration inputOutputDirectories
             = new JavaccCompilerInputOutputConfiguration(getInputDirectory(), getOutputDirectory(), getSource(), javaSources);
-        JjtreeProgramInvoker jjtreeInvoker = new JjtreeProgramInvoker(getClasspath(),
+        JjtreeProgramInvoker jjtreeInvoker = new JjtreeProgramInvoker(getClasspath(), getJavaccVersion().get(),
             inputOutputDirectories.getTempOutputDirectory(), execOperations);
         ProgramArguments arguments = new ProgramArguments();
         arguments.addAll(getArguments());

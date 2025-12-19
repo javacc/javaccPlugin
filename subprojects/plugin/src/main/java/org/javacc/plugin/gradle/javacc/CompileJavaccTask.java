@@ -16,7 +16,7 @@ import org.javacc.plugin.gradle.javacc.programexecution.JavaccProgramInvoker;
 import org.javacc.plugin.gradle.javacc.programexecution.ProgramArguments;
 
 @CacheableTask
-public class CompileJavaccTask extends AbstractJavaccTask {
+public abstract class CompileJavaccTask extends AbstractJavaccTask {
     public static final String TASK_NAME_VALUE = "compileJavacc";
     public static final String TASK_DESCRIPTION_VALUE = "Compiles JavaCC files into Java files";
 
@@ -33,7 +33,7 @@ public class CompileJavaccTask extends AbstractJavaccTask {
     public void run() {
         CompilerInputOutputConfiguration inputOutputDirectories
             = new JavaccCompilerInputOutputConfiguration(getInputDirectory(), getOutputDirectory(), getSource(), javaSources);
-        JavaccProgramInvoker javaccInvoker = new JavaccProgramInvoker(getClasspath(),
+        JavaccProgramInvoker javaccInvoker = new JavaccProgramInvoker(getClasspath(), getJavaccVersion().get(),
             inputOutputDirectories.getTempOutputDirectory(), execOperations);
         ProgramArguments arguments = new ProgramArguments();
         arguments.addAll(getArguments());

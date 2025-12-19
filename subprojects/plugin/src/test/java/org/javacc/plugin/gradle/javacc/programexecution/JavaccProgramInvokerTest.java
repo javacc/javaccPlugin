@@ -39,7 +39,7 @@ public class JavaccProgramInvokerTest {
         Configuration classpath = mock(Configuration.class);
         tempOutputDirectory = testFolder.newFolder("tempOutput");
         execOperations = mock(ExecOperations.class);
-        programInvoker = new JavaccProgramInvoker(classpath, tempOutputDirectory, execOperations);
+        programInvoker = new JavaccProgramInvoker(classpath, "", tempOutputDirectory, execOperations);
     }
 
     @Test
