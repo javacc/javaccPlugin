@@ -1,11 +1,7 @@
 package org.javacc.plugin.gradle.javacc;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.Dependency;
 

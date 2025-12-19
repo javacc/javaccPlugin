@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   build:
@@ -15,7 +16,6 @@ jobs:
     strategy:
       matrix:
         version: [ 11, 17 ]
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
