@@ -57,6 +57,7 @@ jar {
 
 checkstyle {
     configFile = file("${rootProject.projectDir}/config/checkstyle/checks.xml")
+    toolVersion = "10.26.1"
 }
 tasks.withType(Checkstyle) {
     reports {
