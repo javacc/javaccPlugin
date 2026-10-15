@@ -22,7 +22,6 @@ public class JavaccPlugin implements Plugin<Project> {
 
     private Configuration createJavaccConfiguration(Project project) {
         Configuration configuration = project.getConfigurations().create("javacc");
-        configuration.setVisible(false);
         configuration.setTransitive(true);
         configuration.setDescription("The javacc dependencies to be used.");
         return configuration;
